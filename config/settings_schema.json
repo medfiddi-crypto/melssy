@@ -16,9 +16,15 @@
       },
       {
         "type": "font_picker",
-        "id": "type_primary_font",
-        "default": "work_sans_n4",
-        "label": "t:general.primary"
+        "id": "type_heading_font",
+        "default": "cormorant_n4",
+        "label": "t:general.heading"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "default": "inter_n4",
+        "label": "t:general.body"
       }
     ]
   },
@@ -58,15 +64,51 @@
     "settings": [
       {
         "type": "color",
-        "id": "background_color",
-        "default": "#FFFFFF",
-        "label": "t:labels.background"
+        "id": "color_ink",
+        "default": "#1A1A1A",
+        "label": "t:labels.ink"
       },
       {
         "type": "color",
-        "id": "foreground_color",
-        "default": "#333333",
-        "label": "t:labels.foreground"
+        "id": "color_ink_soft",
+        "default": "#4A4744",
+        "label": "t:labels.ink_soft"
+      },
+      {
+        "type": "color",
+        "id": "color_ivory",
+        "default": "#FAF8F5",
+        "label": "t:labels.ivory"
+      },
+      {
+        "type": "color",
+        "id": "color_cream",
+        "default": "#F2ECE4",
+        "label": "t:labels.cream"
+      },
+      {
+        "type": "color",
+        "id": "color_sand",
+        "default": "#E3D9CC",
+        "label": "t:labels.sand"
+      },
+      {
+        "type": "color",
+        "id": "color_blush",
+        "default": "#D8B9AC",
+        "label": "t:labels.blush"
+      },
+      {
+        "type": "color",
+        "id": "color_night",
+        "default": "#14161C",
+        "label": "t:labels.night"
+      },
+      {
+        "type": "color",
+        "id": "color_white",
+        "default": "#FFFFFF",
+        "label": "t:labels.white"
       },
       {
         "type": "range",
@@ -76,7 +118,7 @@
         "step": 1,
         "unit": "px",
         "label": "t:labels.input_corner_radius",
-        "default": 4
+        "default": 2
       }
     ]
   }

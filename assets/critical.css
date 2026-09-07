@@ -31,17 +31,17 @@ input,
 textarea,
 select {
   font: inherit;
-  border-radius: var(--style-border-radius-inputs);
+  border-radius: var(--radius-input);
 }
 
 select {
-  background-color: var(--color-background);
+  background-color: var(--ivory);
   color: currentcolor;
 }
 
 dialog {
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--ivory);
+  color: var(--ink);
 }
 
 p {
@@ -73,9 +73,44 @@ p:empty {
 
 /** Theme styles below */
 body {
-  font-family: var(--font-primary--family);
-  background-color: var(--color-background);
-  color: var(--color-foreground);
+  font-family: var(--font-body--family);
+  background-color: var(--ivory);
+  color: var(--ink);
+  transition: background-color var(--transition-base), color var(--transition-base);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  letter-spacing: 0.01em;
+}
+
+h1,
+h2 {
+  letter-spacing: 0.04em;
+}
+
+.wordmark {
+  font-family: var(--font-body--family);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /** Section layout utilities */
