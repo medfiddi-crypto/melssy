@@ -19,7 +19,14 @@
   .the-ritual__content {
     display: grid;
     grid-template-columns: var(--content-grid);
-    padding: var(--space-7) 0;
+    align-content: center;
+    padding: var(--space-6) 0;
+  }
+
+  @media (min-width: 750px) {
+    .the-ritual__content {
+      padding: var(--space-7) 0;
+    }
   }
 
   .the-ritual__content > * {

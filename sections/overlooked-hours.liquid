@@ -18,15 +18,19 @@
   .overlooked-hours__content {
     display: grid;
     grid-template-columns: var(--content-grid);
-    padding: var(--space-7) 0;
+    align-content: center;
+    padding: var(--space-6) 0;
+    text-align: center;
+  }
+
+  @media (min-width: 750px) {
+    .overlooked-hours__content {
+      padding: var(--space-7) 0;
+    }
   }
 
   .overlooked-hours__content > * {
     grid-column: 2;
-  }
-
-  .overlooked-hours__content {
-    text-align: center;
   }
 
   .overlooked-hours__content p {
@@ -35,6 +39,10 @@
     color: var(--ink);
     font-size: 1.125rem;
     line-height: 1.6;
+  }
+
+  .overlooked-hours__content p + p {
+    margin-top: var(--space-3);
   }
 {% endstylesheet %}
 
@@ -46,7 +54,7 @@
       "type": "richtext",
       "id": "text",
       "label": "t:labels.text",
-      "default": "<p>Chaque soir, vous prenez soin de vous... Puis vous vous couchez. Et pendant les 7 ou 8 heures qui suivent, vos cheveux frottent contre votre oreiller, votre peau est en contact avec le tissu et votre brushing peut perdre sa forme pendant votre sommeil. C'est une chose à laquelle on ne pense presque jamais.</p>"
+      "default": "<p>Chaque soir, vous prenez soin de vous. Vous hydratez votre peau. Vous prenez soin de vos cheveux. Vous appliquez vos produits. Vous faites votre routine.</p><p>Puis vous vous couchez.</p><p>Et pendant les 7 ou 8 heures qui suivent, vos cheveux frottent contre votre oreiller, votre peau est en contact avec le tissu et votre brushing peut perdre sa forme pendant votre sommeil.</p><p>C'est une chose à laquelle on ne pense presque jamais.</p>"
     }
   ],
   "presets": [{ "name": "t:general.overlooked_hours" }]

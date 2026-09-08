@@ -19,7 +19,14 @@
   .why-satin__content {
     display: grid;
     grid-template-columns: var(--content-grid);
-    padding: var(--space-7) 0;
+    align-content: center;
+    padding: var(--space-6) 0;
+  }
+
+  @media (min-width: 750px) {
+    .why-satin__content {
+      padding: var(--space-7) 0;
+    }
   }
 
   .why-satin__content > * {
@@ -38,6 +45,8 @@
     display: grid;
     gap: var(--space-5);
     grid-template-columns: 1fr;
+    max-width: 64rem;
+    margin: 0 auto;
   }
 
   @media (min-width: 750px) {

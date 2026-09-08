@@ -1,7 +1,9 @@
 {% comment %}
   Homepage hero: full-width image (3:2 desktop / 4:5 mobile), headline, and
   a single CTA. Falls back to a plain token-coloured placeholder box, sized
-  to the same ratios, when no image has been picked yet.
+  to the same ratios, when no image has been picked yet. At least 70vh tall,
+  content vertically centered, image beside the content on desktop and
+  above it on mobile.
 {% endcomment %}
 
 <div class="hero full-width" id="hero">
@@ -24,17 +26,17 @@
 </div>
 
 {% stylesheet %}
+  .hero {
+    min-height: 70vh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+  }
+
   .hero__media {
     width: 100%;
     aspect-ratio: 4 / 5;
     overflow: hidden;
     background-color: var(--sand);
-  }
-
-  @media (min-width: 750px) {
-    .hero__media {
-      aspect-ratio: 3 / 2;
-    }
   }
 
   .hero__media img {
@@ -50,14 +52,12 @@
   }
 
   .hero__content {
-    display: grid;
-    grid-template-columns: var(--content-grid);
-    padding: var(--space-6) 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-  }
-
-  .hero__content > * {
-    grid-column: 2;
+    padding: var(--space-6) var(--page-margin);
   }
 
   .hero__heading {
@@ -66,14 +66,14 @@
     font-size: clamp(1.75rem, 4vw, 3rem);
     letter-spacing: 0.02em;
     max-width: 32ch;
-    margin: 0 auto var(--space-4);
+    margin: 0 0 var(--space-4);
   }
 
   .hero__cta {
     display: inline-block;
-    padding: var(--space-2) var(--space-4);
+    padding: var(--space-3) var(--space-6);
     background-color: var(--ink);
-    color: var(--white);
+    color: var(--ivory);
     text-decoration: none;
     border-radius: var(--radius-button);
     transition: background-color var(--transition-base);
@@ -81,6 +81,22 @@
 
   .hero__cta:hover {
     background-color: var(--ink-soft);
+  }
+
+  @media (min-width: 750px) {
+    .hero {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: none;
+    }
+
+    .hero__media {
+      aspect-ratio: unset;
+      height: 100%;
+    }
+
+    .hero__content {
+      padding: var(--space-7) var(--space-6);
+    }
   }
 {% endstylesheet %}
 
