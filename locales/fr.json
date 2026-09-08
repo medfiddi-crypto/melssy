@@ -4,7 +4,9 @@
     "verified_badge": "Achat vérifié",
     "rating_label": "Note de {{ rating }} sur 5",
     "variant": "Variante",
-    "quantity": "Quantité"
+    "quantity": "Quantité",
+    "product": "Produit",
+    "price": "Prix"
   },
   "404": {
     "title": "404",
@@ -24,7 +26,9 @@
     "checkout": "Commander",
     "title": "Panier",
     "update": "Mettre à jour",
-    "remove": "Retirer"
+    "remove": "Retirer",
+    "subtotal": "Sous-total",
+    "empty": "Votre panier est vide."
   },
   "customers": {
     "login": {

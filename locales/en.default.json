@@ -4,7 +4,9 @@
     "verified_badge": "Verified purchase",
     "rating_label": "Rated {{ rating }} out of 5",
     "variant": "Variant",
-    "quantity": "Quantity"
+    "quantity": "Quantity",
+    "product": "Product",
+    "price": "Price"
   },
   "404": {
     "title": "404",
@@ -24,7 +26,9 @@
     "checkout": "Checkout",
     "title": "Cart",
     "update": "Update",
-    "remove": "Remove"
+    "remove": "Remove",
+    "subtotal": "Subtotal",
+    "empty": "Your cart is empty."
   },
   "customers": {
     "login": {
