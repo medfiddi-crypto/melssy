@@ -1,0 +1,51 @@
+{% doc %}
+  Renders one numbered step ("01 — PRÉPARER") for the "The ritual" section.
+
+  @example
+  {% content_for 'block', type: 'ritual-step', id: 'ritual-step-1' %}
+{% enddoc %}
+
+<div class="ritual-step" {{ block.shopify_attributes }}>
+  <p class="ritual-step__label">{{ block.settings.label }}</p>
+  {% if block.settings.description != blank %}
+    <div class="ritual-step__description">{{ block.settings.description }}</div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .ritual-step__label {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    letter-spacing: 0.08em;
+    font-size: 1rem;
+  }
+
+  .ritual-step__description {
+    margin-top: var(--space-2);
+    color: var(--ink-soft);
+  }
+
+  .ritual-step__description p {
+    margin: 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.ritual_step",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:labels.label",
+      "default": "01 — ÉTAPE"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "t:labels.description"
+    }
+  ],
+  "presets": [{ "name": "t:general.ritual_step" }]
+}
+{% endschema %}

@@ -1,0 +1,74 @@
+{% comment %}
+  "The ritual" — four numbered steps, night to morning. Heading is the
+  approved copy recorded in CLAUDE.md §7.
+{% endcomment %}
+
+<div class="the-ritual full-width">
+  <div class="the-ritual__content">
+    {% if section.settings.heading != blank %}
+      <h2 class="the-ritual__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="the-ritual__grid">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .the-ritual__content {
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    padding: var(--space-7) 0;
+  }
+
+  .the-ritual__content > * {
+    grid-column: 2;
+  }
+
+  .the-ritual__heading {
+    text-align: center;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 1.75rem;
+    margin-bottom: var(--space-6);
+  }
+
+  .the-ritual__grid {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 750px) {
+    .the-ritual__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.the_ritual",
+  "blocks": [{ "type": "ritual-step" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading",
+      "default": "Le rituel, en quatre temps"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.the_ritual",
+      "blocks": [
+        { "type": "ritual-step", "settings": { "label": "01 — PRÉPARER" } },
+        { "type": "ritual-step", "settings": { "label": "02 — PROTÉGER" } },
+        { "type": "ritual-step", "settings": { "label": "03 — DORMIR" } },
+        { "type": "ritual-step", "settings": { "label": "04 — RÉVÉLER" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

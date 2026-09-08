@@ -1,4 +1,9 @@
 {
+  "general": {
+    "gift_badge": "Complimentary gift",
+    "verified_badge": "Verified purchase",
+    "rating_label": "Rated {{ rating }} out of 5"
+  },
   "404": {
     "title": "404",
     "not_found": "Page not found.",

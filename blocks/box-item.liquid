@@ -1,0 +1,75 @@
+{% doc %}
+  Renders one line item in the product's "what's in the box" list, with an
+  optional "complimentary gift" badge.
+
+  @example
+  {% content_for 'block', type: 'box-item', id: 'box-item-1' %}
+{% enddoc %}
+
+<div class="box-item" {{ block.shopify_attributes }}>
+  <p class="box-item__label">{{ block.settings.label }}</p>
+  {% if block.settings.detail != blank %}
+    <p class="box-item__detail">{{ block.settings.detail }}</p>
+  {% endif %}
+  {% if block.settings.is_gift %}
+    <span class="box-item__badge">{{ 'general.gift_badge' | t }}</span>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .box-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    column-gap: var(--space-3);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--sand);
+  }
+
+  .box-item__label {
+    font-weight: 500;
+  }
+
+  .box-item__detail {
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+
+  .box-item__badge {
+    display: inline-block;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--blush);
+    border-radius: var(--radius-button);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.box_item",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:labels.label",
+      "default": "Article"
+    },
+    {
+      "type": "text",
+      "id": "detail",
+      "label": "t:labels.detail"
+    },
+    {
+      "type": "checkbox",
+      "id": "is_gift",
+      "label": "t:labels.is_gift",
+      "default": false
+    }
+  ],
+  "presets": [{ "name": "t:general.box_item" }]
+}
+{% endschema %}

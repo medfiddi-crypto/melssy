@@ -1,0 +1,54 @@
+{% comment %}
+  "The overlooked hours" — a short emotional excerpt from the CLAUDE.md §5
+  brand story, not the full narrative (never dumped as one block on the
+  homepage, per §5).
+{% endcomment %}
+
+<div class="overlooked-hours full-width">
+  <div class="overlooked-hours__content">
+    {{ section.settings.text }}
+  </div>
+</div>
+
+{% stylesheet %}
+  .overlooked-hours {
+    background-color: var(--cream);
+  }
+
+  .overlooked-hours__content {
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    padding: var(--space-7) 0;
+  }
+
+  .overlooked-hours__content > * {
+    grid-column: 2;
+  }
+
+  .overlooked-hours__content {
+    text-align: center;
+  }
+
+  .overlooked-hours__content p {
+    max-width: 56ch;
+    margin: 0 auto;
+    color: var(--ink);
+    font-size: 1.125rem;
+    line-height: 1.6;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.overlooked_hours",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:labels.text",
+      "default": "<p>Chaque soir, vous prenez soin de vous... Puis vous vous couchez. Et pendant les 7 ou 8 heures qui suivent, vos cheveux frottent contre votre oreiller, votre peau est en contact avec le tissu et votre brushing peut perdre sa forme pendant votre sommeil. C'est une chose à laquelle on ne pense presque jamais.</p>"
+    }
+  ],
+  "presets": [{ "name": "t:general.overlooked_hours" }]
+}
+{% endschema %}

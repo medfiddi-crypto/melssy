@@ -1,0 +1,98 @@
+{% doc %}
+  Renders one UGC tile (creator video or image, name, handle, caption) in a
+  9:16 frame. Part of the hidden UGC architecture from CLAUDE.md §11 — no
+  creator content is ever fabricated as a default.
+
+  @example
+  {% content_for 'block', type: 'ugc-item', id: 'ugc-item-1' %}
+{% enddoc %}
+
+<div class="ugc-item" {{ block.shopify_attributes }}>
+  <div class="ugc-item__media">
+    {% if block.settings.video_url != blank %}
+      {{ block.settings.video_url | external_video_tag }}
+    {% elsif block.settings.image %}
+      {{ block.settings.image | image_url: width: 800 | image_tag }}
+    {% endif %}
+  </div>
+
+  {% if block.settings.creator_handle != blank or block.settings.caption != blank %}
+    <div class="ugc-item__meta">
+      {% if block.settings.creator_handle != blank %}
+        <p class="ugc-item__handle">{{ block.settings.creator_handle }}</p>
+      {% endif %}
+      {% if block.settings.caption != blank %}
+        <p class="ugc-item__caption">{{ block.settings.caption }}</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .ugc-item__media {
+    position: relative;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    background-color: var(--sand);
+  }
+
+  .ugc-item__media img,
+  .ugc-item__media iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ugc-item__meta {
+    margin-top: var(--space-2);
+  }
+
+  .ugc-item__handle {
+    font-weight: 500;
+  }
+
+  .ugc-item__caption {
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.ugc_item",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "t:labels.video_url",
+      "accept": ["youtube", "vimeo"]
+    },
+    {
+      "type": "text",
+      "id": "creator_name",
+      "label": "t:labels.creator_name"
+    },
+    {
+      "type": "text",
+      "id": "creator_handle",
+      "label": "t:labels.creator_handle"
+    },
+    {
+      "type": "text",
+      "id": "caption",
+      "label": "t:labels.caption"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "t:labels.link"
+    }
+  ],
+  "presets": [{ "name": "t:general.ugc_item" }]
+}
+{% endschema %}

@@ -1,20 +1,93 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "hello-world",
+    "hero": {
+      "type": "hero",
       "settings": {}
+    },
+    "overlooked-hours": {
+      "type": "overlooked-hours",
+      "settings": {}
+    },
+    "the-product": {
+      "type": "the-product",
+      "settings": {
+        "product": ""
+      },
+      "blocks": {
+        "box-item-1": {
+          "type": "box-item",
+          "settings": { "label": "2 taies d'oreiller en satin", "detail": "70 × 50 cm, fermeture zippée" }
+        },
+        "box-item-2": {
+          "type": "box-item",
+          "settings": { "label": "1 bonnet en satin", "detail": "Environ 30 cm, ouverture élastiquée" }
+        },
+        "box-item-3": {
+          "type": "box-item",
+          "settings": { "label": "2 chouchous en satin" }
+        },
+        "box-item-4": {
+          "type": "box-item",
+          "settings": { "label": "1 rouleau à boucler sans chaleur", "detail": "Offert avec votre rituel", "is_gift": true }
+        }
+      },
+      "block_order": ["box-item-1", "box-item-2", "box-item-3", "box-item-4"]
+    },
+    "why-satin": {
+      "type": "why-satin",
+      "settings": {},
+      "blocks": {
+        "benefit-1": {
+          "type": "benefit-item",
+          "settings": { "heading": "MOINS DE FROTTEMENTS", "body": "<p>Limite les frottements entre les cheveux et le tissu pendant la nuit.</p>" }
+        },
+        "benefit-2": {
+          "type": "benefit-item",
+          "settings": { "heading": "RÉVEILLEZ-VOUS PRÊTE", "body": "<p>Aide à préserver votre coiffure pendant la nuit, pour un réveil plus doux.</p>" }
+        },
+        "benefit-3": {
+          "type": "benefit-item",
+          "settings": { "heading": "VOTRE RITUEL DU SOIR", "body": "<p>Parce que prendre soin de ses cheveux ne devrait pas s'arrêter à 23h.</p>" }
+        }
+      },
+      "block_order": ["benefit-1", "benefit-2", "benefit-3"]
+    },
+    "the-ritual": {
+      "type": "the-ritual",
+      "settings": {},
+      "blocks": {
+        "step-1": { "type": "ritual-step", "settings": { "label": "01 — PRÉPARER" } },
+        "step-2": { "type": "ritual-step", "settings": { "label": "02 — PROTÉGER" } },
+        "step-3": { "type": "ritual-step", "settings": { "label": "03 — DORMIR" } },
+        "step-4": { "type": "ritual-step", "settings": { "label": "04 — RÉVÉLER" } }
+      },
+      "block_order": ["step-1", "step-2", "step-3", "step-4"]
+    },
+    "ugc": {
+      "type": "ugc",
+      "disabled": true,
+      "settings": {}
+    },
+    "reviews": {
+      "type": "reviews",
+      "disabled": true,
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq",
+      "settings": {},
+      "blocks": {
+        "faq-1": {
+          "type": "faq-item",
+          "settings": { "question": "Livraison", "answer": "<p>Livraison partout au Maroc.</p>" }
+        },
+        "faq-2": {
+          "type": "faq-item",
+          "settings": { "question": "Matières", "answer": "<p>Surface satinée douce et lisse, fermeture zippée. Taies 70 × 50 cm, bonnet à ouverture élastiquée.</p>" }
+        }
+      },
+      "block_order": ["faq-1", "faq-2"]
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["hero", "overlooked-hours", "the-product", "why-satin", "the-ritual", "ugc", "reviews", "faq"]
 }

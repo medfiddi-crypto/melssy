@@ -279,16 +279,20 @@ ones.
 Hero headline: *Votre routine beauté ne s'arrête pas quand vous fermez les yeux.*
 Hero CTA: *Découvrir le Rituel*
 
-UGC and reviews are built as complete hidden sections and slot in at positions 5 and 6 once
+UGC and reviews are built as complete hidden sections and slot in at positions 6 and 7 once
 real content exists.
 
 ### Benefits (section 4)
+
+Section heading: *Pensé pour vos cheveux*
 
 - **MOINS DE FROTTEMENTS** — designed to reduce friction between hair and fabric during sleep
 - **RÉVEILLEZ-VOUS PRÊTE** — helps preserve your hairstyle and makes mornings easier
 - **VOTRE RITUEL DU SOIR** — turns the last moments of the day into a simple beauty ritual
 
 ### Ritual steps (section 5)
+
+Section heading: *Le rituel, en quatre temps*
 
 `01 — PRÉPARER` · `02 — PROTÉGER` · `03 — DORMIR` · `04 — RÉVÉLER`
 

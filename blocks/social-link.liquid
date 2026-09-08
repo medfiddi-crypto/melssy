@@ -1,0 +1,52 @@
+{% doc %}
+  Renders a single footer social link. Renders nothing until a URL is set —
+  no placeholder social accounts are ever shown.
+
+  @example
+  {% content_for 'block', type: 'social-link', id: 'social-link-1' %}
+{% enddoc %}
+
+{% if block.settings.url != blank %}
+  <a
+    class="social-link"
+    href="{{ block.settings.url }}"
+    target="_blank"
+    rel="noopener noreferrer"
+    {{ block.shopify_attributes }}
+  >
+    {{ block.settings.label }}
+  </a>
+{% endif %}
+
+{% stylesheet %}
+  .social-link {
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.875rem;
+    transition: color var(--transition-base);
+  }
+
+  .social-link:hover {
+    color: var(--ink-soft);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.social_link",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:labels.label",
+      "default": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "t:labels.url"
+    }
+  ],
+  "presets": [{ "name": "t:general.social_link" }]
+}
+{% endschema %}

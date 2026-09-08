@@ -1,0 +1,58 @@
+{% comment %}
+  Reviews list — hidden architecture per CLAUDE.md §11. Ships with zero
+  default blocks; a merchant adds real reviews via "Add block" and flips
+  this section's visibility on once they exist.
+{% endcomment %}
+
+<div class="reviews full-width">
+  <div class="reviews__content">
+    {% if section.settings.heading != blank %}
+      <h2 class="reviews__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="reviews__list">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .reviews__content {
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    padding: var(--space-7) 0;
+  }
+
+  .reviews__content > * {
+    grid-column: 2;
+  }
+
+  .reviews__heading {
+    text-align: center;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 1.75rem;
+    margin-bottom: var(--space-5);
+  }
+
+  .reviews__list {
+    max-width: 48rem;
+    margin: 0 auto;
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.reviews",
+  "blocks": [{ "type": "review-item" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading"
+    }
+  ],
+  "presets": [{ "name": "t:general.reviews" }]
+}
+{% endschema %}

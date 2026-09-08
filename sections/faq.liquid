@@ -1,0 +1,67 @@
+{% comment %}
+  FAQ — accordion of faq-item blocks. Ships with only the two topics
+  CLAUDE.md §3/§9 gives confirmed answers for (Livraison, Matières). COD and
+  Entretien are UNCONFIRMED per §3 and are added as blocks once real answers
+  exist, rather than shipping with blank answers.
+{% endcomment %}
+
+<div class="faq full-width">
+  <div class="faq__content">
+    {% if section.settings.heading != blank %}
+      <h2 class="faq__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="faq__list">
+      {% content_for 'blocks' %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .faq__content {
+    display: grid;
+    grid-template-columns: var(--content-grid);
+    padding: var(--space-7) 0;
+  }
+
+  .faq__content > * {
+    grid-column: 2;
+  }
+
+  .faq__heading {
+    text-align: center;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    font-size: 1.75rem;
+    margin-bottom: var(--space-5);
+  }
+
+  .faq__list {
+    max-width: 48rem;
+    margin: 0 auto;
+    width: 100%;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.faq",
+  "blocks": [{ "type": "faq-item" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:labels.heading"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:general.faq",
+      "blocks": [
+        { "type": "faq-item", "settings": { "question": "Livraison", "answer": "<p>Livraison partout au Maroc.</p>" } },
+        { "type": "faq-item", "settings": { "question": "Matières", "answer": "<p>Surface satinée douce et lisse, fermeture zippée. Taies 70 × 50 cm, bonnet à ouverture élastiquée.</p>" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
