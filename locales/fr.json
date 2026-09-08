@@ -6,7 +6,8 @@
     "variant": "Variante",
     "quantity": "Quantité",
     "product": "Produit",
-    "price": "Prix"
+    "price": "Prix",
+    "menu": "Menu"
   },
   "404": {
     "title": "404",
