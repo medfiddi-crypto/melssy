@@ -296,6 +296,10 @@ Section heading: *Le rituel, en quatre temps*
 
 `01 — PRÉPARER` · `02 — PROTÉGER` · `03 — DORMIR` · `04 — RÉVÉLER`
 
+### FAQ (section 6)
+
+Section heading: *Questions fréquentes*
+
 All copy editable.
 
 ---
