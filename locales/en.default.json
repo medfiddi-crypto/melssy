@@ -2,7 +2,9 @@
   "general": {
     "gift_badge": "Complimentary gift",
     "verified_badge": "Verified purchase",
-    "rating_label": "Rated {{ rating }} out of 5"
+    "rating_label": "Rated {{ rating }} out of 5",
+    "variant": "Variant",
+    "quantity": "Quantity"
   },
   "404": {
     "title": "404",

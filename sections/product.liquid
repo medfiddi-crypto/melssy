@@ -1,50 +1,120 @@
 {% comment %}
-  This section is used in the product template to render product page with
-  media, content, and add-to-cart form.
-
-  https://shopify.dev/docs/storefronts/themes/architecture/templates/product
+  Product page: gallery, title, value proposition, price, description, then
+  an ordered stream of blocks — the self-contained purchase-box first
+  (CLAUDE.md §9), followed by collapsible-tab accordions.
 {% endcomment %}
 
-<div class="product-images">
-  {% for image in product.images %}
-    {% render 'image', class: 'product-image', image: image %}
-  {% endfor %}
-</div>
-
-<div class="product-info">
-  <h1>{{ product.title }}</h1>
-  <p>{{ product.price | money }}</p>
-  <p>{{ product.description }}</p>
-</div>
-
-<div class="product-form">
-  {% form 'product', product %}
-    {% assign current_variant = product.selected_or_first_available_variant %}
-
-    <select name="id">
-      {% for variant in product.variants %}
-        <option
-          value="{{ variant.id }}"
-          {% if variant == current_variant %}
-            selected="selected"
-          {% endif %}
-        >
-          {{ variant.title }} - {{ variant.price | money }}
-        </option>
+<div class="product-page">
+  <div class="product-page__gallery">
+    {% if product.media.size > 0 %}
+      {% for media in product.media %}
+        {% render 'image',
+          image: media.preview_image,
+          class: 'product-page__image',
+          width: 1200,
+          height: 1200,
+          crop: 'center'
+        %}
       {% endfor %}
-    </select>
+    {% else %}
+      <div class="product-page__gallery-placeholder"></div>
+    {% endif %}
+  </div>
 
-    <input type="text" name="quantity" min="1" value="1">
+  <div class="product-page__info">
+    <h1 class="product-page__title">{{ product.title }}</h1>
 
-    <input type="submit" value="Add to cart">
-    {{ form | payment_button }}
-  {% endform %}
+    {% if section.settings.value_proposition != blank %}
+      <p class="product-page__value-prop">{{ section.settings.value_proposition }}</p>
+    {% endif %}
+
+    <p class="product-page__price">{{ product.price | money }}</p>
+
+    {% if product.description != blank %}
+      <div class="product-page__description">{{ product.description }}</div>
+    {% endif %}
+
+    {% content_for 'blocks' %}
+  </div>
 </div>
+
+{% stylesheet %}
+  .product-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding: var(--space-6) 0;
+  }
+
+  @media (min-width: 750px) {
+    .product-page {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+      padding: var(--space-7) 0;
+    }
+  }
+
+  .product-page__gallery {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .product-page__gallery .image {
+    aspect-ratio: 1 / 1;
+  }
+
+  .product-page__gallery .image img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-page__gallery-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: var(--sand);
+  }
+
+  .product-page__title {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .product-page__value-prop {
+    margin-top: var(--space-2);
+    color: var(--ink-soft);
+  }
+
+  .product-page__price {
+    margin-top: var(--space-4);
+    font-size: 1.5rem;
+  }
+
+  .product-page__description {
+    margin-top: var(--space-4);
+    color: var(--ink-soft);
+  }
+
+  .product-page__info > .purchase-box,
+  .product-page__info > .collapsible-tab:first-of-type {
+    margin-top: var(--space-5);
+  }
+{% endstylesheet %}
 
 {% schema %}
 {
   "name": "t:general.product",
-  "settings": [],
+  "blocks": [
+    { "type": "purchase-box" },
+    { "type": "collapsible-tab" }
+  ],
+  "settings": [
+    {
+      "type": "text",
+      "id": "value_proposition",
+      "label": "t:labels.value_proposition",
+      "default": "Beauty while you sleep."
+    }
+  ],
   "disabled_on": {
     "groups": ["header", "footer"]
   }

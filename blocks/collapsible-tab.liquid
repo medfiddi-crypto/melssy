@@ -1,0 +1,66 @@
+{% doc %}
+  Renders one accordion row that nests arbitrary theme blocks (product page
+  "What's Included", "Why Satin", "Materials & Dimensions", "Delivery").
+  Native <details>/<summary> — no JS required for open/close.
+
+  @example
+  {% content_for 'block', type: 'collapsible-tab', id: 'collapsible-tab-1' %}
+{% enddoc %}
+
+<details class="collapsible-tab" {{ block.shopify_attributes }}>
+  <summary class="collapsible-tab__title">{{ block.settings.title }}</summary>
+  <div class="collapsible-tab__content">
+    {% content_for 'blocks' %}
+  </div>
+</details>
+
+{% stylesheet %}
+  .collapsible-tab {
+    border-bottom: 1px solid var(--sand);
+    padding: var(--space-3) 0;
+  }
+
+  .collapsible-tab__title {
+    cursor: pointer;
+    font-weight: 500;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .collapsible-tab__title::-webkit-details-marker {
+    display: none;
+  }
+
+  .collapsible-tab__title::after {
+    content: '+';
+    flex-shrink: 0;
+    color: var(--ink-soft);
+  }
+
+  details[open] > .collapsible-tab__title::after {
+    content: '−';
+  }
+
+  .collapsible-tab__content {
+    margin-top: var(--space-3);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.collapsible_tab",
+  "blocks": [{ "type": "@theme" }],
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "t:labels.title",
+      "default": "Titre"
+    }
+  ],
+  "presets": [{ "name": "t:general.collapsible_tab" }]
+}
+{% endschema %}

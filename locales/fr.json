@@ -2,7 +2,9 @@
   "general": {
     "gift_badge": "Cadeau offert",
     "verified_badge": "Achat vérifié",
-    "rating_label": "Note de {{ rating }} sur 5"
+    "rating_label": "Note de {{ rating }} sur 5",
+    "variant": "Variante",
+    "quantity": "Quantité"
   },
   "404": {
     "title": "404",
