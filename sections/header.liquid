@@ -1,6 +1,12 @@
 <header>
   <h2 class="header__title">
-    {{ shop.name | link_to: routes.root_url }}
+    <a href="{{ routes.root_url }}">
+      {% render 'wordmark',
+        logo: section.settings.logo,
+        show_tagline: section.settings.show_tagline,
+        scale: section.settings.wordmark_scale
+      %}
+    </a>
   </h2>
 
   <div class="header__menu">
@@ -41,6 +47,9 @@
     align-items: center;
     justify-content: center;
   }
+  header .header__title a {
+    justify-content: flex-start;
+  }
   header a sup {
     position: absolute;
     left: 100%;
@@ -61,6 +70,27 @@
 {
   "name": "t:general.header",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "t:labels.logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_tagline",
+      "label": "t:labels.show_tagline",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "wordmark_scale",
+      "label": "t:labels.wordmark_scale",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "%",
+      "default": 100
+    },
     {
       "type": "link_list",
       "id": "menu",

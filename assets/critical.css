@@ -95,13 +95,6 @@ h2 {
   letter-spacing: 0.04em;
 }
 
-.wordmark {
-  font-family: var(--font-body--family);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-}
-
 .visually-hidden {
   position: absolute;
   width: 1px;

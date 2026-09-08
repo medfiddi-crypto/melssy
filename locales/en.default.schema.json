@@ -80,6 +80,7 @@
     "label": "Label",
     "layout_direction": "Layout direction",
     "link": "Link",
+    "logo": "Logo",
     "menu": "Menu",
     "customer_account_menu": "Customer account menu",
     "night": "Night",
@@ -93,6 +94,7 @@
     "sand": "Sand",
     "show_gift": "Show gift messaging",
     "show_payment_icons": "Show payment icons",
+    "show_tagline": "Show tagline",
     "tagline": "Tagline",
     "text_style": "Text style",
     "text": "Text",
@@ -101,7 +103,8 @@
     "value_proposition": "Value proposition",
     "verified": "Verified purchase",
     "video_url": "Video URL",
-    "white": "White"
+    "white": "White",
+    "wordmark_scale": "Wordmark size"
   },
   "options": {
     "alignment": {

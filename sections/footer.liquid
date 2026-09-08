@@ -1,6 +1,6 @@
 <footer>
   <div class="footer__top">
-    <p class="wordmark">{{ shop.name }}</p>
+    {% render 'wordmark', show_tagline: false %}
     {% if section.settings.tagline != blank %}
       <p class="footer__tagline">{{ section.settings.tagline }}</p>
     {% endif %}
@@ -45,9 +45,8 @@
     color: var(--white);
   }
 
-  footer .wordmark {
-    color: var(--white);
-    margin: 0;
+  footer .wordmark-svg__brand {
+    fill: var(--white);
   }
 
   footer .footer__tagline {

@@ -1,0 +1,116 @@
+{% doc %}
+  Renders the MELSSY wordmark as inline SVG: "MELSSY" in Cormorant Garamond
+  (weight 300) with an optional "BEAUTY WHILE YOU SLEEP" tagline in Inter
+  (weight 400) beneath it, both left-aligned to a shared edge. Renders an
+  uploaded logo image instead when one is provided.
+
+  Font families come from the theme's existing --font-heading--family /
+  --font-body--family tokens. The specific weights (300/400) are fixed
+  brand-mark values fetched via font_modify, independent of whatever weight
+  the merchant separately picks for general headings/body text — a font
+  variant not existing for the chosen family falls back to that family's
+  own default weight.
+
+  The SVG's viewBox width/height attributes are set 1:1 with real CSS px
+  (no CSS-forced scaling), so the font-size values below are literal
+  rendered pixel sizes. The `scale` param applies as a separate transform
+  on top of that base size, for the merchant-adjustable size setting.
+
+  @param {image} [logo] - An uploaded logo image. Renders instead of the SVG when present.
+  @param {boolean} [show_tagline] - Whether to render the tagline line. Defaults to true.
+  @param {number} [scale] - Percentage scale multiplier (100 = default size). Defaults to 100.
+
+  @example
+  {% render 'wordmark' %}
+  {% render 'wordmark', logo: section.settings.logo, show_tagline: section.settings.show_tagline, scale: section.settings.wordmark_scale %}
+  {% render 'wordmark', show_tagline: false %}
+{% enddoc %}
+
+{% liquid
+  assign show_tagline = show_tagline | default: true
+  assign scale = scale | default: 100
+  assign brand_font = settings.type_heading_font | font_modify: 'weight', '300' | default: settings.type_heading_font
+  assign tagline_font = settings.type_body_font | font_modify: 'weight', '400' | default: settings.type_body_font
+%}
+
+{% style %}
+  {{ brand_font | font_face: font_display: 'swap' }}
+  {{ tagline_font | font_face: font_display: 'swap' }}
+{% endstyle %}
+
+<div class="wordmark" style="--wordmark-scale: {{ scale }};">
+  {% if logo %}
+    {{ logo | image_url: width: 320 | image_tag: class: 'wordmark-logo', alt: shop.name }}
+  {% else %}
+    <svg
+      class="wordmark-svg"
+      viewBox="0 0 260 {% if show_tagline %}54{% else %}34{% endif %}"
+      width="260"
+      height="{% if show_tagline %}54{% else %}34{% endif %}"
+      role="img"
+      aria-label="{{ shop.name }}"
+      style="--wordmark-brand-weight: {{ brand_font.weight }}; --wordmark-tagline-weight: {{ tagline_font.weight }};"
+    >
+      <text class="wordmark-svg__brand" x="0" y="{% if show_tagline %}27{% else %}25{% endif %}" text-anchor="start">MELSSY</text>
+      {% if show_tagline %}
+        <text class="wordmark-svg__tagline" x="0" y="48" text-anchor="start">
+          Beauty while you sleep
+        </text>
+      {% endif %}
+    </svg>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .wordmark {
+    display: inline-block;
+    transform: scale(calc(var(--wordmark-scale) / 100));
+    transform-origin: left center;
+  }
+
+  .wordmark-logo {
+    height: 22px;
+    width: auto;
+  }
+
+  @media (min-width: 750px) {
+    .wordmark-logo {
+      height: 28px;
+    }
+  }
+
+  .wordmark-svg {
+    display: block;
+    width: auto;
+    height: auto;
+    overflow: visible;
+  }
+
+  .wordmark-svg__brand {
+    font-family: var(--font-heading--family);
+    font-weight: var(--wordmark-brand-weight);
+    font-size: 22px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    fill: var(--ink);
+  }
+
+  .wordmark-svg__tagline {
+    font-family: var(--font-body--family);
+    font-weight: var(--wordmark-tagline-weight);
+    font-size: 7.7px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    fill: var(--ink-soft);
+  }
+
+  @media (min-width: 750px) {
+    .wordmark-svg__brand {
+      font-size: 28px;
+    }
+
+    .wordmark-svg__tagline {
+      font-size: 9.8px;
+    }
+  }
+{% endstylesheet %}

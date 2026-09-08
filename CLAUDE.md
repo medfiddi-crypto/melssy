@@ -215,8 +215,11 @@ One accent colour only. No gold. No gradients. No glow effects.
 - **Display:** Cormorant Garamond, weights 300–400. Headlines only. Generous letter-spacing
   at large sizes.
 - **Body / UI:** Inter, weights 400 and 500. Nothing heavier.
-- **Wordmark:** MELSSY in Inter, uppercase, wide letter-spacing. Simple, embroidery-friendly,
-  replaceable without redesigning the theme.
+- **Wordmark:** "MELSSY" in Cormorant Garamond, uppercase, weight 300, generous letter-spacing
+  (~0.25em). Tagline "BEAUTY WHILE YOU SLEEP" beneath it in Inter, uppercase, weight 400,
+  roughly 22% of the wordmark's size, letter-spacing ~0.3em, both centered on a shared
+  vertical axis. Simple, embroidery-friendly, replaceable without redesigning the theme —
+  swappable for a final logo image via the header's logo setting without touching code.
 
 Two typefaces total. No decorative fonts.
 
