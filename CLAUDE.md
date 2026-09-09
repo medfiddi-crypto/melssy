@@ -8,6 +8,29 @@ editable theme setting, metafield, or clearly labelled placeholder.
 
 ---
 
+## Current status
+
+Built: seven homepage sections (hero, the overlooked hours as a story-moment sequence, the
+product, why satin, the ritual, FAQ, footer) plus the hidden UGC and reviews architectures; the
+product page with What's Included / Why Satin / Materials & Dimensions / Delivery accordions;
+the cart page; the header (three-part layout, SVG wordmark) and footer. All on the MELSSY
+design system — colour tokens, typography, spacing scale, radius, motion.
+
+Still blocked on real assets and decisions, not invented in the meantime:
+
+- No real photography — every image slot renders a plain token-coloured placeholder.
+- No final product description written in Shopify admin yet.
+- No COD app chosen — the product page's purchase area is a self-contained block, ready to
+  swap for whichever app is picked, per §9.
+- Fabric composition unconfirmed — "satin" only, no fibre claims anywhere.
+- No legal or company information, no domain.
+- UGC and reviews sections are fully built but stay hidden and empty until real creator or
+  review content exists, per §11.
+- How To Use, Returns, and Care accordions on the product page are not built — no approved
+  copy exists for them anywhere in this file yet.
+
+---
+
 ## 1. Brand foundation
 
 **Brand name:** MELSSY
@@ -65,6 +88,9 @@ local beauty concerns — never through decorative stereotyping.
 **THE BEAUTY NIGHT RITUAL™**
 
 Launch price: **449 DH**
+
+Product handle: `beauty-night-ritual` (confirmed — referenced directly by the homepage's
+`the-product` section and by `templates/product.json`).
 
 Contents:
 - 2 satin pillowcases — target 70 × 50 cm, zipper closure
@@ -215,11 +241,17 @@ One accent colour only. No gold. No gradients. No glow effects.
 - **Display:** Cormorant Garamond, weights 300–400. Headlines only. Generous letter-spacing
   at large sizes.
 - **Body / UI:** Inter, weights 400 and 500. Nothing heavier.
-- **Wordmark:** "MELSSY" in Cormorant Garamond, uppercase, weight 300, generous letter-spacing
-  (~0.25em). Tagline "BEAUTY WHILE YOU SLEEP" beneath it in Inter, uppercase, weight 400,
-  roughly 22% of the wordmark's size, letter-spacing ~0.3em, both centered on a shared
-  vertical axis. Simple, embroidery-friendly, replaceable without redesigning the theme —
-  swappable for a final logo image via the header's logo setting without touching code.
+- **Wordmark:** "MELSSY" in Cormorant Garamond, uppercase, weight 300, wide letter-spacing
+  (~0.25em), fill `--ink`. Tagline "BEAUTY WHILE YOU SLEEP" beneath it in Inter, uppercase,
+  weight 400, roughly 35% of the wordmark's size, letter-spacing ~0.15em, fill `--ink-soft`.
+  Both left-aligned to a shared edge. Built as inline SVG in `snippets/wordmark.liquid`, with
+  both weights fetched independently via `font_modify` so they stay fixed regardless of the
+  merchant's general heading/body font-weight choice elsewhere. Tagline is hidden below 750px
+  (wordmark only on mobile) via CSS. Simple, embroidery-friendly, replaceable without
+  redesigning the theme — the header exposes a `logo` image_picker that renders an uploaded
+  logo file instead of the SVG, and a `wordmark_scale` range setting (50–200%) for resizing
+  from the Theme Editor. Footer reuses the same snippet with the tagline suppressed (it has
+  its own separate tagline text setting) and the fill swapped for legibility on `--night`.
 
 Two typefaces total. No decorative fonts.
 
@@ -229,6 +261,10 @@ Two typefaces total. No decorative fonts.
 
 Section vertical padding: 96px desktop, 64px mobile.
 Generous whitespace is most of what makes the store read as premium.
+
+Within a repeating block (e.g. an image paired with its own text), keep spacing tight so the
+pairing reads as one unit. Between separate blocks or sections, keep spacing generous so each
+one stays a distinct moment. Tight within, generous between.
 
 ### Other tokens
 
@@ -285,6 +321,15 @@ Hero CTA: *Découvrir le Rituel*
 UGC and reviews are built as complete hidden sections and slot in at positions 6 and 7 once
 real content exists.
 
+### The overlooked hours (section 2)
+
+Built as a repeating `story-moment` block architecture, not a single text block: a "body"
+style (Inter weight 500, `--ink-soft`, optional image — 3:2 on mobile, 4:5 on desktop — left
+or right of the text on desktop, stacked above it on mobile) and a "quote" style (Cormorant
+weight 300, centred, no image). Ships with four default blocks — body / quote / body / quote —
+using verbatim §5 excerpts, alternating image position left/right for when photography exists.
+Spacing is tight within a block (image to its own text) and generous between blocks.
+
 ### Benefits (section 4)
 
 Section heading: *Pensé pour vos cheveux*
@@ -319,6 +364,13 @@ Nothing hardcoded: price, colours, inventory, dimensions, descriptions, material
 estimates, care instructions, gift information. Use Shopify product data, variants, metafields,
 dynamic sources, theme settings and blocks.
 
+**Status:** Built. Accordions shipped so far: What's Included, Why Satin, Materials &
+Dimensions, Delivery — each a `collapsible-tab` block nesting the appropriate content blocks
+(`box-item`, `benefit-item`, or `text`). How To Use, Returns, and Care are deliberately not
+built yet — no approved copy exists for any of them in this file; add each as a separate task
+once real copy is written. Purchase CTA (`blocks/purchase-box.liquid`) reuses the same label as
+the cart CTA (§9): *Complétez votre rituel*.
+
 ---
 
 ## 9. COD and cart
@@ -331,7 +383,8 @@ realistic meaning of "modular" here — a layout cannot be neutral to every poss
 
 Cart shows: product, variant, quantity, price, subtotal, complimentary gift, delivery
 information, CTA.
-Cart CTA: *Complétez votre rituel*
+Cart CTA: *Complétez votre rituel* — the same phrase is deliberately reused for the product
+page's add-to-cart button (§8), for consistency.
 
 Order experience is mobile-first with minimal fields: full name, phone, city, address, optional
 second address line, product/variant, quantity. Moroccan phone validation.
@@ -339,11 +392,20 @@ second address line, product/variant, quantity. Moroccan phone validation.
 Delivery messaging: *Livraison partout au Maroc*. Do not advertise free delivery. Do not invent
 courier names, prices or timings. All delivery text editable.
 
+**Status:** `sections/cart.liquid` is built on the design system — product, variant (hidden
+when it's the default "Default Title"), quantity, line price, cart subtotal, the
+complimentary-gift line, delivery messaging, and the checkout CTA. The product page's purchase
+area is the self-contained block described above; COD provider is still UNCONFIRMED and no
+such app is wired in yet. The mobile-first order-form fields above are not built — that's a
+separate, later task gated on the COD provider decision.
+
 ---
 
 ## 10. Pricing rules
 
-449 DH is the current display price.
+449 DH is the current display price, rendered via Shopify's `money` filter (e.g.
+`product.price | money`) using the store's `amount_no_decimals` format — never a hardcoded
+string, so it stays correct if the price or currency settings change.
 
 - No crossed-out "original" price.
 - No artificial discount.
@@ -402,7 +464,18 @@ Keep code modular. Avoid coupling between sections so future changes are safe an
 
 ## 14. Shopify implementation
 
-Foundation: **Dawn**.
+Foundation: **Skeleton** — Shopify's official, actively-maintained skeleton-theme starter,
+using the modern theme-blocks architecture (nestable blocks in `/blocks`, not classic
+Dawn-style section-only settings). This repo was inspected early on and found to already be
+Skeleton, not Dawn as an earlier draft of this file assumed; the decision was to stay on
+Skeleton rather than switch, since it's the current official starter and already matched this
+project's modular, low-dependency requirements.
+
+Header uses a three-part CSS grid: navigation left (from the `menu` link list setting,
+admin-managed, not hardcoded), wordmark centred, cart icon right (account icon added only when
+`shop.customer_accounts_enabled`). Below 750px the inline nav is replaced by a native
+`<details>/<summary>` hamburger disclosure next to the wordmark — no JavaScript, the same
+pattern used for the FAQ and product-page accordions.
 
 Use Shopify Liquid, sections, blocks, Theme Editor settings, product data, variants, and
 metafields where appropriate. Clean CSS, minimal JavaScript, no unnecessary dependencies.
@@ -479,3 +552,46 @@ Do not fabricate. Do not overbuild. Do not block on missing assets — build the
 hide unfinished content, keep it editable.
 
 The goal is not to launch a Shopify website. The goal is to launch MELSSY.
+
+---
+
+## Design principles established in review
+
+Rules derived from design critique during the build. They explain the reasoning behind
+decisions already made so a future session doesn't undo them.
+
+- **Logo is wordmark only** — no icon or symbol. Script fonts, butterflies, swashes and
+  decorative flourishes were explicitly rejected as off-brand: they read as generic beauty
+  rather than quiet luxury, and script does not survive small sizes or embroidery. If a
+  monogram is ever added, it must come from the brand's own story (night, sleep, the
+  overlooked hours), never a generic feminine motif.
+
+- **No generic quality claims.** Never write "original quality", "premium quality", "best
+  quality", or similar filler. The brand says something specific ("Beauty while you sleep") —
+  generic quality claims are what dropshipping stores use.
+
+- **Buttons never span the full viewport width.** Contained width, generous horizontal
+  padding, light letter-spacing. Heavy solid blocks fight the Cormorant headings.
+
+- **Never ship empty accordions, empty sections, or placeholder rows visible.** If content
+  doesn't exist yet, the section is hidden or the row is omitted entirely. An empty tab reads
+  as an unfinished store and costs more trust than the missing content is worth.
+
+- **Spacing principle: tight within a block, generous between blocks** (see §6). Uniform
+  spacing everywhere removes visual grouping and makes the page read as disconnected.
+
+- **Section padding must adapt to content height.** A short section with desktop-scale padding
+  creates dead space and looks broken.
+
+- **The brand story is a problem statement, not decoration.** Its job is recognition — making
+  the reader realise they have a problem they never named — before any product is offered. One
+  line carries the section (the question), not the whole passage.
+
+- **Mobile is the primary surface.** Most traffic will arrive from Instagram and TikTok. Any
+  change must be checked at 375px before it's considered done.
+
+- **Emotional idea carries the brand, functional benefit carries the sale** (see §1). Every
+  page needs both — atmosphere alone is admired and not bought.
+
+- **Scroll distance from hero to product is a conversion metric.** Long story sections and
+  tall images that push the purchase decision down the page are a cost, not a style choice.
