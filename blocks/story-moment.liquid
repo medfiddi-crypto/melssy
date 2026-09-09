@@ -15,20 +15,26 @@
 {% liquid
   if block.settings.style == 'quote'
     assign quote_font = settings.type_heading_font | font_modify: 'weight', '300' | default: settings.type_heading_font
+  else
+    assign body_font = settings.type_body_font | font_modify: 'weight', '500' | default: settings.type_body_font
   endif
 %}
 
-{% if quote_font %}
-  {% style %}
+{% style %}
+  {% if quote_font %}
     {{ quote_font | font_face: font_display: 'swap' }}
-  {% endstyle %}
-{% endif %}
+  {% endif %}
+  {% if body_font %}
+    {{ body_font | font_face: font_display: 'swap' }}
+  {% endif %}
+{% endstyle %}
 
 <div
   class="story-moment story-moment--{{ block.settings.style }} story-moment--image-{{ block.settings.image_position }}"
-  {% if quote_font %}
-    style="--story-quote-weight: {{ quote_font.weight }};"
-  {% endif %}
+  style="
+    {% if quote_font %}--story-quote-weight: {{ quote_font.weight }};{% endif %}
+    {% if body_font %}--story-body-weight: {{ body_font.weight }};{% endif %}
+  "
   {{ block.shopify_attributes }}
 >
   {% if block.settings.style == 'body' and block.settings.image %}
@@ -51,11 +57,9 @@
 
   .story-moment--body .story-moment__text {
     font-family: var(--font-body--family);
+    font-weight: var(--story-body-weight);
+    font-size: 1.0625rem;
     color: var(--ink-soft);
-  }
-
-  .story-moment--quote {
-    padding: var(--space-6) 0;
   }
 
   .story-moment--quote .story-moment__text {
