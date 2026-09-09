@@ -3,7 +3,8 @@
   a single CTA. Falls back to a plain token-coloured placeholder box, sized
   to the same ratios, when no image has been picked yet. At least 70vh tall,
   content vertically centered, image beside the content on desktop and
-  above it on mobile.
+  above it on mobile. On mobile the image is additionally capped at 45vh so
+  the headline and CTA stay visible above the fold.
 {% endcomment %}
 
 <div class="hero full-width" id="hero">
@@ -35,6 +36,7 @@
   .hero__media {
     width: 100%;
     aspect-ratio: 4 / 5;
+    max-height: 45vh;
     overflow: hidden;
     background-color: var(--sand);
   }
@@ -63,7 +65,8 @@
   .hero__heading {
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight);
-    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-size: 1.75rem;
+    line-height: 1.15;
     letter-spacing: 0.02em;
     max-width: 32ch;
     margin: 0 0 var(--space-4);
@@ -71,6 +74,8 @@
 
   .hero__cta {
     display: inline-block;
+    align-self: center;
+    width: fit-content;
     padding: var(--space-2) var(--space-6);
     font-size: 0.875rem;
     letter-spacing: 0.08em;
@@ -93,10 +98,16 @@
 
     .hero__media {
       aspect-ratio: 3 / 2;
+      max-height: none;
     }
 
     .hero__content {
       padding: var(--space-7) var(--space-6);
+    }
+
+    .hero__heading {
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.1;
     }
   }
 {% endstylesheet %}
