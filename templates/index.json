@@ -12,7 +12,7 @@
           "type": "story-moment",
           "settings": {
             "style": "body",
-            "text": "<p>Chaque soir, vous prenez soin de vous. Vous hydratez votre peau. Vous prenez soin de vos cheveux. Vous appliquez vos produits. Vous faites votre routine.</p>",
+            "text": "<p>Chaque soir, votre routine beauté touche à sa fin. Ou presque.</p>",
             "image_position": "left"
           }
         },
@@ -27,7 +27,7 @@
           "type": "story-moment",
           "settings": {
             "style": "body",
-            "text": "<p>Et pendant les 7 ou 8 heures qui suivent, vos cheveux frottent contre votre oreiller, votre peau est en contact avec le tissu et votre brushing peut perdre sa forme pendant votre sommeil. C'est une chose à laquelle on ne pense presque jamais.</p>",
+            "text": "<p>Et pendant les 7 ou 8 heures qui suivent : les cheveux qui frottent, la peau au contact du tissu, le brushing qui perd sa forme. C'est une chose à laquelle on ne pense presque jamais.</p>",
             "image_position": "right"
           }
         },
