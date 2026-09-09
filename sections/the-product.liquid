@@ -1,12 +1,30 @@
 {% comment %}
-  "The product" — signature name, price (always dynamic from the referenced
-  product, never hardcoded), what's-in-the-box list, and a CTA to the
-  product page. Purely a summary/teaser: variant selection and add-to-cart
-  belong to the product page itself (CLAUDE.md §8-9), not this section.
+  "The product" — bundle reveal image, a short bridge line (styled like the
+  overlooked-hours quote blocks), signature name, price (always dynamic from
+  the referenced product, never hardcoded), what's-in-the-box list, and a
+  CTA to the product page. Purely a summary/teaser: variant selection and
+  add-to-cart belong to the product page itself (CLAUDE.md §8-9), not this
+  section.
 {% endcomment %}
 
-<div class="the-product full-width" id="the-product">
+{% liquid
+  assign bridge_font = settings.type_heading_font | font_modify: 'weight', '300' | default: settings.type_heading_font
+%}
+
+{% style %}
+  {{ bridge_font | font_face: font_display: 'swap' }}
+{% endstyle %}
+
+<div class="the-product full-width" id="the-product" style="--the-product-bridge-weight: {{ bridge_font.weight }};">
   <div class="the-product__content">
+    <div class="the-product__media">
+      {% render 'image', image: section.settings.image, class: 'the-product__image', width: 1000 %}
+    </div>
+
+    {% if section.settings.bridge_text != blank %}
+      <p class="the-product__bridge">{{ section.settings.bridge_text }}</p>
+    {% endif %}
+
     {% if section.settings.heading != blank %}
       <h2 class="the-product__heading">{{ section.settings.heading }}</h2>
     {% endif %}
@@ -48,6 +66,34 @@
 
   .the-product__content > * {
     grid-column: 2;
+  }
+
+  .the-product__media {
+    max-width: 28rem;
+    margin: 0 auto var(--space-5);
+  }
+
+  .the-product__media .image {
+    aspect-ratio: 4 / 5;
+  }
+
+  .the-product__media .image img {
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .the-product__bridge {
+    font-family: var(--font-heading--family);
+    font-weight: var(--the-product-bridge-weight);
+    font-size: 1.375rem;
+    color: var(--ink);
+    margin-bottom: var(--space-4);
+  }
+
+  @media (min-width: 750px) {
+    .the-product__bridge {
+      font-size: 1.75rem;
+    }
   }
 
   .the-product__heading {
@@ -101,6 +147,17 @@
       "type": "product",
       "id": "product",
       "label": "t:labels.product"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image"
+    },
+    {
+      "type": "text",
+      "id": "bridge_text",
+      "label": "t:labels.bridge_text",
+      "default": "Voici votre rituel."
     },
     {
       "type": "text",
