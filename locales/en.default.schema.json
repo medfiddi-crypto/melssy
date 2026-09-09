@@ -42,6 +42,7 @@
     "settings": "Settings",
     "sidebar": "Sidebar",
     "social_link": "Social link",
+    "story_moment": "Story moment",
     "text": "Text",
     "the_product": "The product",
     "the_ritual": "The ritual",
@@ -72,6 +73,7 @@
     "grid_item_width": "Grid item width",
     "heading": "Heading",
     "image": "Image",
+    "image_position": "Image position",
     "ink": "Ink",
     "ink_soft": "Ink soft",
     "input_corner_radius": "Input corner radius",
@@ -95,6 +97,7 @@
     "show_gift": "Show gift messaging",
     "show_payment_icons": "Show payment icons",
     "show_tagline": "Show tagline",
+    "style": "Style",
     "tagline": "Tagline",
     "text_style": "Text style",
     "text": "Text",
@@ -123,6 +126,10 @@
     "size": {
       "large": "Large",
       "small": "Small"
+    },
+    "style": {
+      "body": "Body",
+      "quote": "Quote"
     },
     "text_style": {
       "title": "Title",

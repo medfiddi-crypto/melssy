@@ -1,0 +1,149 @@
+{% doc %}
+  Renders one moment in the "overlooked hours" editorial story sequence
+  (CLAUDE.md §5): either a "body" paragraph — optionally paired with a 4:5
+  image, left or right on desktop, stacked on mobile — or a large centered
+  "quote" line with no image.
+
+  The quote style's weight-300 Cormorant face is fetched independently of
+  whatever weight the merchant's general heading font setting defaults to,
+  the same technique used for the header wordmark.
+
+  @example
+  {% content_for 'block', type: 'story-moment', id: 'story-moment-1' %}
+{% enddoc %}
+
+{% liquid
+  if block.settings.style == 'quote'
+    assign quote_font = settings.type_heading_font | font_modify: 'weight', '300' | default: settings.type_heading_font
+  endif
+%}
+
+{% if quote_font %}
+  {% style %}
+    {{ quote_font | font_face: font_display: 'swap' }}
+  {% endstyle %}
+{% endif %}
+
+<div
+  class="story-moment story-moment--{{ block.settings.style }} story-moment--image-{{ block.settings.image_position }}"
+  {% if quote_font %}
+    style="--story-quote-weight: {{ quote_font.weight }};"
+  {% endif %}
+  {{ block.shopify_attributes }}
+>
+  {% if block.settings.style == 'body' and block.settings.image %}
+    <div class="story-moment__media">
+      {{ block.settings.image | image_url: width: 800 | image_tag: loading: 'lazy', class: 'story-moment__image' }}
+    </div>
+  {% endif %}
+
+  <div class="story-moment__text">
+    {{ block.settings.text }}
+  </div>
+</div>
+
+{% stylesheet %}
+  .story-moment {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .story-moment--body .story-moment__text {
+    font-family: var(--font-body--family);
+    color: var(--ink-soft);
+  }
+
+  .story-moment--quote {
+    padding: var(--space-6) 0;
+  }
+
+  .story-moment--quote .story-moment__text {
+    font-family: var(--font-heading--family);
+    font-weight: var(--story-quote-weight);
+    font-size: 1.75rem;
+    color: var(--ink);
+    text-align: center;
+    max-width: 40ch;
+    margin: 0 auto;
+  }
+
+  .story-moment__media {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background-color: var(--sand);
+  }
+
+  .story-moment__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 750px) {
+    .story-moment--body.story-moment--image-left,
+    .story-moment--body.story-moment--image-right {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-6);
+    }
+
+    .story-moment--body.story-moment--image-right {
+      flex-direction: row-reverse;
+    }
+
+    .story-moment--body .story-moment__media {
+      flex: 1 1 40%;
+    }
+
+    .story-moment--body .story-moment__text {
+      flex: 1 1 60%;
+    }
+
+    .story-moment--quote .story-moment__text {
+      font-size: 2.5rem;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:general.story_moment",
+  "settings": [
+    {
+      "type": "select",
+      "id": "style",
+      "label": "t:labels.style",
+      "options": [
+        { "value": "body", "label": "t:options.style.body" },
+        { "value": "quote", "label": "t:options.style.quote" }
+      ],
+      "default": "body"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:labels.text"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:labels.image",
+      "visible_if": "{{ block.settings.style == 'body' }}"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:labels.image_position",
+      "options": [
+        { "value": "left", "label": "t:options.alignment.left" },
+        { "value": "right", "label": "t:options.alignment.right" }
+      ],
+      "default": "left",
+      "visible_if": "{{ block.settings.style == 'body' }}"
+    }
+  ],
+  "presets": [{ "name": "t:general.story_moment" }]
+}
+{% endschema %}
