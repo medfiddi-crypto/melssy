@@ -2,7 +2,8 @@
   Renders one moment in the "overlooked hours" editorial story sequence
   (CLAUDE.md §5): either a "body" paragraph — optionally paired with an
   image (3:2 on mobile, 4:5 on desktop), left or right on desktop, stacked
-  on mobile — or a large centered "quote" line with no image.
+  below the text on mobile (text leads, image follows) — or a large
+  centered "quote" line with no image.
 
   The quote style's weight-300 Cormorant face is fetched independently of
   whatever weight the merchant's general heading font setting defaults to,
@@ -56,10 +57,15 @@
   }
 
   .story-moment--body .story-moment__text {
+    order: 1;
     font-family: var(--font-body--family);
     font-weight: var(--story-body-weight);
     font-size: 1.0625rem;
     color: var(--ink-soft);
+  }
+
+  .story-moment--body .story-moment__media {
+    order: 2;
   }
 
   .story-moment--quote .story-moment__text {
@@ -86,6 +92,11 @@
   }
 
   @media (min-width: 750px) {
+    .story-moment--body .story-moment__text,
+    .story-moment--body .story-moment__media {
+      order: initial;
+    }
+
     .story-moment--body.story-moment--image-left,
     .story-moment--body.story-moment--image-right {
       flex-direction: row;

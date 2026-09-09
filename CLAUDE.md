@@ -324,11 +324,12 @@ real content exists.
 ### The overlooked hours (section 2)
 
 Built as a repeating `story-moment` block architecture, not a single text block: a "body"
-style (Inter weight 500, `--ink-soft`, optional image — 3:2 on mobile, 4:5 on desktop — left
-or right of the text on desktop, stacked above it on mobile) and a "quote" style (Cormorant
-weight 300, centred, no image). Ships with four default blocks — body / quote / body / quote —
-using verbatim §5 excerpts, alternating image position left/right for when photography exists.
-Spacing is tight within a block (image to its own text) and generous between blocks.
+style (Inter weight 500, `--ink-soft`, optional image — 3:2 on mobile, 4:5 on desktop — left or
+right of the text on desktop, stacked below it on mobile (text leads, image follows)) and a
+"quote" style (Cormorant weight 300, centred, no image). Ships with four default blocks — body
+/ quote / body / quote — using verbatim §5 excerpts, alternating image position left/right for
+when photography exists. Spacing is tight within a block (image to its own text) and generous
+between blocks.
 
 ### Benefits (section 4)
 
