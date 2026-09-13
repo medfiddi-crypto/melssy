@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f3eb;
+  --foreground: #1f2520;
+  --green: #294538;
+  --rose: #a66a63;
+  --line: #d8d0c5;
+  --section-image-ratio: 3 / 2;
+  --section-image-gutter: 1.5rem;
+  --section-image-spacing: 1.5rem;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+button, a, input { min-height: 44px; }
+button, a { transition: opacity 180ms ease, background-color 180ms ease; }
+button:hover, a:hover { opacity: .78; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+.display { font-family: var(--font-cormorant), serif; font-weight: 500; }
+.wordmark { font-family: var(--font-cormorant), serif; letter-spacing: .22em; }
+.eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.media-placeholder { background: #e8e1d6; position: relative; }
+.media-placeholder::after { content: "Photo MELSSY à venir"; color: #726b62; font-size: .7rem; left: 50%; letter-spacing: .08em; position: absolute; text-transform: uppercase; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; }
+.section-image { aspect-ratio: var(--section-image-ratio); margin: var(--section-image-spacing) var(--section-image-gutter); overflow: hidden; position: relative; }
+@media (min-width: 768px) { .section-image { margin: 0; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { animation: reveal .65s ease both; }
+  .reveal-delay { animation-delay: .15s; }
+  @keyframes reveal { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+}
+
+:root {
+  --background: #f7f3eb;
+  --foreground: #1d1d1a;
+  --rose: #b77070;
+  --green: #315044;
+  --stone: #e4ddd0;
+  --green-disabled: #7b9185;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-dm-sans), sans-serif;
+}
+
+button, a { min-height: 44px; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+.display { font-family: var(--font-cormorant), serif; }
+.wordmark { font-family: var(--font-cormorant), serif; letter-spacing: .22em; }
+.media-placeholder { background: linear-gradient(135deg, #ded5c6, #c8bca8); position: relative; overflow: hidden; }
+.media-placeholder::after { content: "Remplacer par photo MELSSY"; position: absolute; inset: auto 14px 14px; color: #fff; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }

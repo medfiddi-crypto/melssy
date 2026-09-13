@@ -1,0 +1,8 @@
+id,slug,name,price_mad,visibility,placement,description_short,media_key,status
+beauty-night-ritual,beauty-night-ritual,La Beauty Night Ritual™,449,public,home|main_nav|pdp,Le rituel satiné pour accompagner vos nuits.,hero-ritual,draft
+pillowcase-pair,paire-taies-oreiller,Paire de taies d'oreiller satinées,150,add_on,bundle_cross_sell,Une paire supplémentaire pour prolonger le rituel.,pdp-gallery-pillowcase,draft
+extra-bonnet,bonnet-satine,Bonnet satiné,100,add_on,bundle_cross_sell,Un bonnet supplémentaire pour vos soirs de rotation.,pdp-gallery-bonnet,draft
+bonnet-solo,bonnet-satine-seul,Bonnet satiné,130,public,footer_collection,Un essentiel satiné pour votre routine du soir.,solo-bonnet,draft
+pillowcase-solo,taie-oreiller-satinee,Taie d'oreiller satinée,90,public,footer_collection,Une touche de douceur pour vos nuits.,solo-pillowcase,draft
+heatless-curler-solo,boucleur-sans-chaleur,Boucleur sans chaleur,160,public,footer_collection,Pour préparer vos boucles sans chaleur.,solo-curler,draft
+scrunchies-solo,chouchous-satines,Chouchous satinés,85,public,footer_collection,Des chouchous doux pour accompagner vos gestes.,solo-scrunchies,draft

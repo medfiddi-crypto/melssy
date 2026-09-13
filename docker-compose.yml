@@ -1,0 +1,36 @@
+services:
+  database:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: melssybeauty
+      POSTGRES_USER: melssy
+      POSTGRES_PASSWORD: melssy_local_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U melssy -d melssybeauty"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - melssy-postgres:/var/lib/postgresql/data
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql://melssy:melssy_local_dev@database:5432/melssybeauty
+      CORS_ORIGINS: http://localhost:3000
+    depends_on:
+      database:
+        condition: service_healthy
+
+volumes:
+  melssy-postgres:
