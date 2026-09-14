@@ -1,8 +1,9 @@
-from contextlib import asynccontextmanager
+import asyncio
+from contextlib import asynccontextmanager, suppress
 from uuid import uuid4
 
 import structlog
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
@@ -10,15 +11,30 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.phone import MOROCCAN_MOBILE_ERROR, normalize_moroccan_phone
-from app.db.session import engine, get_session
+from app.db.session import SessionLocal, engine, get_session
 from app.models.orders import Base, Order
 from app.schemas.orders import OrderRequest, OrderResponse, UpsellRequest
 from app.services.catalog import CATALOG, OFFER
 from app.services.notifier import ManualOrderConfirmationNotifier
 from app.services.orders import apply_upsell, order_payload
 from app.services.orders import create_order as persist_order
+from app.services.webhook import deliver_pending_sheet_webhooks
 
 logger = structlog.get_logger()
+
+
+async def dispatch_sheet_webhooks() -> None:
+    try:
+        async with SessionLocal() as session:
+            await deliver_pending_sheet_webhooks(session)
+    except Exception:
+        logger.exception("sheet_webhook_dispatch_failed")
+
+
+async def sheet_webhook_retry_loop() -> None:
+    while True:
+        await dispatch_sheet_webhooks()
+        await asyncio.sleep(settings.order_webhook_retry_interval_seconds)
 
 
 @asynccontextmanager
@@ -26,7 +42,13 @@ async def lifespan(app: FastAPI):
     if settings.async_database_url.startswith("sqlite"):
         async with engine.begin() as connection:
             await connection.run_sync(Base.metadata.create_all)
-    yield
+    retry_task = asyncio.create_task(sheet_webhook_retry_loop())
+    try:
+        yield
+    finally:
+        retry_task.cancel()
+        with suppress(asyncio.CancelledError):
+            await retry_task
 
 
 settings = get_settings()
@@ -66,7 +88,10 @@ async def catalog() -> dict[str, object]:
 
 @app.post("/v1/orders", response_model=OrderResponse)
 async def create_order(
-    payload: OrderRequest, request: Request, session: AsyncSession = Depends(get_session)
+    payload: OrderRequest,
+    request: Request,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
 ) -> OrderResponse:
     if payload.website:
         raise HTTPException(400, "Demande invalide.")
@@ -87,16 +112,23 @@ async def create_order(
             503,
             "Un problème technique est survenu. Écrivez-nous sur WhatsApp pour confirmer votre commande.",
         ) from None
+    background_tasks.add_task(dispatch_sheet_webhooks)
     await ManualOrderConfirmationNotifier().notify(order.order_number)
     offer = {"product_id": OFFER["product_id"], "price": str(OFFER["price"])} if OFFER["enabled"] else None
     return OrderResponse(order_number=order.order_number, total=order.total, offer=offer)
 
 
 @app.post("/v1/orders/{order_number}/upsell")
-async def upsell(order_number: str, payload: UpsellRequest, session: AsyncSession = Depends(get_session)) -> JSONResponse:
+async def upsell(
+    order_number: str,
+    payload: UpsellRequest,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_session),
+) -> JSONResponse:
     order = await apply_upsell(session, order_number, payload.decision)
     if not order:
         raise HTTPException(404, "Commande introuvable.")
+    background_tasks.add_task(dispatch_sheet_webhooks)
     return JSONResponse({"order_number": order_number, "total": str(order.total), "status": order.upsell_decision})
 
 

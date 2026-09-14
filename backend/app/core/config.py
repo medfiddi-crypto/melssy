@@ -1,5 +1,5 @@
-from functools import lru_cache
 from decimal import Decimal
+from functools import lru_cache
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000,http://192.168.100.30:3000"
     order_webhook_url: str = ""
     order_webhook_secret: str = ""
+    order_webhook_enabled: bool = False
+    order_webhook_timeout_seconds: float = 10
+    order_webhook_max_attempts: int = 5
+    order_webhook_retry_interval_seconds: int = 60
     meta_pixel_id: str = ""
     meta_capi_access_token: str = ""
     tiktok_pixel_id: str = ""

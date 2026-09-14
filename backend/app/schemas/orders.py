@@ -23,6 +23,8 @@ class OrderRequest(BaseModel):
     items: list[CartLine] = Field(min_length=1)
     name: str = Field(min_length=2, max_length=120)
     phone: str
+    full_address: str | None = Field(default=None, max_length=500)
+    city: str | None = Field(default=None, max_length=120)
     idempotency_key: UUID
     attribution: Attribution = Field(default_factory=Attribution)
     website: str = ""

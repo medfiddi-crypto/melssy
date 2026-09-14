@@ -18,6 +18,8 @@ class Order(Base):
     idempotency_key: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), unique=True, index=True)
     customer_name: Mapped[str] = mapped_column(String(120))
     phone_e164: Mapped[str] = mapped_column(String(16), index=True)
+    full_address: Mapped[str | None] = mapped_column(String(500), nullable=True)
+    city: Mapped[str | None] = mapped_column(String(120), nullable=True)
     currency: Mapped[str] = mapped_column(String(3), default="MAD")
     subtotal: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     discount_total: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=Decimal("0.00"))
@@ -46,6 +48,17 @@ class OrderItem(Base):
 
 class TrackingOutbox(Base):
     __tablename__ = "tracking_outbox"
+
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid4)
+    event_type: Mapped[str] = mapped_column(String(64))
+    payload: Mapped[str] = mapped_column(Text)
+    attempts: Mapped[int] = mapped_column(default=0)
+    delivered_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class SheetWebhookOutbox(Base):
+    __tablename__ = "sheet_webhook_outbox"
 
     id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid4)
     event_type: Mapped[str] = mapped_column(String(64))

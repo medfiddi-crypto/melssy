@@ -16,7 +16,13 @@ function doPost(e) {
     const headers = values[0];
     const rowIndex = headers.indexOf('order_number');
     const existing = values.findIndex(function(row, index) { return index > 0 && row[rowIndex] === event.order.order_number; });
-    const row = headers.map(function(header) { return event.order[header] || event[header] || ''; });
+    const staffFields = ['call_status', 'delivery_status', 'notes'];
+    const previous = existing > 0 ? values[existing] : [];
+    const row = headers.map(function(header, index) {
+      if (staffFields.indexOf(header) !== -1 && existing > 0) return previous[index];
+      const value = event.order[header] !== undefined ? event.order[header] : event[header];
+      return typeof value === 'object' ? JSON.stringify(value) : value || '';
+    });
     if (existing > 0) sheet.getRange(existing + 1, 1, 1, row.length).setValues([row]);
     else sheet.appendRow(row);
   } finally { lock.releaseLock(); }

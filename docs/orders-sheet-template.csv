@@ -1,1 +1,1 @@
-order_number,status,created_at,updated_at,customer_name,phone_e164,currency,subtotal_mad,discount_total_mad,total_mad,items_json,upsell_product_id,source,utm_source,utm_campaign,meta_fbp,meta_fbc,tiktok_click_id,sheet_sync_status
+order_id,order_number,timestamp,customer_name,phone_e164,full_address,city,items,quantity,total,currency,payment_method,fraud_flag,call_status,delivery_status,notes,event_id,occurred_at
