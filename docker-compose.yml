@@ -4,9 +4,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: melssybeauty
-      POSTGRES_USER: melssy
-      POSTGRES_PASSWORD: melssy_local_dev
+        POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB must be set}
+        POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER must be set}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U melssy -d melssybeauty"]
       interval: 5s
@@ -26,8 +26,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://melssy:melssy_local_dev@database:5432/melssybeauty
-      CORS_ORIGINS: http://localhost:3000
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL must be set}
+      CORS_ORIGINS: ${CORS_ORIGINS:?CORS_ORIGINS must be set}
     depends_on:
       database:
         condition: service_healthy

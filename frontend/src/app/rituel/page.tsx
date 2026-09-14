@@ -418,7 +418,7 @@ export default function RitualLandingPage() {
       </section>
       <footer className="bg-[var(--foreground)] px-6 py-12 text-[#f7f3eb] md:px-16">
         <div className="text-center">
-          <span className="wordmark block translate-x-[0.02em] text-base font-medium" style={{ letterSpacing: ".08em" }}>MELSSY</span>
+          <span className="wordmark block translate-x-[0.02em] text-[var(--green)] text-base font-medium" style={{ letterSpacing: ".08em" }}>MELSSY</span>
           <p className="wordmark-descriptor text-[9px] uppercase tracking-[.16em]">Beauty Sleep Ritual</p>
         </div>
         <nav className="mt-7 grid gap-3 text-sm sm:grid-cols-3">
