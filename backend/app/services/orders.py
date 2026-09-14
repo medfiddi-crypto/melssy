@@ -78,7 +78,7 @@ async def apply_upsell(session: AsyncSession, order_number: str, decision: str) 
     if decision == "accept" and OFFER["enabled"]:
         product = CATALOG[OFFER["product_id"]]
         session.add(OrderItem(order_id=order.id, product_id=product.id, product_name=product.name, quantity=1, unit_price=OFFER["price"]))
-        order.discount_total += product.price - OFFER["price"]
+        order.subtotal += OFFER["price"]
         order.total += OFFER["price"]
     await session.flush()
     session.add(TrackingOutbox(event_type="order.updated", payload=json.dumps(order_payload(order))))

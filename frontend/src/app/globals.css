@@ -40,6 +40,8 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
   --foreground: #1d1d1a;
   --rose: #b77070;
   --green: #315044;
+  --brand-wordmark: var(--green);
+  --brand-wordmark-descriptor: #626b64;
   --stone: #e4ddd0;
   --green-disabled: #7b9185;
 }
@@ -53,6 +55,7 @@ body {
 button, a { min-height: 44px; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
 .display { font-family: var(--font-cormorant), serif; }
-.wordmark { font-family: var(--font-cormorant), serif; letter-spacing: .22em; }
+.wordmark { color: var(--brand-wordmark); font-family: var(--font-cormorant), serif; letter-spacing: .22em; }
+.wordmark-descriptor { color: var(--brand-wordmark-descriptor); }
 .media-placeholder { background: linear-gradient(135deg, #ded5c6, #c8bca8); position: relative; overflow: hidden; }
 .media-placeholder::after { content: "Remplacer par photo MELSSY"; position: absolute; inset: auto 14px 14px; color: #fff; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }

@@ -31,13 +31,15 @@ async def lifespan(app: FastAPI):
 
 settings = get_settings()
 app = FastAPI(title="MELSSY API", version="1.0.0", lifespan=lifespan)
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=settings.allowed_origins,
-    allow_credentials=False,
-    allow_methods=["GET", "POST"],
-    allow_headers=["Content-Type", "Idempotency-Key"],
-)
+cors_options: dict[str, object] = {
+    "allow_origins": settings.allowed_origins,
+    "allow_credentials": False,
+    "allow_methods": ["GET", "POST"],
+    "allow_headers": ["Content-Type", "Idempotency-Key"],
+}
+if settings.environment == "development":
+    cors_options["allow_origin_regex"] = r"^https?://(?:localhost|127\.0\.0\.1|(?:\d{1,3}\.){3}\d{1,3})(?::\d+)?$"
+app.add_middleware(CORSMiddleware, **cors_options)
 
 
 @app.middleware("http")
@@ -86,7 +88,7 @@ async def create_order(
             "Un problème technique est survenu. Écrivez-nous sur WhatsApp pour confirmer votre commande.",
         ) from None
     await ManualOrderConfirmationNotifier().notify(order.order_number)
-    offer = {"product_id": OFFER["product_id"], "price": str(OFFER["price"]), "duration_seconds": OFFER["duration_seconds"]} if OFFER["enabled"] else None
+    offer = {"product_id": OFFER["product_id"], "price": str(OFFER["price"])} if OFFER["enabled"] else None
     return OrderResponse(order_number=order.order_number, total=order.total, offer=offer)
 
 

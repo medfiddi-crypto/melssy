@@ -10,10 +10,9 @@ export const landing = {
     viewOrderForm: "Voir le formulaire",
   },
   upsell: {
-    eyebrow: "Complétez votre rituel",
-    title: "Ajoutez vos chouchous satinés.",
-    body: "Ils rejoignent votre commande en cours, dans le même colis.",
-    accept: "Oui, les ajouter",
+    title: "Une seconde paire ?",
+    body: "Une paire de taies satinées en plus, pour la chambre d'amis ou pour offrir. Ajoutée à votre commande, livrée ensemble.",
+    accept: "Oui, ajouter à ma commande",
     decline: "Non merci, continuer",
   },
   problem: {

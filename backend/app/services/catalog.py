@@ -20,7 +20,7 @@ CATALOG = {
     "scrunchies-solo": Product("scrunchies-solo", "Chouchous satinés", Decimal("85.00"), "footer"),
 }
 
-OFFER = {"enabled": True, "product_id": "scrunchies-solo", "price": Decimal("60.00"), "duration_seconds": 12}
+OFFER = {"enabled": True, "product_id": "pillowcase-pair", "price": Decimal("180.00")}
 
 
 def calculate_total(items: list[tuple[str, int]]) -> Decimal:
