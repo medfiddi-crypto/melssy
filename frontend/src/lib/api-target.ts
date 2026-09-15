@@ -7,6 +7,5 @@ export function getApiTarget(): string {
 }
 
 export function getApiTargetLogValue(): string {
-  const target = new URL(getApiTarget());
-  return `${target.protocol}//${target.host}`;
+  return getApiTarget();
 }

@@ -2,7 +2,11 @@ from decimal import Decimal
 from functools import lru_cache
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+DEFAULT_DATABASE_URL = "sqlite+aiosqlite:///./melssy-dev.db"
+DEFAULT_CORS_ORIGINS = "http://localhost:3000,http://192.168.100.30:3000"
 
 
 def normalize_database_url(value: str) -> str:
@@ -22,8 +26,8 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     environment: str = "development"
-    database_url: str = "sqlite+aiosqlite:///./melssy-dev.db"
-    cors_origins: str = "http://localhost:3000,http://192.168.100.30:3000"
+    database_url: str = DEFAULT_DATABASE_URL
+    cors_origins: str = DEFAULT_CORS_ORIGINS
     order_webhook_url: str = ""
     order_webhook_secret: str = ""
     order_webhook_enabled: bool = False
@@ -37,6 +41,19 @@ class Settings(BaseSettings):
     tracking_test_event_code: str = ""
     standard_shipping_fee: Decimal = Decimal("35.00")
     free_shipping_threshold: Decimal = Decimal("0.00")
+
+    @model_validator(mode="after")
+    def require_production_database_settings(self) -> "Settings":
+        if self.environment != "production":
+            return self
+        required_fields = {
+            "database_url": ("DATABASE_URL", DEFAULT_DATABASE_URL),
+            "cors_origins": ("CORS_ORIGINS", DEFAULT_CORS_ORIGINS),
+        }
+        missing = [name for field, (name, default) in required_fields.items() if not getattr(self, field).strip() or getattr(self, field) == default]
+        if missing:
+            raise ValueError(f"Missing required environment variable(s) in production: {', '.join(missing)}")
+        return self
 
     @property
     def async_database_url(self) -> str:
