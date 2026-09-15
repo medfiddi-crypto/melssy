@@ -3,6 +3,8 @@ const required = (value: string | undefined, name: string) => {
   return value;
 };
 
+const optional = (value: string | undefined) => value || null;
+
 export const storefront = {
   whatsappNumber: () => required(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER, "NEXT_PUBLIC_WHATSAPP_NUMBER"),
   confirmationPhone: () => required(process.env.NEXT_PUBLIC_CONFIRMATION_PHONE, "NEXT_PUBLIC_CONFIRMATION_PHONE"),
@@ -11,4 +13,17 @@ export const storefront = {
   deliveryWindow: () => required(process.env.NEXT_PUBLIC_DELIVERY_WINDOW, "NEXT_PUBLIC_DELIVERY_WINDOW"),
   shippingFee: () => Number(required(process.env.NEXT_PUBLIC_STANDARD_SHIPPING_FEE, "NEXT_PUBLIC_STANDARD_SHIPPING_FEE")),
   freeGiftName: () => required(process.env.NEXT_PUBLIC_FREE_GIFT_NAME, "NEXT_PUBLIC_FREE_GIFT_NAME"),
+} as const;
+
+export const optionalStorefront = {
+  whatsappNumber: () => optional(process.env.NEXT_PUBLIC_WHATSAPP_NUMBER),
+  confirmationPhone: () => optional(process.env.NEXT_PUBLIC_CONFIRMATION_PHONE),
+  confirmationWindow: () => optional(process.env.NEXT_PUBLIC_CONFIRMATION_WINDOW),
+  dispatchWindow: () => optional(process.env.NEXT_PUBLIC_DISPATCH_WINDOW),
+  deliveryWindow: () => optional(process.env.NEXT_PUBLIC_DELIVERY_WINDOW),
+  shippingFee: () => {
+    const value = optional(process.env.NEXT_PUBLIC_STANDARD_SHIPPING_FEE);
+    return value === null || Number.isNaN(Number(value)) ? null : Number(value);
+  },
+  freeGiftName: () => optional(process.env.NEXT_PUBLIC_FREE_GIFT_NAME),
 } as const;
