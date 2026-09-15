@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { use, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { catalog, formatPrice } from "@/content/catalog";
 import { landing } from "@/content/landing.fr";
@@ -11,8 +12,10 @@ export default function OfferPage({
   params,
 }: Pick<PageProps<"/offre/[orderNumber]">, "params">) {
   const { orderNumber } = use(params);
+  const searchParams = useSearchParams();
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(searchParams.get("offre") === "indisponible" ? "Votre choix n'a pas pu être enregistré. Veuillez réessayer." : "");
+  const [decision, setDecision] = useState<"accept" | "decline" | "">("");
   const product = catalog["pillowcase-pair"];
 
   const respond = async (decision: "accept" | "decline") => {
@@ -42,13 +45,24 @@ export default function OfferPage({
         <p className="display mt-8 text-5xl">{formatPrice(product.price)}</p>
         <form action={`/offre/${encodeURIComponent(orderNumber)}/decision`} method="post" onSubmit={(event) => {
           event.preventDefault();
-          const decision = new FormData(event.currentTarget).get("decision");
-          if (decision === "accept" || decision === "decline") void respond(decision);
+          const submitter = event.nativeEvent.submitter as HTMLButtonElement | null;
+          const submittedDecision = decision || submitter?.value || String(new FormData(event.currentTarget).get("decision") ?? "");
+          if (submittedDecision === "decline") {
+            // No upsell call for decline; go straight to the thank-you page.
+            // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+            location.href = `/merci/${encodeURIComponent(orderNumber)}`;
+            return;
+          }
+          if (submittedDecision === "accept") {
+            void respond("accept");
+            return;
+          }
+          setError("Une décision valide est requise. Veuillez réessayer.");
         }}>
-          <button name="decision" value="accept" disabled={saving} className="mt-8 w-full bg-[var(--green)] px-6 py-4 text-white disabled:opacity-50">
+          <button type="submit" name="decision" value="accept" onClick={() => setDecision("accept")} disabled={saving} className="mt-8 w-full bg-[var(--green)] px-6 py-4 text-white disabled:opacity-50">
             {saving ? "Enregistrement..." : landing.upsell.accept}
           </button>
-          <button name="decision" value="decline" disabled={saving} className="mt-5 text-sm underline underline-offset-4">
+          <button type="submit" name="decision" value="decline" onClick={() => setDecision("decline")} disabled={saving} className="mt-5 text-sm underline underline-offset-4">
             {landing.upsell.decline}
           </button>
         </form>
