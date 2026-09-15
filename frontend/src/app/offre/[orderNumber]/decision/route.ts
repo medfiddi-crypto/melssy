@@ -16,7 +16,11 @@ export async function POST(request: Request, context: RouteContext) {
   const decision = String(formData.get("decision") ?? "");
   const thankYouUrl = `/merci/${encodeURIComponent(orderNumber)}`;
 
-  if (decision !== "accept" && decision !== "decline") {
+  if (decision === "decline") {
+    return redirect(thankYouUrl);
+  }
+
+  if (decision !== "accept") {
     return redirect(thankYouUrl);
   }
 

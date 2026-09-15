@@ -1,40 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { use, useState } from "react";
+import { use } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { catalog, formatPrice } from "@/content/catalog";
 import { landing } from "@/content/landing.fr";
-import { safeUUID } from "@/lib/analytics";
 
 export default function OfferPage({
   params,
 }: Pick<PageProps<"/offre/[orderNumber]">, "params">) {
   const { orderNumber } = use(params);
   const searchParams = useSearchParams();
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState(searchParams.get("offre") === "indisponible" ? "Votre choix n'a pas pu être enregistré. Veuillez réessayer." : "");
-  const [decision, setDecision] = useState<"accept" | "decline" | "">("");
+  const error = searchParams.get("offre") === "indisponible" ? "Votre choix n'a pas pu être enregistré. Veuillez réessayer." : "";
   const product = catalog["pillowcase-pair"];
-
-  const respond = async (decision: "accept" | "decline") => {
-    setSaving(true);
-    setError("");
-    try {
-      const response = await fetch(`/api/v1/orders/${encodeURIComponent(orderNumber)}/upsell`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ decision, idempotency_key: safeUUID() }),
-      });
-      if (!response.ok) throw new Error("upsell_failed");
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      location.href = `/merci/${encodeURIComponent(orderNumber)}`;
-    } catch {
-      setError("Votre choix n'a pas pu être enregistré. Veuillez réessayer.");
-      setSaving(false);
-    }
-  };
 
   return (
     <main className="min-h-screen bg-[#eadbd1] px-6 py-10 md:px-16">
@@ -43,26 +22,11 @@ export default function OfferPage({
         <h1 className="display mt-4 text-5xl leading-none">{landing.upsell.title}</h1>
         <p className="mt-6 leading-7">{landing.upsell.body}</p>
         <p className="display mt-8 text-5xl">{formatPrice(product.price)}</p>
-        <form action={`/offre/${encodeURIComponent(orderNumber)}/decision`} method="post" onSubmit={(event) => {
-          event.preventDefault();
-          const submitter = event.nativeEvent.submitter as HTMLButtonElement | null;
-          const submittedDecision = decision || submitter?.value || String(new FormData(event.currentTarget).get("decision") ?? "");
-          if (submittedDecision === "decline") {
-            // No upsell call for decline; go straight to the thank-you page.
-            // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-            location.href = `/merci/${encodeURIComponent(orderNumber)}`;
-            return;
-          }
-          if (submittedDecision === "accept") {
-            void respond("accept");
-            return;
-          }
-          setError("Une décision valide est requise. Veuillez réessayer.");
-        }}>
-          <button type="submit" name="decision" value="accept" onClick={() => setDecision("accept")} disabled={saving} className="mt-8 w-full bg-[var(--green)] px-6 py-4 text-white disabled:opacity-50">
-            {saving ? "Enregistrement..." : landing.upsell.accept}
+        <form action={`/offre/${encodeURIComponent(orderNumber)}/decision`} method="post">
+          <button type="submit" name="decision" value="accept" className="mt-8 w-full bg-[var(--green)] px-6 py-4 text-white">
+            {landing.upsell.accept}
           </button>
-          <button type="submit" name="decision" value="decline" onClick={() => setDecision("decline")} disabled={saving} className="mt-5 text-sm underline underline-offset-4">
+          <button type="submit" name="decision" value="decline" className="mt-5 text-sm underline underline-offset-4">
             {landing.upsell.decline}
           </button>
         </form>
