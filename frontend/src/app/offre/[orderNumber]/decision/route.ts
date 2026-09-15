@@ -2,8 +2,6 @@ export const dynamic = "force-dynamic";
 
 import { getApiTarget } from "@/lib/api-target";
 
-const apiTarget = getApiTarget();
-
 type RouteContext = {
   params: Promise<{ orderNumber: string }>;
 };
@@ -28,7 +26,7 @@ export async function POST(request: Request, context: RouteContext) {
 
   try {
     const response = await fetch(
-      new URL(`/v1/orders/${encodeURIComponent(orderNumber)}/upsell`, apiTarget),
+      new URL(`/v1/orders/${encodeURIComponent(orderNumber)}/upsell`, getApiTarget()),
       {
         method: "POST",
         headers: { "content-type": "application/json" },

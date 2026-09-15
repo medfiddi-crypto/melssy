@@ -2,8 +2,6 @@ export const dynamic = "force-dynamic";
 
 import { getApiTarget } from "@/lib/api-target";
 
-const apiTarget = getApiTarget();
-
 function normalizeMoroccanMobile(value: string) {
   let phone = value.replace(/[\s-]/g, "");
   if (phone.startsWith("00212")) phone = `+212${phone.slice(5)}`;
@@ -26,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const response = await fetch(new URL("/v1/orders", apiTarget), {
+    const response = await fetch(new URL("/v1/orders", getApiTarget()), {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({

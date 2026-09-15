@@ -2,15 +2,13 @@ export const dynamic = "force-dynamic";
 
 import { getApiTarget } from "@/lib/api-target";
 
-const apiTarget = getApiTarget();
-
 type RouteContext = {
   params: Promise<{ path: string[] }>;
 };
 
 async function proxy(request: Request, context: RouteContext) {
   const { path } = await context.params;
-  const url = new URL(`/v1/${path.join("/")}`, apiTarget);
+  const url = new URL(`/v1/${path.join("/")}`, getApiTarget());
   url.search = new URL(request.url).search;
 
   const headers = new Headers();
