@@ -11,8 +11,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.phone import MOROCCAN_MOBILE_ERROR, normalize_moroccan_phone
-from app.db.session import SessionLocal, engine, get_session
-from app.models.orders import Base, Order
+from app.db.session import SessionLocal, get_session
+from app.models.orders import Order
 from app.schemas.orders import OrderRequest, OrderResponse, UpsellRequest
 from app.services.catalog import CATALOG, OFFER
 from app.services.notifier import ManualOrderConfirmationNotifier
@@ -39,9 +39,11 @@ async def sheet_webhook_retry_loop() -> None:
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if settings.async_database_url.startswith("sqlite"):
-        async with engine.begin() as connection:
-            await connection.run_sync(Base.metadata.create_all)
+    logger.info(
+        "backend_startup",
+        database_backend=settings.database_backend,
+        database_host=settings.database_host,
+    )
     retry_task = asyncio.create_task(sheet_webhook_retry_loop())
     try:
         yield

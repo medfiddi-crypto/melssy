@@ -66,7 +66,7 @@ export default function Home() {
     const result: { order_number: string; offer: { duration_seconds: number } | null } = await response.json();
     emitCommerceEvent("Purchase", cart, total);
     setCheckout(false);
-    router.push(`/merci/${encodeURIComponent(result.order_number)}`);
+    router.push(`${result.offer ? "/offre/" : "/merci/"}${encodeURIComponent(result.order_number)}`);
   };
   if (order && seconds === 0) return <main className="grid min-h-screen place-items-center px-6 text-center"><div><p className="text-sm text-[var(--green)]">Paiement à la livraison</p><h1 className="display mt-3 text-5xl">Merci, {name.split(" ")[0]}.<br />Votre rituel est réservé.</h1><p className="mt-5">Votre numéro de commande est {order}. Notre équipe vous confirmera les prochaines étapes.</p></div></main>;
   return <main>

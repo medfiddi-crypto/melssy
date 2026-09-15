@@ -31,3 +31,7 @@ __pycache__/
 ## Release files
 release
 *.zip
+
+# Private EasyPanel deployment configuration
+easypanel-frontend.txt
+easypanel-backend.txt

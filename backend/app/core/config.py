@@ -43,6 +43,15 @@ class Settings(BaseSettings):
         return normalize_database_url(self.database_url)
 
     @property
+    def database_backend(self) -> str:
+        return urlsplit(self.async_database_url).scheme.split("+", 1)[0]
+
+    @property
+    def database_host(self) -> str:
+        parts = urlsplit(self.async_database_url)
+        return parts.hostname or "local"
+
+    @property
     def allowed_origins(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 

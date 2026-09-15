@@ -1,7 +1,8 @@
 import { ThankYouPage } from "@/components/thank-you-page";
 import type { ConfirmedOrder } from "@/components/thank-you-page";
+import { getApiTarget } from "@/lib/api-target";
 
-const apiTarget = process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8000";
+const apiTarget = getApiTarget();
 
 export default async function LegacyThankYouPage({ params }: PageProps<"/merci/[orderNumber]">) {
   const { orderNumber } = await params;

@@ -1,6 +1,8 @@
 export const dynamic = "force-dynamic";
 
-const apiTarget = process.env.API_PROXY_TARGET ?? "http://127.0.0.1:8000";
+import { getApiTarget } from "@/lib/api-target";
+
+const apiTarget = getApiTarget();
 
 type RouteContext = {
   params: Promise<{ path: string[] }>;
