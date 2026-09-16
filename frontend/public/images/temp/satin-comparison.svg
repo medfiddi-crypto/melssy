@@ -1,0 +1,42 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="leftBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e2d5c4"/>
+      <stop offset="1" stop-color="#cbbca7"/>
+    </linearGradient>
+    <linearGradient id="rightBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0e6dc"/>
+      <stop offset="1" stop-color="#d9c9b6"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.62"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <pattern id="cottonGrid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M0 0H44V44" stroke="#7c6f5d" stroke-opacity="0.36" stroke-width="2"/>
+      <path d="M0 22H44M22 0V44" stroke="#5f5444" stroke-opacity="0.18" stroke-width="1.5"/>
+    </pattern>
+    <pattern id="satinLines" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(18)">
+      <path d="M0 16H60" stroke="#ffffff" stroke-opacity="0.26" stroke-width="4"/>
+      <path d="M0 34H60" stroke="#8a7762" stroke-opacity="0.16" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="800" fill="#efe5d7"/>
+  <clipPath id="leftClip"><rect x="0" y="0" width="600" height="800" rx="0"/></clipPath>
+  <clipPath id="rightClip"><rect x="600" y="0" width="600" height="800" rx="0"/></clipPath>
+  <g clip-path="url(#leftClip)">
+    <rect width="600" height="800" fill="url(#leftBg)"/>
+    <rect width="600" height="800" fill="url(#cottonGrid)"/>
+    <path d="M0 90C150 120 230 45 330 60C430 75 520 145 600 120V0H0V90Z" fill="#fff6ea" fill-opacity="0.16"/>
+    <path d="M0 650C160 600 260 700 380 680C500 660 550 560 600 580V800H0V650Z" fill="#7b6a57" fill-opacity="0.14"/>
+  </g>
+  <g clip-path="url(#rightClip)">
+    <rect x="600" width="600" height="800" fill="url(#rightBg)"/>
+    <rect x="600" width="600" height="800" fill="url(#satinLines)"/>
+    <path d="M600 120C725 85 825 115 930 100C1030 86 1115 40 1200 62V0H600V120Z" fill="url(#sheen)"/>
+    <path d="M600 610C735 560 840 605 945 595C1060 582 1125 500 1200 520V800H600V610Z" fill="#ffffff" fill-opacity="0.14"/>
+  </g>
+  <rect x="589" y="0" width="22" height="800" fill="#f7f3eb"/>
+  <path d="M589 0L611 0L593 800L589 800Z" fill="#cbbca7"/>
+  <path d="M589 0L611 0L607 800L589 800Z" fill="#ffffff" fill-opacity="0.18"/>
+</svg>

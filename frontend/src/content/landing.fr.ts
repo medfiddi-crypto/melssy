@@ -23,6 +23,27 @@ export const landing = {
     title: "Plus de douceur là où vos cheveux se reposent.",
     body: "Une surface satinée accompagne les longueurs avec moins de friction qu'une surface plus rugueuse. Un geste simple pour une routine du soir plus attentionnée.",
   },
+  satinComparison: {
+    eyebrow: "Pourquoi le satin",
+    headline: "Votre oreiller travaille contre vos cheveux pendant huit heures.",
+    subheadline: "Et le matin, vous accusez vos cheveux.",
+    blocks: [
+      {
+        lead: "Le coton absorbe. C'est son métier.",
+        text: "On fabrique les serviettes en coton pour une raison : il boit l'eau. Votre taie d'oreiller fait exactement la même chose, huit heures par nuit. L'huile que vous appliquez le soir, l'hydratation de votre masque, votre crème de nuit — une partie finit dans le tissu. Le satin, lui, n'absorbe rien. Ce que vous mettez sur vos cheveux y reste.",
+      },
+      {
+        lead: "Vous bougez 20 à 40 fois par nuit.",
+        text: "Pas une fois. Des dizaines. À chaque mouvement, vos cheveux sont traînés sur la trame du coton — une grille rugueuse, invisible à l'œil nu. Le satin n'a pas de trame en relief : les cheveux glissent au lieu d'accrocher.",
+      },
+      {
+        lead: "Les frisottis ne viennent pas de nulle part.",
+        text: "Votre cheveu est couvert d'écailles superposées, comme des tuiles. La friction les soulève. Des écailles soulevées, c'est précisément ça, un frisottis. Voilà pourquoi vos cheveux sont souvent moins beaux au réveil qu'au moment où vous vous êtes couchée.",
+      },
+    ],
+    closing: "Ce n'est pas de la soie. C'est du satin 100% polyester, choisi précisément parce qu'il n'absorbe pas et qu'il supporte le lavage. Nous préférons vous le dire.",
+    imageAlt: "Comparaison macro entre une trame de coton et une trame de satin, côte à côte",
+  },
   comparison: {
     title: "Un rituel pensé, pas un essentiel choisi au hasard.",
     melssy: "Des pièces coordonnées, pensées pour se compléter dans votre soirée.",
