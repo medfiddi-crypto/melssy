@@ -7,5 +7,111 @@ import { media } from "@/content/media";
 const ritual = catalog["beauty-night-ritual"];
 
 export default function RitualPage() {
-  return <main className="min-h-screen"><header className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--line)] bg-[var(--background)]/95 px-6 py-4 backdrop-blur md:px-16"><Link href="/" className="text-sm underline underline-offset-4">Accueil</Link><Link href="/" className="wordmark text-lg">MELSSY</Link><span className="text-sm">{formatPrice(ritual.price)}</span></header><section className="grid md:grid-cols-2"><div className="px-6 py-14 md:px-16 md:py-24"><p className="eyebrow text-[var(--rose)]">La Beauty Night Ritual™</p><h1 className="display mt-5 max-w-xl text-5xl leading-[.95] md:text-7xl">La nuit ne devrait pas effacer ce que vous avez pris le temps de faire.</h1><p className="mt-7 max-w-lg leading-7">Après une journée entre coiffure, chaleur et rythme soutenu, vos cheveux méritent un dernier geste. Ce rituel réunit l&apos;essentiel pour vous coucher avec intention et vous réveiller avec plus de douceur.</p><div className="mt-9 flex items-end justify-between border-y border-[var(--line)] py-5"><div><p className="text-sm text-black/65">Le rituel complet</p><p className="display mt-1 text-3xl">{formatPrice(ritual.price)}</p></div><p className="max-w-32 text-right text-xs leading-5">Paiement à la livraison partout au Maroc</p></div><Link href="/#rituel" className="mt-8 inline-block w-full bg-[var(--green)] px-6 py-4 text-center text-white md:w-auto">Complétez votre rituel</Link></div><div className="relative aspect-[4/5] bg-[#e8e1d6]"><Image src={media.heroRitual.src} alt={media.heroRitual.alt} fill priority sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" /></div></section><section className="grid border-y border-[var(--line)] md:grid-cols-[1fr_1.2fr]"><div className="bg-[#eadbd1] px-6 py-14 md:px-16"><p className="eyebrow text-[var(--rose)]">Dans votre rituel</p><h2 className="display mt-4 text-4xl">Tout ce dont vos nuits ont besoin.</h2></div><div className="grid gap-0 sm:grid-cols-2">{["Deux taies satinées", "Un bonnet satiné", "Deux chouchous satinés", "Un boucleur sans chaleur offert"].map((item, index) => <div key={item} className="border-b border-l border-[var(--line)] px-6 py-8"><span className="text-sm text-[var(--rose)]">0{index + 1}</span><p className="mt-8 text-lg">{item}</p></div>)}</div></section><section className="grid md:grid-cols-2"><div className="relative aspect-[4/5]"><Image src={media.ritualDetail.src} alt={media.ritualDetail.alt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" /></div><div className="px-6 py-16 md:px-16 md:py-24"><p className="eyebrow text-[var(--green)]">Le geste qui compte</p><h2 className="display mt-4 text-4xl md:text-5xl">Moins de friction. Plus de douceur au réveil.</h2><p className="mt-6 max-w-md leading-7">Le satin accompagne vos longueurs avec une surface plus douce pendant les heures où vous ne pouvez rien contrôler. Un petit rituel pour faciliter le matin, sans promesse irréaliste.</p><Link href="/#rituel" className="mt-8 inline-block text-sm underline underline-offset-4">Complétez votre rituel</Link></div></section></main>;
+  return (
+    <main className="min-h-screen">
+      <header className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--line)] bg-[var(--background)]/95 px-6 py-4 backdrop-blur md:px-16">
+        <Link href="/rituel" className="text-sm underline underline-offset-4">
+          Accueil
+        </Link>
+        <Link href="/rituel" className="wordmark text-lg">
+          MELSSY
+        </Link>
+        <span className="text-sm">{formatPrice(ritual.price)}</span>
+      </header>
+      <section className="grid md:grid-cols-2">
+        <div className="px-6 py-14 md:px-16 md:py-24">
+          <p className="eyebrow text-[var(--rose)]">La Beauty Night Ritual™</p>
+          <h1 className="display mt-5 max-w-xl text-5xl leading-[.95] md:text-7xl">
+            La nuit ne devrait pas effacer ce que vous avez pris le temps de
+            faire.
+          </h1>
+          <p className="mt-7 max-w-lg leading-7">
+            Après une journée entre coiffure, chaleur et rythme soutenu, vos
+            cheveux méritent un dernier geste. Ce rituel réunit l&apos;essentiel
+            pour vous coucher avec intention et vous réveiller avec plus de
+            douceur.
+          </p>
+          <div className="mt-9 flex items-end justify-between border-y border-[var(--line)] py-5">
+            <div>
+              <p className="text-sm text-black/65">Le rituel complet</p>
+              <p className="display mt-1 text-3xl">
+                {formatPrice(ritual.price)}
+              </p>
+            </div>
+            <p className="max-w-32 text-right text-xs leading-5">
+              Paiement à la livraison partout au Maroc
+            </p>
+          </div>
+          <Link
+            href="/rituel#commande"
+            className="mt-8 inline-block w-full bg-[var(--green)] px-6 py-4 text-center text-white md:w-auto"
+          >
+            Complétez votre rituel
+          </Link>
+        </div>
+        <div className="relative aspect-[4/5] bg-[#e8e1d6]">
+          <Image
+            src={media.heroRitual.src}
+            alt={media.heroRitual.alt}
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
+      </section>
+      <section className="grid border-y border-[var(--line)] md:grid-cols-[1fr_1.2fr]">
+        <div className="bg-[#eadbd1] px-6 py-14 md:px-16">
+          <p className="eyebrow text-[var(--rose)]">Dans votre rituel</p>
+          <h2 className="display mt-4 text-4xl">
+            Tout ce dont vos nuits ont besoin.
+          </h2>
+        </div>
+        <div className="grid gap-0 sm:grid-cols-2">
+          {[
+            "Deux taies satinées",
+            "Un bonnet satiné",
+            "Deux chouchous satinés",
+            "Un boucleur sans chaleur offert",
+          ].map((item, index) => (
+            <div
+              key={item}
+              className="border-b border-l border-[var(--line)] px-6 py-8"
+            >
+              <span className="text-sm text-[var(--rose)]">0{index + 1}</span>
+              <p className="mt-8 text-lg">{item}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+      <section className="grid md:grid-cols-2">
+        <div className="relative aspect-[4/5]">
+          <Image
+            src={media.ritualDetail.src}
+            alt={media.ritualDetail.alt}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
+        <div className="px-6 py-16 md:px-16 md:py-24">
+          <p className="eyebrow text-[var(--green)]">Le geste qui compte</p>
+          <h2 className="display mt-4 text-4xl md:text-5xl">
+            Moins de friction. Plus de douceur au réveil.
+          </h2>
+          <p className="mt-6 max-w-md leading-7">
+            Le satin accompagne vos longueurs avec une surface plus douce
+            pendant les heures où vous ne pouvez rien contrôler. Un petit rituel
+            pour faciliter le matin, sans promesse irréaliste.
+          </p>
+          <Link
+            href="/rituel#commande"
+            className="mt-8 inline-block text-sm underline underline-offset-4"
+          >
+            Complétez votre rituel
+          </Link>
+        </div>
+      </section>
+    </main>
+  );
 }

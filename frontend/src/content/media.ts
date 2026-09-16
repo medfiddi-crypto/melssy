@@ -1,7 +1,7 @@
 export const media = {
+  landingHero: { src: "/images/hero-pictures.webp", alt: "Coffret MELSSY ouvert avec deux taies d'oreiller en satin, un bonnet, deux chouchous et un boucleur sans chaleur", ratio: "300:301", intendedShot: "Coffret MELSSY ouvert avec les cinq pièces", temporary: false },
   heroRitual: { src: "/images/temp/satin-picture-2.webp", alt: "Les cinq pièces du coffret Beauty Night Ritual", ratio: "4:5", intendedShot: "PHOTO HERO — LES 5 PIÈCES DU COFFRET", temporary: true },
   storyNight: { src: "/images/temp/hero-rituel.svg", alt: "Femme dans une chambre apaisée", ratio: "4:5", intendedShot: "Femme reposant dans la lumière du matin", temporary: true },
-  satinBenefit: { src: "/images/temp/satin-picture-2.webp", alt: "Femme dans son rituel du soir", ratio: "3:2", intendedShot: "Portrait lifestyle dans le rituel du soir", temporary: true },
   satinComparison: { src: "/images/temp/satin-comparison.svg", alt: "Comparaison macro entre une trame de coton et une trame de satin, côte à côte", ratio: "3:2", intendedShot: "Macro comparison shot of cotton weave versus satin weave", temporary: true },
   ritualDetail: { src: "/images/temp/satin-picture.webp", alt: "Coffret complet MELSSY", ratio: "3:2", intendedShot: "Les cinq pièces du coffret ensemble", temporary: true },
   thankYouPackage: { src: "/images/temp/satin-picture.webp", alt: "Coffret ouvert avec les cinq pièces du rituel", ratio: "3:2", intendedShot: "PHOTO — COFFRET OUVERT, LES 5 PIÈCES", temporary: true },

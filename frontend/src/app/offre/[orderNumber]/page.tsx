@@ -17,7 +17,7 @@ export default function OfferPage({
 
   return (
     <main className="min-h-screen bg-[#eadbd1] px-6 py-10 md:px-16">
-      <header className="mx-auto flex max-w-xl justify-center"><Link href="/" className="wordmark text-xl">MELSSY</Link></header>
+      <header className="mx-auto flex max-w-xl justify-center"><Link href="/rituel" className="wordmark text-xl">MELSSY</Link></header>
       <section className="mx-auto max-w-xl py-16 text-center">
         <h1 className="display mt-4 text-5xl leading-none">{landing.upsell.title}</h1>
         <p className="mt-6 leading-7">{landing.upsell.body}</p>

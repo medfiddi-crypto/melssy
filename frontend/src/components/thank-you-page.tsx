@@ -81,11 +81,11 @@ export function ThankYouPage({ orderNumber, initialOrder = null }: { orderNumber
       </figure>
 
       <section className="mt-10 grid grid-cols-3 gap-3 border-y border-[var(--line)] py-6"><Trust icon={MapPin} title="Livraison" detail="partout au Maroc" /><Trust icon={ShieldCheck} title="Échange" detail="sous 7 jours" /><Trust icon={Headphones} title="Équipe" detail="basée au Maroc" /></section>
-      <div className="py-9 text-center"><Link href="/" className="text-sm underline underline-offset-4">Retour à l&apos;accueil</Link></div>
+      <div className="py-9 text-center"><Link href="/rituel" className="text-sm underline underline-offset-4">Retour à l&apos;accueil</Link></div>
     </section>
   </main>;
 }
 
-function Header() { return <header className="mx-auto flex max-w-xl flex-col items-center"><Link href="/" className="wordmark text-2xl">MELSSY</Link><span className="wordmark-descriptor mt-1 text-[9px] font-medium tracking-[0.18em]">BEAUTY SLEEP RITUAL</span></header>; }
+function Header() { return <header className="mx-auto flex max-w-xl flex-col items-center"><Link href="/rituel" className="wordmark text-2xl">MELSSY</Link><span className="wordmark-descriptor mt-1 text-[9px] font-medium tracking-[0.18em]">BEAUTY SLEEP RITUAL</span></header>; }
 function Step({ icon: Icon, children }: { icon: typeof Phone; children: React.ReactNode }) { return <div className="flex gap-3 py-4 text-sm leading-6"><Icon className="mt-0.5 shrink-0 text-[var(--rose)]" size={18} /> <p>{children}</p></div>; }
 function Trust({ icon: Icon, title, detail }: { icon: typeof MapPin; title: string; detail: string }) { return <div className="text-center"><Icon className="mx-auto text-[var(--green)]" size={18} /><p className="mt-2 text-xs font-medium leading-4">{title}</p><p className="mt-1 text-[10px] leading-4 text-black/60">{detail}</p></div>; }

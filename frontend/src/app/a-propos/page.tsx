@@ -3,8 +3,174 @@ import Link from "next/link";
 
 import { media } from "@/content/media";
 
-const steps = [["Préparer", "Glissez vos cheveux dans le bonnet satiné pour les accompagner pendant la nuit."], ["Protéger", "Posez votre tête sur les taies satinées, pensées pour une surface plus douce."], ["Créer", "Enroulez vos longueurs autour du boucleur sans chaleur avant de vous coucher."], ["Relâcher", "Utilisez les chouchous satinés pour attacher sans brusquer votre coiffure."]] as const;
+const steps = [
+  [
+    "Préparer",
+    "Glissez vos cheveux dans le bonnet satiné pour les accompagner pendant la nuit.",
+  ],
+  [
+    "Protéger",
+    "Posez votre tête sur les taies satinées, pensées pour une surface plus douce.",
+  ],
+  [
+    "Créer",
+    "Enroulez vos longueurs autour du boucleur sans chaleur avant de vous coucher.",
+  ],
+  [
+    "Relâcher",
+    "Utilisez les chouchous satinés pour attacher sans brusquer votre coiffure.",
+  ],
+] as const;
 
 export default function AboutPage() {
-	return <main className="min-h-screen"><header className="flex items-center justify-between border-b border-[var(--line)] px-6 py-4 md:px-16"><Link href="/" className="text-sm underline underline-offset-4">Accueil</Link><Link href="/" className="wordmark text-lg">MELSSY</Link><Link href="/rituel" className="text-sm underline underline-offset-4">Le rituel</Link></header><section className="px-6 py-16 md:px-16 md:py-24"><p className="eyebrow text-[var(--rose)]">Notre histoire</p><h1 className="display mt-4 max-w-3xl text-5xl leading-none md:text-7xl">Il y a des heures que personne ne voit, mais que vos cheveux ressentent.</h1><p className="mt-7 max-w-xl leading-7">Quand la journée se termine, le soin ne devrait pas s&apos;arrêter. C&apos;est dans ce moment calme, entre le démaquillage et le sommeil, que MELSSY trouve sa place.</p></section><section className="grid border-y border-[var(--line)] md:grid-cols-2"><div className="px-6 py-16 md:px-16 md:py-24"><p className="eyebrow text-[var(--green)]">L&apos;observation</p><h2 className="display mt-4 text-4xl leading-none md:text-5xl">Huit heures que la routine du matin ne peut pas rattraper.</h2><p className="mt-6 max-w-md leading-7">Pendant la nuit, les frottements, l&apos;humidité et l&apos;oreiller peuvent laisser les longueurs plus froissées, les boucles aplaties et la coiffure moins nette. Se préparer le matin demande déjà assez d&apos;énergie.</p><p className="mt-4 max-w-md leading-7">MELSSY propose un autre réflexe: offrir à vos cheveux une attention continue, même pendant les heures où vous vous reposez.</p></div><div className="relative aspect-[4/5]"><Image src={media.storyNight.src} alt={media.storyNight.alt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" /></div></section><section className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16 md:py-24"><p className="eyebrow text-[#dfaaa1]">Pourquoi MELSSY existe</p><h2 className="display mt-4 max-w-3xl text-5xl leading-none md:text-6xl">Une beauté marocaine qui continue pendant le sommeil.</h2><p className="mt-7 max-w-2xl leading-7 text-[#f7f3eb]/80">Nous imaginons des essentiels de nuit pour les femmes qui veulent retrouver leurs cheveux avec plus de douceur le matin. Des pièces pensées avec intention, pour que votre rituel du soir reste à la hauteur de vos exigences.</p></section><section className="px-6 py-16 md:px-16 md:py-24"><p className="eyebrow text-[var(--rose)]">La Beauty Night Ritual™</p><h2 className="display mt-4 max-w-2xl text-5xl leading-none">Quatre gestes simples avant de fermer les yeux.</h2><div className="mt-10 grid border-t border-[var(--line)] sm:grid-cols-2">{steps.map(([title, copy], index) => <article key={title} className="border-b border-r border-[var(--line)] px-5 py-8"><p className="eyebrow text-[var(--rose)]">0{index + 1}</p><h3 className="display mt-8 text-3xl">{title}</h3><p className="mt-3 max-w-sm text-sm leading-6">{copy}</p></article>)}</div></section><section className="grid border-y border-[var(--line)] md:grid-cols-[1.1fr_.9fr]"><div className="order-2 px-6 py-16 md:order-1 md:px-16 md:py-24"><p className="eyebrow text-[var(--green)]">Notre promesse</p><h2 className="display mt-4 text-4xl leading-none md:text-5xl">Le soin dans les détails, la clarté dans le reste.</h2><div className="mt-8 grid gap-5 text-sm leading-6"><p><strong>Conception attentive.</strong> Des essentiels pensés pour trouver naturellement leur place dans votre soirée.</p><p><strong>Des matériaux choisis avec exigence.</strong> Les informations matière et entretien sont précisées avant toute commande.</p><p><strong>Un prix clair.</strong> Aucun faux prix barré, aucune promesse exagérée.</p><p><strong>Paiement à la livraison.</strong> Votre commande est confirmée avec notre équipe avant sa livraison partout au Maroc.</p></div></div><div className="relative order-1 aspect-[4/5] md:order-2"><Image src={media.ritualDetail.src} alt={media.ritualDetail.alt} fill sizes="(max-width: 768px) 100vw, 45vw" className="object-cover" /></div></section><section className="px-6 py-16 md:px-16 md:py-24"><p className="eyebrow text-[var(--rose)]">Un mot de la fondatrice</p><div className="mt-6 grid gap-8 border-y border-[var(--line)] py-8 md:grid-cols-[180px_1fr]"><div className="media-placeholder aspect-square w-full max-w-44" aria-label="Photo de la fondatrice à ajouter" /><div><h2 className="display text-4xl">À compléter.</h2><p className="mt-5 max-w-xl leading-7">Cet espace est réservé à votre note personnelle: ce qui vous a menée à créer MELSSY, et ce que vous souhaitez transmettre à chaque femme qui choisit ce rituel.</p><p className="display mt-8 text-2xl">Signature à ajouter</p></div></div></section><section className="bg-[#eadbd1] px-6 py-16 text-center md:px-16 md:py-24"><p className="eyebrow text-[var(--rose)]">Votre soirée commence ici</p><h2 className="display mx-auto mt-4 max-w-2xl text-5xl leading-none">Offrez à votre nuit le soin qu&apos;elle mérite.</h2><Link href="/rituel" className="mt-8 inline-block bg-[var(--green)] px-6 py-4 text-white">Découvrir la Beauty Night Ritual™</Link></section></main>;
+  return (
+    <main className="min-h-screen">
+      <header className="flex items-center justify-between border-b border-[var(--line)] px-6 py-4 md:px-16">
+        <Link href="/rituel" className="text-sm underline underline-offset-4">
+          Accueil
+        </Link>
+        <Link href="/rituel" className="wordmark text-lg">
+          MELSSY
+        </Link>
+        <Link href="/rituel" className="text-sm underline underline-offset-4">
+          Le rituel
+        </Link>
+      </header>
+      <section className="px-6 py-16 md:px-16 md:py-24">
+        <p className="eyebrow text-[var(--rose)]">Notre histoire</p>
+        <h1 className="display mt-4 max-w-3xl text-5xl leading-none md:text-7xl">
+          Il y a des heures que personne ne voit, mais que vos cheveux
+          ressentent.
+        </h1>
+        <p className="mt-7 max-w-xl leading-7">
+          Quand la journée se termine, le soin ne devrait pas s&apos;arrêter.
+          C&apos;est dans ce moment calme, entre le démaquillage et le sommeil,
+          que MELSSY trouve sa place.
+        </p>
+      </section>
+      <section className="grid border-y border-[var(--line)] md:grid-cols-2">
+        <div className="px-6 py-16 md:px-16 md:py-24">
+          <p className="eyebrow text-[var(--green)]">L&apos;observation</p>
+          <h2 className="display mt-4 text-4xl leading-none md:text-5xl">
+            Huit heures que la routine du matin ne peut pas rattraper.
+          </h2>
+          <p className="mt-6 max-w-md leading-7">
+            Pendant la nuit, les frottements, l&apos;humidité et l&apos;oreiller
+            peuvent laisser les longueurs plus froissées, les boucles aplaties
+            et la coiffure moins nette. Se préparer le matin demande déjà assez
+            d&apos;énergie.
+          </p>
+          <p className="mt-4 max-w-md leading-7">
+            MELSSY propose un autre réflexe: offrir à vos cheveux une attention
+            continue, même pendant les heures où vous vous reposez.
+          </p>
+        </div>
+        <div className="relative aspect-[4/5]">
+          <Image
+            src={media.storyNight.src}
+            alt={media.storyNight.alt}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+          />
+        </div>
+      </section>
+      <section className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16 md:py-24">
+        <p className="eyebrow text-[#dfaaa1]">Pourquoi MELSSY existe</p>
+        <h2 className="display mt-4 max-w-3xl text-5xl leading-none md:text-6xl">
+          Une beauté marocaine qui continue pendant le sommeil.
+        </h2>
+        <p className="mt-7 max-w-2xl leading-7 text-[#f7f3eb]/80">
+          Nous imaginons des essentiels de nuit pour les femmes qui veulent
+          retrouver leurs cheveux avec plus de douceur le matin. Des pièces
+          pensées avec intention, pour que votre rituel du soir reste à la
+          hauteur de vos exigences.
+        </p>
+      </section>
+      <section className="px-6 py-16 md:px-16 md:py-24">
+        <p className="eyebrow text-[var(--rose)]">La Beauty Night Ritual™</p>
+        <h2 className="display mt-4 max-w-2xl text-5xl leading-none">
+          Quatre gestes simples avant de fermer les yeux.
+        </h2>
+        <div className="mt-10 grid border-t border-[var(--line)] sm:grid-cols-2">
+          {steps.map(([title, copy], index) => (
+            <article
+              key={title}
+              className="border-b border-r border-[var(--line)] px-5 py-8"
+            >
+              <p className="eyebrow text-[var(--rose)]">0{index + 1}</p>
+              <h3 className="display mt-8 text-3xl">{title}</h3>
+              <p className="mt-3 max-w-sm text-sm leading-6">{copy}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <section className="grid border-y border-[var(--line)] md:grid-cols-[1.1fr_.9fr]">
+        <div className="order-2 px-6 py-16 md:order-1 md:px-16 md:py-24">
+          <p className="eyebrow text-[var(--green)]">Notre promesse</p>
+          <h2 className="display mt-4 text-4xl leading-none md:text-5xl">
+            Le soin dans les détails, la clarté dans le reste.
+          </h2>
+          <div className="mt-8 grid gap-5 text-sm leading-6">
+            <p>
+              <strong>Conception attentive.</strong> Des essentiels pensés pour
+              trouver naturellement leur place dans votre soirée.
+            </p>
+            <p>
+              <strong>Des matériaux choisis avec exigence.</strong> Les
+              informations matière et entretien sont précisées avant toute
+              commande.
+            </p>
+            <p>
+              <strong>Un prix clair.</strong> Aucun faux prix barré, aucune
+              promesse exagérée.
+            </p>
+            <p>
+              <strong>Paiement à la livraison.</strong> Votre commande est
+              confirmée avec notre équipe avant sa livraison partout au Maroc.
+            </p>
+          </div>
+        </div>
+        <div className="relative order-1 aspect-[4/5] md:order-2">
+          <Image
+            src={media.ritualDetail.src}
+            alt={media.ritualDetail.alt}
+            fill
+            sizes="(max-width: 768px) 100vw, 45vw"
+            className="object-cover"
+          />
+        </div>
+      </section>
+      <section className="px-6 py-16 md:px-16 md:py-24">
+        <p className="eyebrow text-[var(--rose)]">Un mot de la fondatrice</p>
+        <div className="mt-6 grid gap-8 border-y border-[var(--line)] py-8 md:grid-cols-[180px_1fr]">
+          <div
+            className="media-placeholder aspect-square w-full max-w-44"
+            aria-label="Photo de la fondatrice à ajouter"
+          />
+          <div>
+            <h2 className="display text-4xl">À compléter.</h2>
+            <p className="mt-5 max-w-xl leading-7">
+              Cet espace est réservé à votre note personnelle: ce qui vous a
+              menée à créer MELSSY, et ce que vous souhaitez transmettre à
+              chaque femme qui choisit ce rituel.
+            </p>
+            <p className="display mt-8 text-2xl">Signature à ajouter</p>
+          </div>
+        </div>
+      </section>
+      <section className="bg-[#eadbd1] px-6 py-16 text-center md:px-16 md:py-24">
+        <p className="eyebrow text-[var(--rose)]">Votre soirée commence ici</p>
+        <h2 className="display mx-auto mt-4 max-w-2xl text-5xl leading-none">
+          Offrez à votre nuit le soin qu&apos;elle mérite.
+        </h2>
+        <Link
+          href="/rituel"
+          className="mt-8 inline-block bg-[var(--green)] px-6 py-4 text-white"
+        >
+          Découvrir la Beauty Night Ritual™
+        </Link>
+      </section>
+    </main>
+  );
 }

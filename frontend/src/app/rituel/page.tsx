@@ -14,10 +14,6 @@ import { SectionImage } from "@/components/section-image";
 import { UgcCarousel } from "@/components/ugc-carousel";
 
 const ritual = catalog["beauty-night-ritual"];
-const ritualHero = {
-  headline: "Vos cheveux, protégés toute la nuit",
-  body: "Un coffret complet en satin — taies, bonnet et chouchous — pour limiter les frottements pendant votre sommeil. Livré partout au Maroc, payé à la livraison.",
-};
 const collectionProducts = [
   ["bonnet-solo", media.collectionBonnet],
   ["pillowcase-solo", media.collectionPillowcase],
@@ -165,7 +161,7 @@ export default function RitualLandingPage() {
       location.href = destination;
     } catch (error) {
       console.error("MELSSY order submission failed", { url: "/api/v1/orders", error });
-      setError("Votre commande n'a pas pu être enregistrée. Veuillez réessayer.");
+      setError(landing.order.error);
       setSubmitting(false);
     }
   };
@@ -184,7 +180,7 @@ export default function RitualLandingPage() {
         className="scroll-mt-20 grid gap-4"
       >
       <label htmlFor={`name-${suffix}`} className="text-sm font-medium">
-        Nom complet
+        {landing.order.nameLabel}
         <input
           id={`name-${suffix}`}
           name="full_name"
@@ -198,10 +194,10 @@ export default function RitualLandingPage() {
           className="mt-2 w-full border border-[#b9a497] bg-[#faf8f5] px-4 py-3 outline-none focus:border-[var(--rose)] focus:ring-1 focus:ring-[var(--rose)]"
           required
         />
-        {touched.name && name.trim().length < 2 && <span id={`name-error-${suffix}`} className="mt-2 block text-sm text-red-800">Saisissez votre nom complet.</span>}
+        {touched.name && name.trim().length < 2 && <span id={`name-error-${suffix}`} className="mt-2 block text-sm text-red-800">{landing.order.nameError}</span>}
       </label>
       <label htmlFor={`phone-${suffix}`} className="text-sm font-medium">
-        Téléphone
+        {landing.order.phoneLabel}
         <input
           id={`phone-${suffix}`}
           name="phone"
@@ -212,7 +208,7 @@ export default function RitualLandingPage() {
           type="tel"
           autoComplete="tel"
           inputMode="numeric"
-          placeholder="06 00 00 00 00"
+          placeholder={landing.order.phonePlaceholder}
           aria-invalid={touched.phone && !normalizeMoroccanMobile(phone)}
           aria-describedby={`phone-error-${suffix}`}
           className="mt-2 w-full border border-[#b9a497] bg-[#faf8f5] px-4 py-3 outline-none focus:border-[var(--rose)] focus:ring-1 focus:ring-[var(--rose)]"
@@ -220,20 +216,20 @@ export default function RitualLandingPage() {
         />
         {touched.phone && !normalizeMoroccanMobile(phone) && (
           <span id={`phone-error-${suffix}`} className="mt-2 block text-sm text-red-800">
-            Saisissez un numéro mobile marocain valide commençant par 06 ou 07.
+            {landing.order.phoneError}
           </span>
         )}
       </label>
       {error && <p role="alert" className="text-sm text-red-800">{error}</p>}
       <p className="text-center text-sm leading-6 text-black/65">
-        Un rituel complet, un paiement à la livraison, une confirmation avec notre équipe.
+        {landing.order.reassurance}
       </p>
       <button
         type="submit"
         disabled={submitting}
         className="relative z-40 w-full bg-[var(--green)] px-6 py-4 text-white disabled:bg-[#9aa79f] disabled:text-white disabled:opacity-100"
       >
-        {submitting ? "Enregistrement..." : `${landing.ctas.completeRitual} · ${formatPrice(total)}`}
+        {submitting ? landing.order.submitting : `${landing.ctas.completeRitual} · ${formatPrice(total)}`}
       </button>
       </div>
     </form>
@@ -248,16 +244,16 @@ export default function RitualLandingPage() {
       <header
         className={`fixed inset-x-0 top-0 z-20 flex justify-center border-b border-[#b9a497]/45 px-5 transition-[height,background-color,box-shadow] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "h-14 bg-[var(--background)]/90 shadow-[0_2px_8px_rgba(31,37,32,0.06)] backdrop-blur" : "h-[86px] bg-[var(--background)]"}`}
       >
-        <Link href="/" className="block translate-x-[0.02em] self-center text-center">
-          <span className={`wordmark block font-medium transition-[font-size] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "text-lg" : "text-xl"}`} style={{ letterSpacing: ".08em" }}>MELSSY</span>
-          <span className={`wordmark-descriptor block overflow-hidden text-[9px] uppercase tracking-[.16em] transition-[max-height,opacity] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "max-h-0 opacity-0" : "max-h-4 opacity-100"}`}>Beauty Sleep Ritual</span>
+        <Link href="/rituel" className="block translate-x-[0.02em] self-center text-center">
+          <span className={`wordmark block font-medium transition-[font-size] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "text-lg" : "text-xl"}`} style={{ letterSpacing: ".08em" }}>{landing.masthead.brand}</span>
+          <span className={`wordmark-descriptor block overflow-hidden text-[9px] uppercase tracking-[.16em] transition-[max-height,opacity] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "max-h-0 opacity-0" : "max-h-4 opacity-100"}`}>{landing.footer.descriptor}</span>
         </Link>
       </header>
       <section ref={setHeroSection} className="grid md:grid-cols-2">
         <div className="relative h-[50dvh] w-full md:order-2 md:h-auto md:aspect-[300/301]">
           <Image
-            src="/images/hero-pictures.webp"
-            alt="Coffret MELSSY ouvert avec deux taies d'oreiller en satin, un bonnet, deux chouchous et un boucleur sans chaleur"
+            src={media.landingHero.src}
+            alt={media.landingHero.alt}
             width={1200}
             height={1204}
             priority
@@ -267,11 +263,11 @@ export default function RitualLandingPage() {
         </div>
         <div className="px-6 py-4 md:order-1 md:px-16 md:py-24">
           <h1 className="display text-4xl leading-[.98] md:text-7xl">
-            {ritualHero.headline}
+            {landing.hero.headline}
           </h1>
-          <p className="mt-3 max-w-lg leading-6">{ritualHero.body}</p>
+          <p className="mt-3 max-w-lg leading-6">{landing.hero.body}</p>
           <p className="mt-3 text-sm text-black/65">
-            {formatPrice(ritual.price)} · paiement à la livraison
+            {formatPrice(ritual.price)} · {landing.hero.priceCaption}
           </p>
         </div>
       </section>
@@ -281,7 +277,7 @@ export default function RitualLandingPage() {
       >
         <div className="mx-auto max-w-xl">
           <div className="border border-[var(--line)] bg-white/50 p-5 md:p-6">
-            <p className="text-sm font-medium">Coffret Beauty Night Ritual</p>
+            <p className="text-sm font-medium">{landing.order.productLabel}</p>
             <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">
               {ritual.contents}
             </p>
@@ -295,7 +291,7 @@ export default function RitualLandingPage() {
         </div>
       </section>
       <section id="commande-final" className="px-6 py-16 md:px-16 md:py-24">
-        <p className="eyebrow text-[var(--rose)]">Le problème</p>
+        <p className="eyebrow text-[var(--rose)]">{landing.problem.eyebrow}</p>
         <h2 className="display mt-4 max-w-3xl text-5xl leading-none">
           {landing.problem.title}
         </h2>
@@ -303,44 +299,42 @@ export default function RitualLandingPage() {
       </section>
       <section className="grid border-y border-[var(--line)] md:grid-cols-[.9fr_1.1fr]">
         <div className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16">
-          <p className="eyebrow text-[#dfaaa1]">Dans la boîte</p>
+          <p className="eyebrow text-[#dfaaa1]">{landing.bundle.eyebrow}</p>
           <h2 className="display mt-4 text-4xl leading-none">
-            Le rituel complet, prêt pour ce soir.
+            {landing.bundle.title}
           </h2>
           <p className="mt-6 text-sm leading-6 text-[#f7f3eb]/80">
-            Deux taies satinées, un bonnet satiné, deux chouchous satinés et un
-            boucleur sans chaleur offert.
+            {landing.bundle.body}
           </p>
         </div>
         <SectionImage src={media.ritualDetail.src} alt={media.ritualDetail.alt} sizes="(max-width: 768px) calc(100vw - 48px), 45vw" />
       </section>
       <section className="grid md:grid-cols-2">
         <div className="px-6 py-16 md:order-2 md:px-16 md:py-24">
-          <p className="eyebrow text-[var(--green)]">Pourquoi le satin</p>
+          <p className="eyebrow text-[var(--green)]">{landing.satinComparison.eyebrow}</p>
           <h2 className="display mt-4 text-5xl leading-none">
-            {landing.satin.title}
+            {landing.satinComparison.headline}
           </h2>
-          <p className="mt-6 max-w-lg leading-7">{landing.satin.body}</p>
+          <p className="mt-6 max-w-lg leading-7">{landing.satinComparison.subheadline}</p>
+          <div className="mt-8 space-y-6">
+            {landing.satinComparison.blocks.map((block) => <div key={block.lead}><p className="font-medium leading-6">{block.lead}</p><p className="mt-2 leading-7 text-black/75">{block.text}</p></div>)}
+          </div>
+          <p className="mt-8 border-t border-[var(--line)] pt-5 text-sm leading-6 text-black/70">{landing.satinComparison.closing}</p>
         </div>
         <div className="md:order-1">
-          <SectionImage src={media.satinBenefit.src} alt={media.satinBenefit.alt} sizes="(max-width: 768px) calc(100vw - 48px), 40vw" />
+          <SectionImage src={media.satinComparison.src} alt={landing.satinComparison.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 40vw" />
         </div>
       </section>
       <section className="px-6 py-16 md:px-16">
-        <p className="eyebrow text-[var(--rose)]">Le rituel</p>
+        <p className="eyebrow text-[var(--rose)]">{landing.ritual.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
-          Un geste qui suit votre soirée.
+          {landing.ritual.title}
         </h2>
         <div className="mt-10 divide-y border-y border-[var(--line)]">
-          {[
-            { step: "Attachez avec douceur", image: media.stepScrunchie },
-            { step: "Préparez vos boucles", image: media.stepCurler },
-            { step: "Enveloppez vos longueurs", image: media.stepBonnet },
-            { step: "Posez-vous, simplement", image: media.stepPillowcase },
-          ].map(({ step, image }, index) => (
-            <div key={step} className="flex items-center gap-5 py-5">
+          {[media.stepScrunchie, media.stepCurler, media.stepBonnet, media.stepPillowcase].map((image, index) => (
+            <div key={landing.ritual.steps[index]} className="flex items-center gap-5 py-5">
               <div className="relative aspect-square w-20 shrink-0 overflow-hidden md:w-[96px]"><Image src={image.src} alt={image.alt} fill sizes="96px" className="object-cover" /></div>
-              <div><p className="eyebrow text-[var(--rose)]">0{index + 1}</p><p className="mt-2 text-lg">{step}</p></div>
+              <div><p className="eyebrow text-[var(--rose)]">0{index + 1}</p><p className="mt-2 text-lg">{landing.ritual.steps[index]}</p></div>
             </div>
           ))}
         </div>
@@ -351,7 +345,7 @@ export default function RitualLandingPage() {
         <UgcCarousel cards={landing.preview.ugcCards.map((card, index) => ({ ...card, poster: media.ugc[index].src, alt: media.ugc[index].alt }))} onOrder={scrollToForm} ctaLabel={landing.ctas.completeRitual} />
       </section>}
       {showReviews && <section className="bg-[#eadbd1] px-6 py-16 text-center md:px-16">
-        <p className="eyebrow text-[var(--rose)]">{landing.preview.eyebrow}</p>
+        <p className="eyebrow text-[var(--green)]">{landing.comparison.eyebrow}</p>
         <h2 className="display mt-4 text-4xl leading-none">{landing.preview.reviewsTitle}</h2>
         <p className="mx-auto mt-5 max-w-xl text-sm leading-6">{landing.preview.reviewsBody}</p>
       </section>}
@@ -362,19 +356,19 @@ export default function RitualLandingPage() {
         </h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <div className="border border-[var(--green)] bg-[var(--green)] p-6 text-[#f7f3eb]">
-            <p className="eyebrow text-[#dfaaa1]">MELSSY</p>
+            <p className="eyebrow text-[#dfaaa1]">{landing.comparison.melssyLabel}</p>
             <p className="mt-5 leading-7">{landing.comparison.melssy}</p>
           </div>
           <div className="border border-[var(--line)] p-6">
-            <p className="eyebrow text-[var(--rose)]">Générique</p>
+            <p className="eyebrow text-[var(--rose)]">{landing.comparison.genericLabel}</p>
             <p className="mt-5 leading-7">{landing.comparison.generic}</p>
           </div>
         </div>
       </section>
       <section className="bg-[#eadbd1] px-6 py-16 md:px-16">
-        <p className="eyebrow text-[var(--rose)]">Questions fréquentes</p>
+        <p className="eyebrow text-[var(--rose)]">{landing.faqSection.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
-          Avant de commander.
+          {landing.faqSection.title}
         </h2>
         <div className="mt-8 divide-y divide-[var(--line)] border-y border-[var(--line)]">
           {landing.faq.map(([question, answer]) => (
@@ -389,9 +383,9 @@ export default function RitualLandingPage() {
       </section>
       <section className="px-6 py-16 md:px-16 md:py-24">
         <div className="mx-auto max-w-xl text-center">
-          <p className="eyebrow text-[var(--rose)]">La Beauty Night Ritual™</p>
+          <p className="eyebrow text-[var(--rose)]">{landing.finalOrder.eyebrow}</p>
           <h2 className="display mt-4 text-5xl leading-none">
-            Le dernier geste de votre journée.
+            {landing.finalOrder.title}
           </h2>
           <p className="display mt-6 text-3xl">{formatPrice(ritual.price)}</p>
           {form("final")}
@@ -418,8 +412,8 @@ export default function RitualLandingPage() {
       </section>
       <footer className="bg-[var(--foreground)] px-6 py-12 text-[#f7f3eb] md:px-16">
         <div className="text-center">
-          <span className="wordmark block translate-x-[0.02em] text-[var(--green)] text-base font-medium" style={{ letterSpacing: ".08em" }}>MELSSY</span>
-          <p className="wordmark-descriptor text-[9px] uppercase tracking-[.16em]">Beauty Sleep Ritual</p>
+          <span className="wordmark block translate-x-[0.02em] text-[var(--green)] text-base font-medium" style={{ letterSpacing: ".08em" }}>{landing.masthead.brand}</span>
+          <p className="wordmark-descriptor text-[9px] uppercase tracking-[.16em]">{landing.footer.descriptor}</p>
         </div>
         <nav className="mt-7 grid gap-3 text-sm sm:grid-cols-3">
           <Link href="/a-propos">Notre histoire</Link>
