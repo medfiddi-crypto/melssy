@@ -1,6 +1,9 @@
 export const dynamic = "force-dynamic";
 
 import { getApiTarget } from "@/lib/api-target";
+import { landing } from "@/content/landing.fr";
+
+const addonWhitelist = new Set<string>(landing.addons.items);
 
 function normalizeMoroccanMobile(value: string) {
   let phone = value.replace(/[\s-]/g, "");
@@ -23,6 +26,11 @@ export async function POST(request: Request) {
     return redirect("/rituel?commande=invalide");
   }
 
+  const addonItems = [...new Set(formData.getAll("addons").map(String))]
+    .filter((id) => addonWhitelist.has(id))
+    .map((id) => ({ product_id: id, quantity: 1 }));
+  const items = [{ product_id: "beauty-night-ritual", quantity: 1 }, ...addonItems];
+
   try {
     const response = await fetch(new URL("/v1/orders", getApiTarget()), {
       method: "POST",
@@ -31,16 +39,15 @@ export async function POST(request: Request) {
         name,
         phone,
         idempotency_key: crypto.randomUUID(),
-        items: [{ product_id: "beauty-night-ritual", quantity: 1 }],
+        items,
       }),
       cache: "no-store",
       signal: AbortSignal.timeout(10_000),
     });
     if (!response.ok) throw new Error(`order_failed_status_${response.status}`);
 
-    const order = (await response.json()) as { order_number: string; offer: unknown };
-    const destination = order.offer ? "/offre/" : "/merci/";
-    return redirect(`${destination}${encodeURIComponent(order.order_number)}`);
+    const order = (await response.json()) as { order_number: string };
+    return redirect(`/merci/${encodeURIComponent(order.order_number)}`);
   } catch (error) {
     console.error("MELSSY form checkout failed", { error });
     return redirect("/rituel?commande=indisponible");

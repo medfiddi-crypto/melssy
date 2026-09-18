@@ -8,6 +8,7 @@ import type { CSSProperties } from "react";
 import { catalog, formatPrice } from "@/content/catalog";
 import { landing } from "@/content/landing.fr";
 import { media } from "@/content/media";
+import { optionalStorefront } from "@/content/storefront";
 import { emitCommerceEvent, safeUUID } from "@/lib/analytics";
 import { Carousel } from "@/components/carousel";
 import { SectionImage } from "@/components/section-image";
@@ -25,6 +26,12 @@ const previewEmpty =
   process.env.NEXT_PUBLIC_PREVIEW_EMPTY === "true";
 const showUgc = previewEmpty && landing.sectionOrder.includes("ugc");
 const showReviews = previewEmpty && landing.sectionOrder.includes("reviews");
+const separateValue = landing.valueStack.items.reduce(
+  (sum, item) => sum + catalog[item.productId].price,
+  0,
+);
+const deliveryTime = landing.trust.deliveryTime;
+const confirmationWindow = optionalStorefront.confirmationWindow();
 const normalizeMoroccanMobile = (value: string) => {
   let phone = value.replace(/[\s-]/g, "");
   if (phone.startsWith("00212")) phone = `+212${phone.slice(5)}`;
@@ -36,6 +43,7 @@ const normalizeMoroccanMobile = (value: string) => {
 export default function RitualLandingPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({ name: false, phone: false });
@@ -47,7 +55,11 @@ export default function RitualLandingPage() {
   const [stickyCtaVisible, setStickyCtaVisible] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(0);
   const [tapTarget, setTapTarget] = useState("");
-  const total = ritual.price;
+  const toggleAddon = (id: string) =>
+    setSelectedAddons((current) => ({ ...current, [id]: !current[id] }));
+  const selectedAddonIds = landing.addons.items.filter((id) => selectedAddons[id]);
+  const addonsTotal = selectedAddonIds.reduce((sum, id) => sum + catalog[id].price, 0);
+  const total = ritual.price + addonsTotal;
   useEffect(() => {
     const updateViewportHeight = () => {
       setViewportHeight(window.visualViewport?.height ?? window.innerHeight);
@@ -108,6 +120,10 @@ export default function RitualLandingPage() {
   const scrollToForm = () => {
     document.getElementById("commande-fields")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+  const handleHeroCta = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    scrollToForm();
+  };
   const order = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setTouched({ name: true, phone: true });
@@ -120,6 +136,10 @@ export default function RitualLandingPage() {
       const attribution = new URLSearchParams(window.location.search);
       const controller = new AbortController();
       const timeout = window.setTimeout(() => controller.abort(), 10_000);
+      const items = [
+        { product_id: "beauty-night-ritual", quantity: 1 },
+        ...selectedAddonIds.map((id) => ({ product_id: id, quantity: 1 })),
+      ];
       const response = await fetch(
         orderUrl,
         {
@@ -130,7 +150,7 @@ export default function RitualLandingPage() {
             name: name.trim(),
             phone: normalizedPhone,
             idempotency_key: safeUUID(),
-            items: [{ product_id: "beauty-night-ritual", quantity: 1 }],
+            items,
             attribution: {
               utm_source: attribution.get("utm_source"),
               utm_campaign: attribution.get("utm_campaign"),
@@ -142,19 +162,9 @@ export default function RitualLandingPage() {
       );
       window.clearTimeout(timeout);
       if (!response.ok) throw new Error(`order_failed_status_${response.status}`);
-      const result: {
-        order_number: string;
-        offer: { product_id: string } | null;
-      } = await response.json();
-      console.info("MELSSY order saved", { orderUrl, orderNumber: result.order_number, hasOffer: Boolean(result.offer) });
-      void emitCommerceEvent("Purchase", ["beauty-night-ritual"], total);
-      if (result.offer) {
-        const destination = `/offre/${encodeURIComponent(result.order_number)}`;
-        console.info("MELSSY navigating after order", { destination });
-        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-        location.href = destination;
-        return;
-      }
+      const result: { order_number: string } = await response.json();
+      console.info("MELSSY order saved", { orderUrl, orderNumber: result.order_number });
+      void emitCommerceEvent("Purchase", ["beauty-night-ritual", ...selectedAddonIds], total);
       const destination = `/merci/${encodeURIComponent(result.order_number)}`;
       console.info("MELSSY navigating after order", { destination });
       // eslint-disable-next-line @next/next/no-location-assign-relative-destination
@@ -221,6 +231,32 @@ export default function RitualLandingPage() {
         )}
       </label>
       {error && <p role="alert" className="text-sm text-red-800">{error}</p>}
+      {landing.addons.items.length > 0 && (
+        <fieldset className="grid gap-3 border-t border-[var(--line)] pt-4">
+          <legend className="text-sm font-medium">{landing.addons.title}</legend>
+          <p className="text-xs text-black/55">{landing.addons.hint}</p>
+          {landing.addons.items.map((id) => (
+            <label key={`${id}-${suffix}`} className="flex items-start gap-3 border border-[var(--line)] bg-[#faf8f5] px-4 py-3">
+              <input
+                type="checkbox"
+                name="addons"
+                value={id}
+                checked={Boolean(selectedAddons[id])}
+                onChange={() => toggleAddon(id)}
+                className="mt-1 h-4 w-4 shrink-0 accent-[var(--green)]"
+              />
+              <span className="flex-1">
+                <span className="block text-sm font-medium">{catalog[id].name}</span>
+                <span className="block text-xs text-black/60">{catalog[id].description}</span>
+              </span>
+              <span className="shrink-0 text-sm">{landing.addons.pricePrefix} {formatPrice(catalog[id].price)}</span>
+            </label>
+          ))}
+        </fieldset>
+      )}
+      <p className="text-center text-xs leading-5 text-[var(--green)]">
+        {formatPrice(ritual.price)} · {landing.trust.freeDelivery} · {landing.trust.cod}
+      </p>
       <p className="text-center text-sm leading-6 text-black/65">
         {landing.order.reassurance}
       </p>
@@ -262,14 +298,75 @@ export default function RitualLandingPage() {
           />
         </div>
         <div className="px-6 py-4 md:order-1 md:px-16 md:py-24">
-          <h1 className="display text-4xl leading-[.98] md:text-7xl">
+          <p className="eyebrow text-[var(--rose)]">{landing.hero.eyebrow}</p>
+          <h1 className="display mt-3 text-4xl leading-[.98] md:text-7xl">
             {landing.hero.headline}
           </h1>
           <p className="mt-3 max-w-lg leading-6">{landing.hero.body}</p>
-          <p className="mt-3 text-sm text-black/65">
-            {formatPrice(ritual.price)} · {landing.hero.priceCaption}
+          <p className="mt-4 text-sm font-medium">
+            {formatPrice(ritual.price)} · {landing.trust.freeDelivery} · {landing.trust.cod}
           </p>
+          <a
+            href="#commande-fields"
+            onClick={handleHeroCta}
+            className="mt-6 inline-block w-full bg-[var(--green)] px-6 py-4 text-center text-white sm:w-auto"
+          >
+            {landing.hero.cta}
+          </a>
         </div>
+      </section>
+      <section className="border-b border-[var(--line)] bg-[#eadbd1]/40 px-6 py-4 md:px-16">
+        <ul className="mx-auto grid max-w-3xl gap-2 text-center text-xs sm:grid-cols-3 sm:text-sm">
+          <li>{landing.trust.freeDelivery}</li>
+          <li>{landing.trust.codLong}</li>
+          <li>{confirmationWindow ? `${landing.trust.confirm} (${confirmationWindow})` : landing.trust.confirm}</li>
+        </ul>
+      </section>
+      <section className="px-6 py-16 md:px-16 md:py-24">
+        <p className="eyebrow text-[var(--rose)]">{landing.problem.eyebrow}</p>
+        <h2 className="display mt-4 max-w-3xl text-5xl leading-none">
+          {landing.problem.title}
+        </h2>
+        <p className="mt-6 max-w-xl leading-7">{landing.problem.body}</p>
+      </section>
+      <section className="grid border-y border-[var(--line)] md:grid-cols-[1.1fr_.9fr]">
+        <div className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16">
+          <p className="eyebrow text-[#dfaaa1]">{landing.valueStack.eyebrow}</p>
+          <h2 className="display mt-4 text-4xl leading-none">
+            {landing.valueStack.title}
+          </h2>
+          <p className="mt-4 text-sm leading-6 text-[#f7f3eb]/80">
+            {landing.valueStack.body}
+          </p>
+          <ul className="mt-8 divide-y divide-[#f7f3eb]/20 border-y border-[#f7f3eb]/20">
+            {landing.valueStack.items.map((item) => (
+              <li key={item.productId} className="flex items-center justify-between gap-4 py-3 text-sm">
+                <span>{item.label}</span>
+                <span className="flex items-center gap-2">
+                  {Boolean((item as { gift?: boolean }).gift) && (
+                    <span className="text-[10px] uppercase tracking-[.1em] text-[#dfaaa1]">{landing.valueStack.giftBadge}</span>
+                  )}
+                  <span>{formatPrice(catalog[item.productId].price)}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6 space-y-1 text-sm">
+            <div className="flex justify-between text-[#f7f3eb]/70">
+              <span>{landing.valueStack.separateLabel}</span>
+              <span>{formatPrice(separateValue)}</span>
+            </div>
+            <div className="flex justify-between text-lg font-medium">
+              <span>{landing.valueStack.coffretLabel}</span>
+              <span>{formatPrice(ritual.price)}</span>
+            </div>
+            <div className="flex justify-between text-[#dfaaa1]">
+              <span>{landing.valueStack.savingsLabel}</span>
+              <span>{formatPrice(separateValue - ritual.price)}</span>
+            </div>
+          </div>
+        </div>
+        <SectionImage src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 45vw" />
       </section>
       <section
         id="commande"
@@ -289,25 +386,6 @@ export default function RitualLandingPage() {
             </div>
           </div>
         </div>
-      </section>
-      <section id="commande-final" className="px-6 py-16 md:px-16 md:py-24">
-        <p className="eyebrow text-[var(--rose)]">{landing.problem.eyebrow}</p>
-        <h2 className="display mt-4 max-w-3xl text-5xl leading-none">
-          {landing.problem.title}
-        </h2>
-        <p className="mt-6 max-w-xl leading-7">{landing.problem.body}</p>
-      </section>
-      <section className="grid border-y border-[var(--line)] md:grid-cols-[.9fr_1.1fr]">
-        <div className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16">
-          <p className="eyebrow text-[#dfaaa1]">{landing.bundle.eyebrow}</p>
-          <h2 className="display mt-4 text-4xl leading-none">
-            {landing.bundle.title}
-          </h2>
-          <p className="mt-6 text-sm leading-6 text-[#f7f3eb]/80">
-            {landing.bundle.body}
-          </p>
-        </div>
-        <SectionImage src={media.ritualDetail.src} alt={media.ritualDetail.alt} sizes="(max-width: 768px) calc(100vw - 48px), 45vw" />
       </section>
       <section className="grid md:grid-cols-2">
         <div className="px-6 py-16 md:order-2 md:px-16 md:py-24">
@@ -350,7 +428,7 @@ export default function RitualLandingPage() {
         <p className="mx-auto mt-5 max-w-xl text-sm leading-6">{landing.preview.reviewsBody}</p>
       </section>}
       <section className="px-6 py-16 md:px-16">
-        <p className="eyebrow text-[var(--green)]">MELSSY et le reste</p>
+        <p className="eyebrow text-[var(--green)]">{landing.comparison.eyebrow}</p>
         <h2 className="display mt-4 max-w-2xl text-5xl leading-none">
           {landing.comparison.title}
         </h2>
@@ -376,7 +454,7 @@ export default function RitualLandingPage() {
               <summary className="cursor-pointer pr-5 font-medium">
                 {question}
               </summary>
-              <p className="mt-3 max-w-xl text-sm leading-6">{answer}</p>
+              <p className="mt-3 max-w-xl text-sm leading-6">{answer.replace("{{deliveryTime}}", deliveryTime)}</p>
             </details>
           ))}
         </div>
@@ -394,19 +472,19 @@ export default function RitualLandingPage() {
       <section className="border-t border-[var(--line)] px-6 py-16 md:px-16">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="eyebrow text-[var(--green)]">La collection</p>
-            <h2 className="display mt-3 text-4xl">Les essentiels de nuit.</h2>
+            <p className="eyebrow text-[var(--green)]">{landing.collection.eyebrow}</p>
+            <h2 className="display mt-3 text-4xl">{landing.collection.title}</h2>
           </div>
           <Link
             href="/collections/essentiels-de-nuit"
             className="text-sm underline underline-offset-4"
           >
-            Voir la collection
+            {landing.collection.view}
           </Link>
         </div>
         <div className="mt-8">
-          <Carousel label="Les essentiels de nuit">
-            {collectionProducts.map(([id, image]) => <article key={id} className="w-[74vw] shrink-0 snap-start sm:w-64"><div className="relative aspect-square overflow-hidden bg-[#e8e1d6]"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 640px) 74vw, 256px" className="object-cover" /></div><div className="mt-4 flex items-start justify-between gap-3"><h3 className="text-sm font-medium">{catalog[id].name}</h3><span className="shrink-0 text-sm">{formatPrice(catalog[id].price)}</span></div><Link href={`/products/${id}`} className="mt-4 block border border-[var(--green)] px-4 py-3 text-center text-sm">Découvrir</Link></article>)}
+          <Carousel label={landing.collection.title}>
+            {collectionProducts.map(([id, image]) => <article key={id} className="w-[74vw] shrink-0 snap-start sm:w-64"><div className="relative aspect-square overflow-hidden bg-[#e8e1d6]"><Image src={image.src} alt={image.alt} fill sizes="(max-width: 640px) 74vw, 256px" className="object-cover" /></div><div className="mt-4 flex items-start justify-between gap-3"><h3 className="text-sm font-medium">{catalog[id].name}</h3><span className="shrink-0 text-sm">{formatPrice(catalog[id].price)}</span></div><Link href={`/products/${id}`} className="mt-4 block border border-[var(--green)] px-4 py-3 text-center text-sm">{landing.collection.discover}</Link></article>)}
           </Carousel>
         </div>
       </section>
