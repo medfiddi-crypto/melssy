@@ -10,6 +10,7 @@ const dmSans = DM_Sans({
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: "600",
 });
 
 export const metadata: Metadata = {
