@@ -347,12 +347,15 @@ export default function RitualLandingPage() {
           </div>
         </div>
       </section>
-      <section className="grid border-y border-[var(--line)] md:grid-cols-[1.1fr_.9fr]">
+      <section className="border-y border-[var(--line)] md:grid md:grid-cols-[1.1fr_.9fr]">
         <div className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16">
           <p className="eyebrow text-[#dfaaa1]">{landing.valueStack.eyebrow}</p>
           <h2 className="display mt-4 text-4xl leading-none">
             Six pièces pensées pour <span className="headline-accent">une nuit entière.</span>
           </h2>
+          <div className="md:hidden mt-6">
+            <Image src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} width={400} height={300} className="w-full rounded-2xl object-cover" sizes="calc(100vw - 48px)" />
+          </div>
           <p className="mt-4 text-sm leading-6 text-[#f7f3eb]/80">
             {landing.valueStack.body}
           </p>
@@ -394,7 +397,9 @@ export default function RitualLandingPage() {
             Paiement à la livraison · Livraison offerte
           </p>
         </div>
-        <SectionImage src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 45vw" />
+        <div className="hidden md:block">
+          <SectionImage src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} sizes="45vw" />
+        </div>
       </section>
       <section className="grid md:grid-cols-2 md:gap-8">
         <div className="px-6 py-16 md:order-2 md:px-16 md:py-24">
@@ -432,9 +437,6 @@ export default function RitualLandingPage() {
             </table>
           </div>
           <p className="mt-6 text-xs text-black/50">Satin 100 % polyester, pas de la soie. Nous préférons vous le dire.</p>
-        </div>
-        <div className="md:order-1">
-          <SectionImage src={media.satinComparison.src} alt={landing.satinComparison.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 40vw" />
         </div>
       </section>
       <section className="px-6 py-16 md:px-16">
