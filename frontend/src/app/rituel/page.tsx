@@ -323,17 +323,24 @@ export default function RitualLandingPage() {
         </ul>
       </section>
       <section className="px-6 py-16 md:px-16 md:py-24">
-        <p className="eyebrow text-[var(--rose)]">{landing.problem.eyebrow}</p>
-        <h2 className="display mt-4 max-w-lg text-[30px] leading-[1.15] md:max-w-3xl md:text-5xl md:leading-none">
-          Chaque nuit, vos cheveux s&apos;abîment <span className="headline-accent">en silence.</span>
-        </h2>
-        <div className="mt-6 max-w-xl space-y-4">
-          <p className="leading-7">
-            Chaque matin, vous le voyez : frisottis, pointes sèches, boucles écrasées. Alors vous brossez — et chaque coup de brosse casse un peu plus.
-          </p>
-          <p className="font-serif italic leading-7 text-lg">
-            Une nuit, ça ne se voit pas. 365 nuits, si.
-          </p>
+        <div className="grid md:grid-cols-[1fr_1.2fr] md:gap-8 md:items-center">
+          <div>
+            <p className="eyebrow text-[var(--rose)]">{landing.problem.eyebrow}</p>
+            <h2 className="display mt-4 max-w-lg text-[30px] leading-[1.15] md:max-w-3xl md:text-5xl md:leading-none">
+              Chaque nuit, vos cheveux s&apos;abîment <span className="headline-accent">en silence.</span>
+            </h2>
+            <div className="mt-6 max-w-xl space-y-4">
+              <p className="leading-7">
+                Chaque matin, vous le voyez : frisottis, pointes sèches, boucles écrasées. Alors vous brossez — et chaque coup de brosse casse un peu plus.
+              </p>
+              <p className="font-serif italic leading-7 text-lg">
+                Une nuit, ça ne se voit pas. 365 nuits, si.
+              </p>
+            </div>
+          </div>
+          <div className="mt-6 md:mt-0">
+            <Image src={media.problemSection.src} alt={media.problemSection.alt} width={400} height={300} className="w-full rounded-2xl object-cover" sizes="(max-width: 768px) calc(100vw - 48px), 40vw" />
+          </div>
         </div>
       </section>
       <section className="grid border-y border-[var(--line)] md:grid-cols-[1.1fr_.9fr]">

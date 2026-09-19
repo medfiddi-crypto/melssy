@@ -4,6 +4,7 @@ export const media = {
   storyNight: { src: "/images/temp/hero-rituel.svg", alt: "Femme dans une chambre apaisée", ratio: "4:5", intendedShot: "Femme reposant dans la lumière du matin", temporary: true },
   satinComparison: { src: "/images/temp/satin-comparison.svg", alt: "Comparaison macro entre une trame de coton et une trame de satin, côte à côte", ratio: "3:2", intendedShot: "Macro comparison shot of cotton weave versus satin weave", temporary: true },
   ritualDetail: { src: "/images/temp/satin-picture.webp", alt: "Coffret complet MELSSY", ratio: "3:2", intendedShot: "Les cinq pièces du coffret ensemble", temporary: true },
+  problemSection: { src: "/images/temp/problem-brush.svg", alt: "Brosse à cheveux avec des cheveux cassés sur une taie d'oreiller en coton froissée", ratio: "4:3", intendedShot: "Brush with broken hairs on crumpled cotton pillowcase", temporary: true },
   thankYouPackage: { src: "/images/temp/satin-picture.webp", alt: "Coffret ouvert avec les cinq pièces du rituel", ratio: "3:2", intendedShot: "PHOTO — COFFRET OUVERT, LES 5 PIÈCES", temporary: true },
   satinPink: { src: "/images/temp/satin-pink.jpg", alt: "Surface satinée rose", ratio: "3:2", intendedShot: "Détail satiné rose", temporary: true },
   stepScrunchie: { src: "/images/temp/step-chouchou.svg", alt: "Chouchou satiné dans les cheveux", ratio: "1:1", intendedShot: "Chouchou satiné attaché dans les cheveux", temporary: true },
