@@ -3,7 +3,7 @@ export const landing = {
   hero: {
     eyebrow: "Le coffret Beauty Night Ritual",
     headline: "Vos cheveux, protégés toute la nuit.",
-    body: "Le coffret complet en satin — 2 taies, 1 bonnet, 2 chouchous et le boucleur sans chaleur offert. Un seul geste, avant de dormir.",
+    body: "2 taies, 1 bonnet, 2 chouchous et le boucleur offert. Prêt pour ce soir.",
     cta: "Commander le coffret",
     priceCaption: "paiement à la livraison",
   },
@@ -70,7 +70,7 @@ export const landing = {
   },
   satinComparison: {
     eyebrow: "Pourquoi le satin",
-    headline: "Votre oreiller travaille contre vos cheveux pendant huit heures.",
+    headline: "Ce que le satin change, nuit après nuit.",
     subheadline: "Et le matin, vous accusez vos cheveux.",
     blocks: [
       {
@@ -86,7 +86,7 @@ export const landing = {
         text: "Votre cheveu est couvert d'écailles superposées, comme des tuiles. La friction les soulève. Des écailles soulevées, c'est précisément ça, un frisottis. Voilà pourquoi vos cheveux sont souvent moins beaux au réveil qu'au moment où vous vous êtes couchée.",
       },
     ],
-    closing: "Ce n'est pas de la soie. C'est du satin 100% polyester, choisi précisément parce qu'il n'absorbe pas et qu'il supporte le lavage. Nous préférons vous le dire.",
+    closing: "Ce n'est pas de la soie, et nous préférons vous le dire. C'est du satin 100% polyester : il n'absorbe pas et supporte le lavage.",
     imageAlt: "Comparaison macro entre une trame de coton et une trame de satin, côte à côte",
   },
   comparison: {
@@ -112,11 +112,10 @@ export const landing = {
     reviewsBody: "Aperçu réservé à la validation de mise en page.",
   },
   faq: [
-    ["Comment se passe le paiement?", "Vous réglez votre commande à la livraison, après confirmation avec notre équipe."],
-    ["En combien de temps serai-je livrée?", "Nous livrons partout au Maroc. Délai indicatif : {{deliveryTime}}. Le délai exact est confirmé par téléphone avant l'envoi."],
-    ["Où livrez-vous?", "Nous livrons partout au Maroc. Les modalités précises sont confirmées avant l'envoi."],
-    ["Le rituel convient-il à tous les cheveux?", "Il est conçu comme un geste de douceur pour les longueurs et les coiffures. Il ne remplace pas un avis ou un soin professionnel."],
-    ["Comment entretenir les pièces?", "Nos pièces sont en satin 100% polyester, pensé pour supporter le lavage. Conseils d'entretien détaillés : [à confirmer]."],
+    ["Comment se passe le paiement ?", "Vous réglez votre commande à la livraison, après confirmation avec notre équipe."],
+    ["Où livrez-vous et en combien de temps ?", "Partout au Maroc, livraison offerte sur le coffret. Délai indicatif : {{deliveryTime}}. Confirmé par téléphone avant l'envoi."],
+    ["Le rituel convient-il à tous les cheveux ?", "Oui. C'est un geste de douceur pour vos cheveux. Il ne remplace pas un soin professionnel."],
+    ["Comment entretenir les pièces ?", "Nos pièces sont en satin 100% polyester, pensé pour supporter le lavage. Conseils d'entretien détaillés : [à confirmer]."],
   ],
   ritual: {
     eyebrow: "Le rituel",

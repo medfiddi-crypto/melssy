@@ -324,10 +324,17 @@ export default function RitualLandingPage() {
       </section>
       <section className="px-6 py-16 md:px-16 md:py-24">
         <p className="eyebrow text-[var(--rose)]">{landing.problem.eyebrow}</p>
-        <h2 className="display mt-4 max-w-3xl text-5xl leading-none">
-          {landing.problem.title}
+        <h2 className="display mt-4 max-w-lg text-[30px] leading-[1.15] md:max-w-3xl md:text-5xl md:leading-none">
+          Chaque nuit, vos cheveux s&apos;abîment en silence.
         </h2>
-        <p className="mt-6 max-w-xl leading-7">{landing.problem.body}</p>
+        <div className="mt-6 max-w-xl space-y-4">
+          <p className="leading-7">
+            Chaque matin, vous le voyez : frisottis, pointes sèches, boucles écrasées. Alors vous brossez — et chaque coup de brosse casse un peu plus.
+          </p>
+          <p className="font-serif italic leading-7 text-lg">
+            Une nuit, ça ne se voit pas. 365 nuits, si.
+          </p>
+        </div>
       </section>
       <section className="grid border-y border-[var(--line)] md:grid-cols-[1.1fr_.9fr]">
         <div className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16">
