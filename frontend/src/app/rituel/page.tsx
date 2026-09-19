@@ -287,7 +287,7 @@ export default function RitualLandingPage() {
         </Link>
       </header>
       <section ref={setHeroSection} className="grid md:grid-cols-2">
-        <div className="relative h-[52vh] max-h-[52vh] w-full md:order-2 md:h-auto md:max-h-none md:aspect-[300/301]">
+        <div className="relative h-[56vh] max-h-[56vh] w-full md:order-2 md:h-auto md:max-h-none md:aspect-[300/301]">
           <Image
             src={media.landingHero.src}
             alt={media.landingHero.alt}
@@ -295,7 +295,7 @@ export default function RitualLandingPage() {
             height={1500}
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="h-full w-full object-cover object-[center_38%] md:object-center"
+            className="h-full w-full object-cover object-[center_70%] md:object-center"
           />
         </div>
         <div className="px-6 py-4 md:order-1 md:px-16 md:py-24">
@@ -317,9 +317,7 @@ export default function RitualLandingPage() {
         </div>
       </section>
       <section className="border-b border-[var(--line)] bg-[#eadbd1]/40 px-6 py-4 md:px-16">
-        <ul className="mx-auto grid max-w-3xl gap-2 text-center text-xs sm:grid-cols-3 sm:text-sm">
-          <li>{landing.trust.freeDelivery}</li>
-          <li>{landing.trust.codLong}</li>
+        <ul className="mx-auto max-w-3xl text-center text-xs sm:text-sm">
           <li>{confirmationWindow ? `${landing.trust.confirm} (${confirmationWindow})` : landing.trust.confirm}</li>
         </ul>
       </section>
