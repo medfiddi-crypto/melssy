@@ -276,10 +276,10 @@ export default function RitualLandingPage() {
       style={{
         "--sticky-cta-height": "52px",
       } as CSSProperties}
-      className={`pb-[calc(var(--sticky-cta-height)+env(safe-area-inset-bottom))] transition-[padding] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "pt-14" : "pt-[86px]"}`}
+      className={`pb-[calc(var(--sticky-cta-height)+env(safe-area-inset-bottom))] transition-[padding] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "pt-14" : "pt-14 md:pt-[86px]"}`}
     >
       <header
-        className={`fixed inset-x-0 top-0 z-20 flex justify-center border-b border-[#b9a497]/45 px-5 transition-[height,background-color,box-shadow] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "h-14 bg-[var(--background)]/90 shadow-[0_2px_8px_rgba(31,37,32,0.06)] backdrop-blur" : "h-[86px] bg-[var(--background)]"}`}
+        className={`fixed inset-x-0 top-0 z-20 flex justify-center border-b border-[#b9a497]/45 px-5 transition-[height,background-color,box-shadow] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "h-14 bg-[var(--background)]/90 shadow-[0_2px_8px_rgba(31,37,32,0.06)] backdrop-blur" : "h-14 md:h-[86px] bg-[var(--background)]"}`}
       >
         <Link href="/rituel" className="block translate-x-[0.02em] self-center text-center">
           <span className={`wordmark block font-medium transition-[font-size] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "text-lg" : "text-xl"}`} style={{ letterSpacing: ".08em" }}>{landing.masthead.brand}</span>
@@ -287,7 +287,7 @@ export default function RitualLandingPage() {
         </Link>
       </header>
       <section ref={setHeroSection} className="grid md:grid-cols-2">
-        <div className="relative aspect-[4/5] w-full md:order-2 md:aspect-[300/301]">
+        <div className="relative h-[52vh] max-h-[52vh] w-full md:order-2 md:h-auto md:max-h-none md:aspect-[300/301]">
           <Image
             src={media.landingHero.src}
             alt={media.landingHero.alt}
@@ -295,7 +295,7 @@ export default function RitualLandingPage() {
             height={1500}
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-[center_38%] md:object-center"
           />
         </div>
         <div className="px-6 py-4 md:order-1 md:px-16 md:py-24">
@@ -305,7 +305,7 @@ export default function RitualLandingPage() {
           </h1>
           <p className="mt-3 max-w-lg leading-6">{landing.hero.body}</p>
           <p className="mt-4 text-sm font-medium">
-            {formatPrice(ritual.price)} · {landing.trust.freeDelivery} · {landing.trust.cod}
+            {formatPrice(ritual.price)} · Livraison offerte · Paiement à la livraison
           </p>
           <a
             href="#commande-fields"
