@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
+import { Check, X } from "lucide-react";
 
 import { catalog, formatPrice } from "@/content/catalog";
 import { landing } from "@/content/landing.fr";
@@ -395,17 +396,42 @@ export default function RitualLandingPage() {
         </div>
         <SectionImage src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 45vw" />
       </section>
-      <section className="grid md:grid-cols-2">
+      <section className="grid md:grid-cols-2 md:gap-8">
         <div className="px-6 py-16 md:order-2 md:px-16 md:py-24">
           <p className="eyebrow text-[var(--green)]">{landing.satinComparison.eyebrow}</p>
-          <h2 className="display mt-4 text-5xl leading-none">
-            Ce que le satin change, <span className="headline-accent">nuit après nuit.</span>
+          <h2 className="display mt-4 text-[30px] leading-[1.15] md:text-5xl md:leading-none">
+            Le coton accroche. <span className="headline-accent">Le satin glisse.</span>
           </h2>
-          <p className="mt-6 max-w-lg leading-7">{landing.satinComparison.subheadline}</p>
-          <div className="mt-8 space-y-6">
-            {landing.satinComparison.blocks.map((block) => <div key={block.lead}><p className="font-medium leading-6">{block.lead}</p><p className="mt-2 leading-7 text-black/75">{block.text}</p></div>)}
+          <p className="mt-6 max-w-lg leading-7">Toute la nuit, vos cheveux frottent contre votre taie. Tout dépend de ce qu&apos;ils touchent.</p>
+          <div className="mt-8 overflow-x-auto">
+            <table className="w-full border-collapse text-sm md:text-base mx-auto md:max-w-[640px]">
+              <thead>
+                <tr>
+                  <th className="text-left p-3 md:p-4"></th>
+                  <th className="text-left p-3 md:p-4 text-black/50 font-normal">Coton</th>
+                  <th className="text-left p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb] font-normal">Satin MELSSY</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-t border-[var(--line)]">
+                  <td className="p-3 md:p-4 text-[var(--rose)] text-xs font-semibold uppercase tracking-wide">Vos cheveux</td>
+                  <td className="p-3 md:p-4 text-black/50"><div className="flex items-start gap-2"><X size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span>S&apos;accrochent à chaque mouvement</span></div></td>
+                  <td className="p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb]"><div className="flex items-start gap-2"><Check size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span className="font-medium">Glissent sans frottement</span></div></td>
+                </tr>
+                <tr className="border-t border-[var(--line)]">
+                  <td className="p-3 md:p-4 text-[var(--rose)] text-xs font-semibold uppercase tracking-wide">Votre soin du soir</td>
+                  <td className="p-3 md:p-4 text-black/50"><div className="flex items-start gap-2"><X size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span>Absorbé par le tissu</span></div></td>
+                  <td className="p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb]"><div className="flex items-start gap-2"><Check size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span className="font-medium">Reste dans vos cheveux</span></div></td>
+                </tr>
+                <tr className="border-t border-[var(--line)]">
+                  <td className="p-3 md:p-4 text-[var(--rose)] text-xs font-semibold uppercase tracking-wide">Au réveil</td>
+                  <td className="p-3 md:p-4 text-black/50"><div className="flex items-start gap-2"><X size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span>Frisottis, boucles écrasées</span></div></td>
+                  <td className="p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb]"><div className="flex items-start gap-2"><Check size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span className="font-medium">Moins de frisottis, boucles préservées</span></div></td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <p className="mt-8 border-t border-[var(--line)] pt-5 text-sm leading-6 text-black/70">{landing.satinComparison.closing}</p>
+          <p className="mt-6 text-xs text-black/50">Satin 100 % polyester, pas de la soie. Nous préférons vous le dire.</p>
         </div>
         <div className="md:order-1">
           <SectionImage src={media.satinComparison.src} alt={landing.satinComparison.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 40vw" />
