@@ -59,3 +59,4 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid 
 .wordmark-descriptor { color: var(--brand-wordmark-descriptor); }
 .media-placeholder { background: linear-gradient(135deg, #ded5c6, #c8bca8); position: relative; overflow: hidden; }
 .media-placeholder::after { content: "Remplacer par photo MELSSY"; position: absolute; inset: auto 14px 14px; color: #fff; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+.headline-accent { font-style: italic; }

@@ -300,7 +300,7 @@ export default function RitualLandingPage() {
         <div className="px-6 py-4 md:order-1 md:px-16 md:py-24">
           <p className="eyebrow text-[var(--rose)]">{landing.hero.eyebrow}</p>
           <h1 className="display mt-3 text-4xl leading-[.98] md:text-7xl">
-            {landing.hero.headline}
+            Vos cheveux, protégés <span className="headline-accent">toute la nuit.</span>
           </h1>
           <p className="mt-3 max-w-lg leading-6">{landing.hero.body}</p>
           <p className="mt-4 text-sm font-medium">
@@ -325,7 +325,7 @@ export default function RitualLandingPage() {
       <section className="px-6 py-16 md:px-16 md:py-24">
         <p className="eyebrow text-[var(--rose)]">{landing.problem.eyebrow}</p>
         <h2 className="display mt-4 max-w-lg text-[30px] leading-[1.15] md:max-w-3xl md:text-5xl md:leading-none">
-          Chaque nuit, vos cheveux s&apos;abîment en silence.
+          Chaque nuit, vos cheveux s&apos;abîment <span className="headline-accent">en silence.</span>
         </h2>
         <div className="mt-6 max-w-xl space-y-4">
           <p className="leading-7">
@@ -340,7 +340,7 @@ export default function RitualLandingPage() {
         <div className="bg-[var(--green)] px-6 py-16 text-[#f7f3eb] md:px-16">
           <p className="eyebrow text-[#dfaaa1]">{landing.valueStack.eyebrow}</p>
           <h2 className="display mt-4 text-4xl leading-none">
-            {landing.valueStack.title}
+            Six pièces pensées pour <span className="headline-accent">une nuit entière.</span>
           </h2>
           <p className="mt-4 text-sm leading-6 text-[#f7f3eb]/80">
             {landing.valueStack.body}
@@ -398,7 +398,7 @@ export default function RitualLandingPage() {
         <div className="px-6 py-16 md:order-2 md:px-16 md:py-24">
           <p className="eyebrow text-[var(--green)]">{landing.satinComparison.eyebrow}</p>
           <h2 className="display mt-4 text-5xl leading-none">
-            {landing.satinComparison.headline}
+            Ce que le satin change, <span className="headline-accent">nuit après nuit.</span>
           </h2>
           <p className="mt-6 max-w-lg leading-7">{landing.satinComparison.subheadline}</p>
           <div className="mt-8 space-y-6">
@@ -413,7 +413,7 @@ export default function RitualLandingPage() {
       <section className="px-6 py-16 md:px-16">
         <p className="eyebrow text-[var(--rose)]">{landing.ritual.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
-          {landing.ritual.title}
+          Un geste qui suit <span className="headline-accent">votre soirée.</span>
         </h2>
         <div className="mt-10 divide-y border-y border-[var(--line)]">
           {[media.stepScrunchie, media.stepCurler, media.stepBonnet, media.stepPillowcase].map((image, index) => (
@@ -437,7 +437,7 @@ export default function RitualLandingPage() {
       <section className="px-6 py-16 md:px-16">
         <p className="eyebrow text-[var(--green)]">{landing.comparison.eyebrow}</p>
         <h2 className="display mt-4 max-w-2xl text-5xl leading-none">
-          {landing.comparison.title}
+          Un rituel pensé, pas un essentiel <span className="headline-accent">choisi au hasard.</span>
         </h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2">
           <div className="border border-[var(--green)] bg-[var(--green)] p-6 text-[#f7f3eb]">
@@ -453,7 +453,7 @@ export default function RitualLandingPage() {
       <section className="bg-[#eadbd1] px-6 py-16 md:px-16">
         <p className="eyebrow text-[var(--rose)]">{landing.faqSection.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
-          {landing.faqSection.title}
+          Avant de <span className="headline-accent">commander.</span>
         </h2>
         <div className="mt-8 divide-y divide-[var(--line)] border-y border-[var(--line)]">
           {landing.faq.map(([question, answer]) => (
@@ -470,7 +470,7 @@ export default function RitualLandingPage() {
         <div className="mx-auto max-w-xl text-center">
           <p className="eyebrow text-[var(--rose)]">{landing.finalOrder.eyebrow}</p>
           <h2 className="display mt-4 text-5xl leading-none">
-            {landing.finalOrder.title}
+            Le dernier geste <span className="headline-accent">de votre journée.</span>
           </h2>
           <p className="display mt-6 text-3xl">{formatPrice(ritual.price)}</p>
           {form("final")}
@@ -480,7 +480,7 @@ export default function RitualLandingPage() {
         <div className="flex items-end justify-between gap-4">
           <div>
             <p className="eyebrow text-[var(--green)]">{landing.collection.eyebrow}</p>
-            <h2 className="display mt-3 text-4xl">{landing.collection.title}</h2>
+            <h2 className="display mt-3 text-4xl">Les essentiels <span className="headline-accent">de nuit.</span></h2>
           </div>
           <Link
             href="/collections/essentiels-de-nuit"
