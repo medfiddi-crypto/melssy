@@ -329,6 +329,9 @@ export default function RitualLandingPage() {
             <h2 className="display mt-4 max-w-lg text-[30px] leading-[1.15] md:max-w-3xl md:text-5xl md:leading-none">
               Chaque nuit, vos cheveux s&apos;abîment <span className="headline-accent">en silence.</span>
             </h2>
+            <div className="md:hidden mt-6">
+              <Image src={media.problemSection.src} alt={media.problemSection.alt} width={400} height={300} className="w-full rounded-2xl object-cover" sizes="calc(100vw - 48px)" />
+            </div>
             <div className="mt-6 max-w-xl space-y-4">
               <p className="leading-7">
                 Chaque matin, vous le voyez : frisottis, pointes sèches, boucles écrasées. Alors vous brossez — et chaque coup de brosse casse un peu plus.
@@ -338,8 +341,8 @@ export default function RitualLandingPage() {
               </p>
             </div>
           </div>
-          <div className="mt-6 md:mt-0">
-            <Image src={media.problemSection.src} alt={media.problemSection.alt} width={400} height={300} className="w-full rounded-2xl object-cover" sizes="(max-width: 768px) calc(100vw - 48px), 40vw" />
+          <div className="hidden md:block mt-6 md:mt-0">
+            <Image src={media.problemSection.src} alt={media.problemSection.alt} width={400} height={300} className="w-full rounded-2xl object-cover" sizes="40vw" />
           </div>
         </div>
       </section>
