@@ -187,8 +187,7 @@ export default function RitualLandingPage() {
       className="grid gap-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0"
     >
       <div
-        id={suffix === "primary" ? "commande-fields" : undefined}
-        className="scroll-mt-20 grid gap-4"
+        className="grid gap-4"
       >
       <label htmlFor={`name-${suffix}`} className="text-sm font-medium">
         {landing.order.nameLabel}
@@ -256,7 +255,7 @@ export default function RitualLandingPage() {
         </fieldset>
       )}
       <p className="text-center text-xs leading-5 text-[var(--green)]">
-        {formatPrice(ritual.price)} · {landing.trust.freeDelivery} · {landing.trust.cod}
+        {formatPrice(total)} · Livraison offerte · Paiement à la livraison
       </p>
       <p className="text-center text-sm leading-6 text-black/65">
         {landing.order.reassurance}
@@ -266,7 +265,7 @@ export default function RitualLandingPage() {
         disabled={submitting}
         className="relative z-40 w-full bg-[var(--green)] px-6 py-4 text-white disabled:bg-[#9aa79f] disabled:text-white disabled:opacity-100"
       >
-        {submitting ? landing.order.submitting : `${landing.ctas.completeRitual} · ${formatPrice(total)}`}
+        {submitting ? landing.order.submitting : `Confirmer ma commande · ${formatPrice(total)}`}
       </button>
       </div>
     </form>
@@ -457,33 +456,23 @@ export default function RitualLandingPage() {
         <UgcCarousel cards={landing.preview.ugcCards.map((card, index) => ({ ...card, poster: media.ugc[index].src, alt: media.ugc[index].alt }))} onOrder={scrollToForm} ctaLabel={landing.ctas.completeRitual} />
       </section>}
       {showReviews && <section className="bg-[#eadbd1] px-6 py-16 text-center md:px-16">
-        <p className="eyebrow text-[var(--green)]">{landing.comparison.eyebrow}</p>
+        <p className="eyebrow text-[var(--green)]">{landing.preview.eyebrow}</p>
         <h2 className="display mt-4 text-4xl leading-none">{landing.preview.reviewsTitle}</h2>
         <p className="mx-auto mt-5 max-w-xl text-sm leading-6">{landing.preview.reviewsBody}</p>
       </section>}
-      <section className="px-6 py-16 md:px-16">
-        <p className="eyebrow text-[var(--green)]">{landing.comparison.eyebrow}</p>
-        <h2 className="display mt-4 max-w-2xl text-5xl leading-none">
-          Un rituel pensé, pas un essentiel <span className="headline-accent">choisi au hasard.</span>
-        </h2>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
-          <div className="border border-[var(--green)] bg-[var(--green)] p-6 text-[#f7f3eb]">
-            <p className="eyebrow text-[#dfaaa1]">{landing.comparison.melssyLabel}</p>
-            <p className="mt-5 leading-7">{landing.comparison.melssy}</p>
-          </div>
-          <div className="border border-[var(--line)] p-6">
-            <p className="eyebrow text-[var(--rose)]">{landing.comparison.genericLabel}</p>
-            <p className="mt-5 leading-7">{landing.comparison.generic}</p>
-          </div>
-        </div>
-      </section>
       <section
         id="commande"
-        className="scroll-mt-20 px-6 py-6 md:px-16 md:py-12"
+        className="px-6 py-16 md:px-16 md:py-24"
       >
         <div className="mx-auto max-w-xl">
-          <div className="border border-[var(--line)] bg-white/50 p-5 md:p-6">
-            <p className="text-sm font-medium" id="commande-fields">{landing.order.productLabel}</p>
+          <div id="commande-fields" className="scroll-mt-20">
+            <p className="eyebrow text-[var(--rose)]">COMMANDER</p>
+            <h2 className="display mt-4 text-5xl leading-none">
+              Votre coffret, <span className="headline-accent">livré chez vous.</span>
+            </h2>
+          </div>
+          <div className="mt-8 border border-[var(--line)] bg-white/50 p-5 md:p-6">
+            <p className="text-sm font-medium">{landing.order.productLabel}</p>
             <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">
               {ritual.contents}
             </p>

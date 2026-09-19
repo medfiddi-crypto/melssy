@@ -89,14 +89,6 @@ export const landing = {
     closing: "Ce n'est pas de la soie, et nous préférons vous le dire. C'est du satin 100% polyester : il n'absorbe pas et supporte le lavage.",
     imageAlt: "Comparaison macro entre une trame de coton et une trame de satin, côte à côte",
   },
-  comparison: {
-    eyebrow: "MELSSY et le reste",
-    title: "Un rituel pensé, pas un essentiel choisi au hasard.",
-    melssyLabel: "MELSSY",
-    genericLabel: "Générique",
-    melssy: "Des pièces coordonnées, pensées pour se compléter dans votre soirée.",
-    generic: "Un accessoire isolé, sans rituel clair ni expérience pensée autour de votre nuit.",
-  },
   preview: {
     eyebrow: "Aperçu de mise en page",
     ugcTitle: "Vos vidéos clientes.",
