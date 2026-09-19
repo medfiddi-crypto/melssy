@@ -437,14 +437,14 @@ export default function RitualLandingPage() {
           <p className="mt-6 text-xs text-black/50">Satin 100 % polyester, pas de la soie. Nous préférons vous le dire.</p>
         </div>
       </section>
-      <section className="px-6 py-16 md:px-16">
+      <section className="px-6 py-16 md:px-16 md:py-24">
         <p className="eyebrow text-[var(--rose)]">{landing.ritual.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
           Trois gestes, <span className="headline-accent">puis dormez.</span>
         </h2>
-        <div className="mt-10 divide-y divide-[var(--line)] border-y border-[var(--line)]">
+        <div className="mt-6 divide-y divide-[var(--line)] border-y border-[var(--line)]">
           {landing.ritual.steps.map((step, index) => (
-            <div key={landing.ritual.steps[index].label} className="flex items-center gap-5 py-5">
+            <div key={landing.ritual.steps[index].label} className="flex items-center gap-5 py-4 md:py-5">
               <div className="ritual-step-number w-20 shrink-0 text-[40px] leading-none text-[var(--rose)] md:w-[96px] md:text-5xl">0{index + 1}</div>
               <div><p className="eyebrow text-[var(--rose)]">{step.label}</p><p className="mt-2 text-lg">{step.text}</p></div>
             </div>
