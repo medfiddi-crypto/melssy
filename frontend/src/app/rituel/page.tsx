@@ -287,12 +287,12 @@ export default function RitualLandingPage() {
         </Link>
       </header>
       <section ref={setHeroSection} className="grid md:grid-cols-2">
-        <div className="relative h-[50dvh] w-full md:order-2 md:h-auto md:aspect-[300/301]">
+        <div className="relative aspect-[4/5] w-full md:order-2 md:aspect-[300/301]">
           <Image
             src={media.landingHero.src}
             alt={media.landingHero.alt}
             width={1200}
-            height={1204}
+            height={1500}
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
             className="h-full w-full object-cover object-center"
@@ -354,7 +354,7 @@ export default function RitualLandingPage() {
             Six pièces pensées pour <span className="headline-accent">une nuit entière.</span>
           </h2>
           <div className="md:hidden mt-6">
-            <Image src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} width={400} height={300} className="w-full rounded-2xl object-cover" sizes="calc(100vw - 48px)" />
+            <Image src={media.coffretBox.src} alt={landing.valueStack.imageAlt} width={400} height={400} className="w-full rounded-2xl object-cover" sizes="calc(100vw - 48px)" />
           </div>
           <p className="mt-4 text-sm leading-6 text-[#f7f3eb]/80">
             {landing.valueStack.body}
@@ -398,7 +398,7 @@ export default function RitualLandingPage() {
           </p>
         </div>
         <div className="hidden md:block">
-          <SectionImage src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} sizes="45vw" />
+          <SectionImage src={media.coffretBox.src} alt={landing.valueStack.imageAlt} sizes="45vw" ratio="1 / 1" />
         </div>
       </section>
       <section className="grid md:grid-cols-2 md:gap-8">

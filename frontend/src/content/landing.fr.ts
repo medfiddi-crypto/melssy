@@ -19,6 +19,7 @@ export const landing = {
     eyebrow: "Dans la boîte",
     title: "Six pièces pensées pour une nuit entière.",
     body: "Deux taies, un bonnet, deux chouchous et le boucleur sans chaleur offert. Un rituel complet, prêt pour ce soir.",
+    imageAlt: "Coffret MELSSY ouvert avec deux taies satinées, un bonnet, deux chouchous et un boucleur sans chaleur",
     items: [
       { productId: "pillowcase-pair", label: "2 taies satinées" },
       { productId: "bonnet-solo", label: "1 bonnet satiné" },
@@ -29,7 +30,6 @@ export const landing = {
     separateLabel: "Valeur séparée",
     coffretLabel: "En coffret",
     savingsLabel: "Vous économisez",
-    imageAlt: "Les cinq pièces du coffret disposées ensemble",
   },
   addons: {
     title: "Ajoutez à votre coffret",
