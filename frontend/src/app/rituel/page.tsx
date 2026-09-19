@@ -440,13 +440,13 @@ export default function RitualLandingPage() {
       <section className="px-6 py-16 md:px-16">
         <p className="eyebrow text-[var(--rose)]">{landing.ritual.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
-          Un geste qui suit <span className="headline-accent">votre soirée.</span>
+          Trois gestes, <span className="headline-accent">puis dormez.</span>
         </h2>
         <div className="mt-10 divide-y border-y border-[var(--line)]">
-          {[media.stepScrunchie, media.stepCurler, media.stepBonnet, media.stepPillowcase].map((image, index) => (
-            <div key={landing.ritual.steps[index]} className="flex items-center gap-5 py-5">
+          {[media.stepCurler, media.stepBonnet, media.stepPillowcase, media.stepWakeUp].map((image, index) => (
+            <div key={landing.ritual.steps[index].label} className="flex items-center gap-5 py-5">
               <div className="relative aspect-square w-20 shrink-0 overflow-hidden md:w-[96px]"><Image src={image.src} alt={image.alt} fill sizes="96px" className="object-cover" /></div>
-              <div><p className="eyebrow text-[var(--rose)]">0{index + 1}</p><p className="mt-2 text-lg">{landing.ritual.steps[index]}</p></div>
+              <div><p className="eyebrow text-[var(--rose)]">0{index + 1} · {landing.ritual.steps[index].label}</p><p className="mt-2 text-lg">{landing.ritual.steps[index].text}</p></div>
             </div>
           ))}
         </div>

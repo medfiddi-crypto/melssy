@@ -119,8 +119,13 @@ export const landing = {
   ],
   ritual: {
     eyebrow: "Le rituel",
-    title: "Un geste qui suit votre soirée.",
-    steps: ["Attachez avec douceur", "Préparez vos boucles", "Enveloppez vos longueurs", "Posez-vous, simplement"],
+    title: "Trois gestes, puis dormez.",
+    steps: [
+      { label: "LE BOUCLEUR", text: "Enroulez vos longueurs, fixez avec les chouchous." },
+      { label: "LE BONNET", text: "Enfilez-le pour garder tout en place." },
+      { label: "LA TAIE", text: "Posez la tête sur le satin. Aucun frottement." },
+      { label: "AU RÉVEIL", text: "Déroulez : des boucles souples, sans chaleur." },
+    ],
   },
   masthead: {
     brand: "MELSSY",
