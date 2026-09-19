@@ -382,27 +382,18 @@ export default function RitualLandingPage() {
               <span>{formatPrice(separateValue - ritual.price)}</span>
             </div>
           </div>
+          <a
+            href="#commande"
+            onClick={handleHeroCta}
+            className="mt-8 block w-full bg-[var(--green)] px-6 py-4 text-center text-white"
+          >
+            Je commande mon coffret
+          </a>
+          <p className="mt-3 text-center text-xs text-black/60">
+            {landing.trust.freeDelivery} · {landing.trust.cod}
+          </p>
         </div>
         <SectionImage src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 45vw" />
-      </section>
-      <section
-        id="commande"
-        className="scroll-mt-20 px-6 py-6 md:px-16 md:py-12"
-      >
-        <div className="mx-auto max-w-xl">
-          <div className="border border-[var(--line)] bg-white/50 p-5 md:p-6">
-            <p className="text-sm font-medium">{landing.order.productLabel}</p>
-            <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">
-              {ritual.contents}
-            </p>
-            <p className="display mt-4 text-5xl leading-none">
-              {ritual.price}<span className="ml-1 align-middle text-3xl font-normal">&thinsp;DH</span>
-            </p>
-            <div className="mt-6 border-t border-[var(--line)] pt-5">
-              {form("primary")}
-            </div>
-          </div>
-        </div>
       </section>
       <section className="grid md:grid-cols-2">
         <div className="px-6 py-16 md:order-2 md:px-16 md:py-24">
@@ -457,6 +448,25 @@ export default function RitualLandingPage() {
           <div className="border border-[var(--line)] p-6">
             <p className="eyebrow text-[var(--rose)]">{landing.comparison.genericLabel}</p>
             <p className="mt-5 leading-7">{landing.comparison.generic}</p>
+          </div>
+        </div>
+      </section>
+      <section
+        id="commande"
+        className="scroll-mt-20 px-6 py-6 md:px-16 md:py-12"
+      >
+        <div className="mx-auto max-w-xl">
+          <div className="border border-[var(--line)] bg-white/50 p-5 md:p-6">
+            <p className="text-sm font-medium" id="commande-fields">{landing.order.productLabel}</p>
+            <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">
+              {ritual.contents}
+            </p>
+            <p className="display mt-4 text-5xl leading-none">
+              {ritual.price}<span className="ml-1 align-middle text-3xl font-normal">&thinsp;DH</span>
+            </p>
+            <div className="mt-6 border-t border-[var(--line)] pt-5">
+              {form("primary")}
+            </div>
           </div>
         </div>
       </section>
