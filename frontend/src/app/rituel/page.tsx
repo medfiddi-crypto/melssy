@@ -385,12 +385,12 @@ export default function RitualLandingPage() {
           <a
             href="#commande"
             onClick={handleHeroCta}
-            className="mt-8 block w-full bg-[var(--green)] px-6 py-4 text-center text-white"
+            className="mt-8 mx-auto block w-full bg-[var(--background)] px-6 py-[13px] text-center font-semibold text-[var(--green)] rounded-[8px] md:max-w-[400px] text-base transition-colors hover:bg-[#ede7dd] active:bg-[#e8e0d4]"
           >
             Je commande mon coffret
           </a>
-          <p className="mt-3 text-center text-xs text-black/60">
-            {landing.trust.freeDelivery} · {landing.trust.cod}
+          <p className="mt-3 text-center text-[13px] text-[#f7f3eb]/70">
+            Paiement à la livraison · Livraison offerte
           </p>
         </div>
         <SectionImage src={media.ritualDetail.src} alt={landing.valueStack.imageAlt} sizes="(max-width: 768px) calc(100vw - 48px), 45vw" />
