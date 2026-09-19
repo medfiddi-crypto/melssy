@@ -373,9 +373,9 @@ export default function RitualLandingPage() {
               <span>{landing.valueStack.separateLabel}</span>
               <span>{formatPrice(separateValue)}</span>
             </div>
-            <div className="flex justify-between text-lg font-medium">
-              <span>{landing.valueStack.coffretLabel}</span>
-              <span>{formatPrice(ritual.price)}</span>
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-lg">{landing.valueStack.coffretLabel}</span>
+              <span className="display text-[28px] md:text-[32px] leading-none">{formatPrice(ritual.price)}</span>
             </div>
             <div className="flex justify-between text-[#dfaaa1]">
               <span>{landing.valueStack.savingsLabel}</span>
