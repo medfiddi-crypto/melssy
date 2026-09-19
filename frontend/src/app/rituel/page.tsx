@@ -442,11 +442,11 @@ export default function RitualLandingPage() {
         <h2 className="display mt-4 text-5xl leading-none">
           Trois gestes, <span className="headline-accent">puis dormez.</span>
         </h2>
-        <div className="mt-10 divide-y border-y border-[var(--line)]">
-          {[media.stepCurler, media.stepBonnet, media.stepPillowcase, media.stepWakeUp].map((image, index) => (
+        <div className="mt-10 divide-y divide-[var(--line)] border-y border-[var(--line)]">
+          {landing.ritual.steps.map((step, index) => (
             <div key={landing.ritual.steps[index].label} className="flex items-center gap-5 py-5">
-              <div className="relative aspect-square w-20 shrink-0 overflow-hidden rounded-2xl md:w-[96px]"><Image src={image.src} alt={image.alt} fill sizes="96px" className="object-cover" /></div>
-              <div><p className="eyebrow text-[var(--rose)]">0{index + 1} · {landing.ritual.steps[index].label}</p><p className="mt-2 text-lg">{landing.ritual.steps[index].text}</p></div>
+              <div className="ritual-step-number w-20 shrink-0 text-[40px] leading-none text-[var(--rose)] md:w-[96px] md:text-5xl">0{index + 1}</div>
+              <div><p className="eyebrow text-[var(--rose)]">{step.label}</p><p className="mt-2 text-lg">{step.text}</p></div>
             </div>
           ))}
         </div>

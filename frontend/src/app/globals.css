@@ -22,6 +22,7 @@ button, a { transition: opacity 180ms ease, background-color 180ms ease; }
 button:hover, a:hover { opacity: .78; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
 .display { font-family: var(--font-cormorant), serif; font-weight: 600; }
+.ritual-step-number { font-family: var(--font-cormorant), serif; font-style: italic; font-weight: 500; }
 .wordmark { font-family: var(--font-cormorant), serif; letter-spacing: .22em; }
 .eyebrow { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .media-placeholder { background: #e8e1d6; position: relative; }
