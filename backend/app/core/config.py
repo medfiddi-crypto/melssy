@@ -73,6 +73,10 @@ class Settings(BaseSettings):
         return parts.hostname or "local"
 
     @property
+    def database_name(self) -> str:
+        return urlsplit(self.async_database_url).path.removeprefix("/") or "local"
+
+    @property
     def allowed_origins(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 

@@ -60,6 +60,7 @@ class TelegramOrderNotifier:
                     },
                 )
                 response.raise_for_status()
+            logger.info("telegram_notification_sent", order_number=order_number)
         except Exception as error:
             logger.warning(
                 "telegram_notification_failed",

@@ -44,9 +44,29 @@ export async function POST(request: Request) {
       cache: "no-store",
       signal: AbortSignal.timeout(10_000),
     });
-    if (!response.ok) throw new Error(`order_failed_status_${response.status}`);
+    if (!response.ok) {
+      throw new Error(
+        `order_failed_status_${response.status}_request_${response.headers.get("x-request-id") ?? "unknown"}`,
+      );
+    }
 
-    const order = (await response.json()) as { order_number: string };
+    const order = (await response.json()) as { order_number?: unknown };
+    if (typeof order.order_number !== "string" || !/^MLS-[A-F0-9]{10}$/.test(order.order_number)) {
+      throw new Error("order_response_missing_number");
+    }
+    const confirmation = await fetch(
+      new URL(`/v1/orders/${encodeURIComponent(order.order_number)}/confirmation`, getApiTarget()),
+      { cache: "no-store", signal: AbortSignal.timeout(10_000) },
+    );
+    if (!confirmation.ok) {
+      throw new Error(
+        `order_confirmation_failed_status_${confirmation.status}_request_${confirmation.headers.get("x-request-id") ?? "unknown"}`,
+      );
+    }
+    const confirmedOrder = (await confirmation.json()) as { order_number?: unknown };
+    if (confirmedOrder.order_number !== order.order_number) {
+      throw new Error("order_confirmation_mismatch");
+    }
     return redirect(`/merci/${encodeURIComponent(order.order_number)}`);
   } catch (error) {
     console.error("MELSSY form checkout failed", { error });

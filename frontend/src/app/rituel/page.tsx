@@ -63,6 +63,13 @@ const orderErrorMessage = async (response: Response) => {
   return response.status === 422 ? landing.order.validationError : landing.order.error;
 };
 
+const readConfirmedOrderNumber = async (response: Response) => {
+  const payload = await response.json() as { order_number?: unknown };
+  return typeof payload.order_number === "string" && /^MLS-[A-F0-9]{10}$/.test(payload.order_number)
+    ? payload.order_number
+    : null;
+};
+
 export default function RitualLandingPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -200,14 +207,40 @@ export default function RitualLandingPage() {
         },
       );
       if (!response.ok) {
+        console.error("MELSSY order rejected", {
+          status: response.status,
+          requestId: response.headers.get("x-request-id"),
+        });
         setError(await orderErrorMessage(response));
         setSubmitting(false);
         return;
       }
-      const result: { order_number: string } = await response.json();
-      console.info("MELSSY order saved", { orderUrl, orderNumber: result.order_number });
+      const orderNumber = await readConfirmedOrderNumber(response);
+      if (!orderNumber) {
+        setError(landing.order.confirmationError);
+        setSubmitting(false);
+        return;
+      }
+      const confirmationResponse = await fetch(
+        `/api/v1/orders/${encodeURIComponent(orderNumber)}/confirmation`,
+        { cache: "no-store", signal: controller.signal },
+      );
+      const confirmedOrderNumber = confirmationResponse.ok
+        ? await readConfirmedOrderNumber(confirmationResponse)
+        : null;
+      if (confirmedOrderNumber !== orderNumber) {
+        console.error("MELSSY order confirmation failed", {
+          orderNumber,
+          status: confirmationResponse.status,
+          requestId: confirmationResponse.headers.get("x-request-id"),
+        });
+        setError(landing.order.confirmationError);
+        setSubmitting(false);
+        return;
+      }
+      console.info("MELSSY order saved", { orderUrl, orderNumber });
       void emitCommerceEvent("Purchase", ["beauty-night-ritual", ...selectedAddonIds], total);
-      const destination = `/merci/${encodeURIComponent(result.order_number)}`;
+      const destination = `/merci/${encodeURIComponent(orderNumber)}`;
       console.info("MELSSY navigating after order", { destination });
       // eslint-disable-next-line @next/next/no-location-assign-relative-destination
       location.href = destination;

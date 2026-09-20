@@ -50,6 +50,7 @@ export const landing = {
     validationError: "Vérifiez votre nom et votre numéro de téléphone, puis réessayez.",
     timeoutError: "Le service met trop de temps à répondre. Vérifiez votre connexion puis réessayez.",
     networkError: "Impossible de joindre le service de commande. Vérifiez votre connexion puis réessayez.",
+    confirmationError: "Nous n'avons pas pu confirmer l'enregistrement de votre commande. Veuillez réessayer.",
   },
   ctas: {
     completeRitual: "Complétez votre rituel",

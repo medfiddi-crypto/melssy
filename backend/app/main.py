@@ -47,6 +47,7 @@ async def lifespan(app: FastAPI):
         "backend_startup",
         database_backend=settings.database_backend,
         database_host=settings.database_host,
+        database_name=settings.database_name,
     )
     retry_task = asyncio.create_task(sheet_webhook_retry_loop())
     try:
@@ -131,6 +132,14 @@ async def create_order(
             503,
             "Un problème technique est survenu. Écrivez-nous sur WhatsApp pour confirmer votre commande.",
         ) from None
+    logger.info(
+        "order_persisted",
+        order_number=order.order_number,
+        created=created,
+        request_id=request.state.request_id,
+        database_host=settings.database_host,
+        database_name=settings.database_name,
+    )
     if created:
         background_tasks.add_task(
             TelegramOrderNotifier().notify,

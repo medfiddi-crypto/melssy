@@ -19,6 +19,11 @@ def test_production_rejects_sqlite_database() -> None:
         )
 
 
+def test_database_name_is_available_for_diagnostics() -> None:
+    settings = Settings(database_url="postgresql://user:password@database:5432/melssybeauty")
+    assert settings.database_name == "melssybeauty"
+
+
 def test_accepts_moroccan_mobile_forms() -> None:
     for candidate in ("0612345678", "07 1234-5678", "+212612345678", "+212 6 1234 5678", "212612345678", "00212612345678"):
         assert normalize_moroccan_phone(candidate) in ("+212612345678", "+212712345678")
