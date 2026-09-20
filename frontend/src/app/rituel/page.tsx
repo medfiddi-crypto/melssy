@@ -33,7 +33,7 @@ const separateValue = landing.valueStack.items.reduce(
 );
 const renderFaqAnswer = (answer: string) => {
   const [before, after] = answer.split("{{contact}}");
-  if (after === undefined) return withDelivery;
+  if (after === undefined) return answer;
   return (
     <>
       {before}

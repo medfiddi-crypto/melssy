@@ -55,11 +55,14 @@ export function ThankYouPage({ orderNumber, initialOrder = null }: { orderNumber
   const shippingFee = optionalStorefront.shippingFee();
   const freeGiftName = optionalStorefront.freeGiftName();
 
+  const firstName = order.customer_name.trim().split(/\s+/)[0] || "";
+  const greeting = firstName ? `Merci, ${firstName} !` : "Merci !";
+
   return <main className="min-h-dvh bg-[var(--background)] px-5 py-8 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:px-6">
     <Header />
     <section className="mx-auto max-w-xl pt-12">
       <p className="inline-flex items-center gap-2 rounded-full border border-[var(--green)]/25 bg-white px-3 py-1.5 text-xs font-medium text-[var(--green)]"><Check size={14} strokeWidth={2.5} />Votre commande est enregistrée.</p>
-      <h1 className="display mt-5 text-5xl leading-none">Merci !</h1>
+      <h1 className="display mt-5 text-5xl leading-none">{greeting}</h1>
       <p className="mt-4 text-sm leading-6">Nous vous appelons très bientôt pour confirmer votre commande et la date de livraison. Vous payez à la réception.</p>
       <p className="mt-6 text-sm text-black/65">Commande n° {reference}</p>
 
