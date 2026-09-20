@@ -463,6 +463,16 @@ export default function RitualLandingPage() {
         <h2 className="display mt-4 text-5xl leading-none">
           Trois gestes, <span className="headline-accent">puis dormez.</span>
         </h2>
+        <div className="mt-6 md:mx-auto md:max-w-2xl">
+          <Image
+            src={media.ritualSoir.src}
+            alt={media.ritualSoir.alt}
+            width={400}
+            height={300}
+            className="w-full rounded-2xl object-cover"
+            sizes="(max-width: 768px) 100vw, 672px"
+          />
+        </div>
         <div className="mt-6 divide-y divide-[var(--line)] border-y border-[var(--line)]">
           {landing.ritual.steps.map((step, index) => (
             <div key={landing.ritual.steps[index].label} className="flex items-center gap-5 py-4 md:py-5">
@@ -521,8 +531,19 @@ export default function RitualLandingPage() {
           <h2 className="display mt-4 text-5xl leading-none">
             Le dernier geste <span className="headline-accent">de votre journée.</span>
           </h2>
-          <p className="mt-6 text-sm font-medium">{landing.order.productLabel}</p>
-          <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">{ritual.contents}</p>
+          <div className="mt-6 flex items-center justify-center gap-4 text-left">
+            <Image
+              src={media.coffretBox.src}
+              alt="Coffret MELSSY"
+              width={64}
+              height={64}
+              className="h-16 w-16 shrink-0 rounded-xl object-cover"
+            />
+            <div>
+              <p className="text-sm font-medium">{landing.order.productLabel}</p>
+              <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">{ritual.contents}</p>
+            </div>
+          </div>
           <p className="display mt-4 text-3xl">{formatPrice(total)}</p>
           {form("final")}
         </div>

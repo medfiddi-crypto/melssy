@@ -1,5 +1,6 @@
 export const media = {
   landingHero: { src: "/images/hero-reveil.png", alt: "Femme qui se réveille sur une taie d'oreiller en satin MELSSY", ratio: "4:5", intendedShot: "Femme se réveillant sur une taie satinée MELSSY", temporary: false },
+  ritualSoir: { src: "/images/rituel-soir.png", alt: "Femme qui enroule ses cheveux autour d'un boucleur en satin le soir", ratio: "4:3", intendedShot: "Femme qui enroule ses cheveux autour d'un boucleur en satin le soir", temporary: false },
   coffretBox: { src: "/images/hero-pictures.webp", alt: "Coffret MELSSY ouvert avec deux taies satinées, un bonnet, deux chouchous et un boucleur sans chaleur", ratio: "1:1", intendedShot: "Coffret MELSSY ouvert, vue carrée", temporary: false },
   heroRitual: { src: "/images/temp/satin-picture-2.webp", alt: "Les cinq pièces du coffret Beauty Night Ritual", ratio: "4:5", intendedShot: "PHOTO HERO — LES 5 PIÈCES DU COFFRET", temporary: true },
   storyNight: { src: "/images/temp/hero-rituel.svg", alt: "Femme dans une chambre apaisée", ratio: "4:5", intendedShot: "Femme reposant dans la lumière du matin", temporary: true },
