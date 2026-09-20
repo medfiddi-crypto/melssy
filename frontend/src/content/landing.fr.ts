@@ -12,8 +12,6 @@ export const landing = {
     cod: "Payé à la livraison",
     codLong: "Vous payez à la réception",
     confirm: "On vous appelle pour confirmer avant l'envoi",
-    deliveryLabel: "Délai de livraison",
-    deliveryTime: "[délai à confirmer]",
   },
   valueStack: {
     eyebrow: "Dans la boîte",

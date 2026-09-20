@@ -31,10 +31,8 @@ const separateValue = landing.valueStack.items.reduce(
   (sum, item) => sum + catalog[item.productId].price,
   0,
 );
-const deliveryTime = landing.trust.deliveryTime;
 const renderFaqAnswer = (answer: string) => {
-  const withDelivery = answer.replace("{{deliveryTime}}", deliveryTime);
-  const [before, after] = withDelivery.split("{{contact}}");
+  const [before, after] = answer.split("{{contact}}");
   if (after === undefined) return withDelivery;
   return (
     <>
