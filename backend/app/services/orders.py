@@ -55,10 +55,16 @@ def calculate_shipping(items: list[tuple[str, int]], subtotal: object) -> object
     return settings.standard_shipping_fee
 
 
-async def create_order(session: AsyncSession, payload: OrderRequest, phone: str) -> Order:
-    existing = await session.scalar(select(Order).where(Order.idempotency_key == payload.idempotency_key))
+async def create_order(
+    session: AsyncSession, payload: OrderRequest, phone: str
+) -> tuple[Order, list[OrderItem], bool]:
+    existing = await session.scalar(
+        select(Order)
+        .options(selectinload(Order.items))
+        .where(Order.idempotency_key == payload.idempotency_key)
+    )
     if existing:
-        return existing
+        return existing, existing.items, False
     since = datetime.now(UTC) - timedelta(hours=24)
     duplicate = await session.scalar(
         select(Order.id).where(Order.phone_e164 == phone, Order.created_at >= since).limit(1)
@@ -89,7 +95,7 @@ async def create_order(session: AsyncSession, payload: OrderRequest, phone: str)
     session.add(SheetWebhookOutbox(event_type="order.created", payload=json.dumps(sheet_event(order, "order.created", order_items))))
     await session.commit()
     await session.refresh(order)
-    return order
+    return order, order_items, True
 
 
 async def apply_upsell(session: AsyncSession, order_number: str, decision: str) -> Order | None:

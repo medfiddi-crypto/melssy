@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     order_webhook_timeout_seconds: float = 10
     order_webhook_max_attempts: int = 5
     order_webhook_retry_interval_seconds: int = 60
+    telegram_bot_token: str = ""
+    telegram_chat_id: str = ""
     meta_pixel_id: str = ""
     meta_capi_access_token: str = ""
     tiktok_pixel_id: str = ""

@@ -15,7 +15,11 @@ from app.db.session import SessionLocal, get_session
 from app.models.orders import Order
 from app.schemas.orders import OrderRequest, OrderResponse, UpsellRequest
 from app.services.catalog import CATALOG, OFFER
-from app.services.notifier import ManualOrderConfirmationNotifier
+from app.services.notifier import (
+    ManualOrderConfirmationNotifier,
+    TelegramOrderNotifier,
+    telegram_order_message,
+)
 from app.services.orders import apply_upsell, order_payload
 from app.services.orders import create_order as persist_order
 from app.services.webhook import deliver_pending_sheet_webhooks
@@ -108,7 +112,7 @@ async def create_order(
     if any(line.product_id not in CATALOG for line in payload.items):
         raise HTTPException(422, "Un article de votre panier n'est plus disponible.")
     try:
-        order = await persist_order(session, payload, phone)
+        order, order_items, created = await persist_order(session, payload, phone)
     except Exception:
         logger.exception(
             "order_submission_failed",
@@ -119,6 +123,12 @@ async def create_order(
             503,
             "Un problème technique est survenu. Écrivez-nous sur WhatsApp pour confirmer votre commande.",
         ) from None
+    if created:
+        background_tasks.add_task(
+            TelegramOrderNotifier().notify,
+            order.order_number,
+            telegram_order_message(order, order_items),
+        )
     background_tasks.add_task(dispatch_sheet_webhooks)
     await ManualOrderConfirmationNotifier().notify(order.order_number)
     offer = {"product_id": OFFER["product_id"], "price": str(OFFER["price"])} if OFFER["enabled"] else None
