@@ -47,6 +47,9 @@ export const landing = {
     reassurance: "On vous appelle pour confirmer avant l'envoi. Aucun paiement en ligne.",
     submitting: "Enregistrement...",
     error: "Votre commande n'a pas pu être enregistrée. Veuillez réessayer.",
+    validationError: "Vérifiez votre nom et votre numéro de téléphone, puis réessayez.",
+    timeoutError: "Le service met trop de temps à répondre. Vérifiez votre connexion puis réessayez.",
+    networkError: "Impossible de joindre le service de commande. Vérifiez votre connexion puis réessayez.",
   },
   ctas: {
     completeRitual: "Complétez votre rituel",

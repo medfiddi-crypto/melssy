@@ -55,6 +55,8 @@ class Settings(BaseSettings):
         missing = [name for field, (name, default) in required_fields.items() if not getattr(self, field).strip() or getattr(self, field) == default]
         if missing:
             raise ValueError(f"Missing required environment variable(s) in production: {', '.join(missing)}")
+        if urlsplit(normalize_database_url(self.database_url)).scheme.split("+")[0] != "postgresql":
+            raise ValueError("DATABASE_URL must point to PostgreSQL in production")
         return self
 
     @property

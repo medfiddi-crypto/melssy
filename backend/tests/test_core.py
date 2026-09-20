@@ -1,4 +1,6 @@
-from app.core.config import normalize_database_url
+import pytest
+
+from app.core.config import Settings, normalize_database_url
 from app.core.phone import normalize_moroccan_phone
 from app.core.security import sha256_pii
 from app.services.catalog import calculate_total
@@ -6,6 +8,15 @@ from app.services.catalog import calculate_total
 
 def test_normalizes_easypanel_postgres_url() -> None:
     assert normalize_database_url("postgres://u:p@host/melssybeauty?sslmode=disable") == "postgresql+asyncpg://u:p@host/melssybeauty"
+
+
+def test_production_rejects_sqlite_database() -> None:
+    with pytest.raises(ValueError, match="must point to PostgreSQL"):
+        Settings(
+            environment="production",
+            database_url="sqlite+aiosqlite:///./wrong.db",
+            cors_origins="https://melssy.beauty",
+        )
 
 
 def test_accepts_moroccan_mobile_forms() -> None:

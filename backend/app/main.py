@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import get_settings
 from app.core.phone import MOROCCAN_MOBILE_ERROR, normalize_moroccan_phone
 from app.db.session import SessionLocal, get_session
-from app.models.orders import Order
+from app.models.orders import Order, OrderItem, SheetWebhookOutbox, TrackingOutbox
 from app.schemas.orders import OrderRequest, OrderResponse, UpsellRequest
 from app.services.catalog import CATALOG, OFFER
 from app.services.notifier import (
@@ -72,10 +72,12 @@ app.add_middleware(CORSMiddleware, **cors_options)
 
 @app.middleware("http")
 async def security_headers(request: Request, call_next):
+    request_id = request.headers.get("X-Request-ID", str(uuid4()))
+    request.state.request_id = request_id
     response = await call_next(request)
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-Request-ID"] = request.headers.get("X-Request-ID", str(uuid4()))
+    response.headers["X-Request-ID"] = request_id
     return response
 
 
@@ -85,8 +87,14 @@ async def root() -> dict[str, str]:
 
 
 @app.get("/health")
-async def health() -> dict[str, str]:
-    return {"status": "ok"}
+async def health(session: AsyncSession = Depends(get_session)) -> dict[str, str]:
+    try:
+        for model in (Order, OrderItem, TrackingOutbox, SheetWebhookOutbox):
+            await session.execute(select(model).limit(1))
+    except Exception as error:
+        logger.warning("database_health_check_failed", error_type=type(error).__name__)
+        raise HTTPException(503, "Database unavailable or schema incomplete") from None
+    return {"status": "ok", "database": settings.database_backend}
 
 
 @app.get("/v1/catalog")
@@ -116,7 +124,7 @@ async def create_order(
     except Exception:
         logger.exception(
             "order_submission_failed",
-            request_id=request.headers.get("X-Request-ID"),
+            request_id=request.state.request_id,
             item_count=len(payload.items),
         )
         raise HTTPException(

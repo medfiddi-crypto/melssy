@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   const phone = normalizeMoroccanMobile(String(formData.get("phone") ?? ""));
 
   if (name.length < 2 || !phone) {
-    return redirect("/rituel?commande=invalide");
+    return redirect("/rituel?commande=invalide#commander");
   }
 
   const addonItems = [...new Set(formData.getAll("addons").map(String))]
@@ -50,6 +50,6 @@ export async function POST(request: Request) {
     return redirect(`/merci/${encodeURIComponent(order.order_number)}`);
   } catch (error) {
     console.error("MELSSY form checkout failed", { error });
-    return redirect("/rituel?commande=indisponible");
+    return redirect("/rituel?commande=indisponible#commander");
   }
 }

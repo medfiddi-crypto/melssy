@@ -53,10 +53,21 @@ const normalizeMoroccanMobile = (value: string) => {
   return /^\+212[67]\d{8}$/.test(phone) ? phone : null;
 };
 
+const orderErrorMessage = async (response: Response) => {
+  try {
+    const payload = await response.json() as { detail?: unknown };
+    if (typeof payload.detail === "string") return payload.detail;
+  } catch {
+    // Use the status-based message when the server did not return JSON.
+  }
+  return response.status === 422 ? landing.order.validationError : landing.order.error;
+};
+
 export default function RitualLandingPage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
+  const [idempotencyKey] = useState(safeUUID);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({ name: false, phone: false });
@@ -76,6 +87,11 @@ export default function RitualLandingPage() {
   const selectedAddonIds = landing.addons.items.filter((id) => selectedAddons[id]);
   const addonsTotal = selectedAddonIds.reduce((sum, id) => sum + catalog[id].price, 0);
   const total = ritual.price + addonsTotal;
+  useEffect(() => {
+    const checkoutStatus = new URLSearchParams(window.location.search).get("commande");
+    if (checkoutStatus === "invalide") setError(landing.order.validationError);
+    if (checkoutStatus === "indisponible") setError(landing.order.error);
+  }, []);
   useEffect(() => {
     const updateViewportHeight = () => {
       setViewportHeight(window.visualViewport?.height ?? window.innerHeight);
@@ -150,14 +166,15 @@ export default function RitualLandingPage() {
     event.preventDefault();
     setTouched({ name: true, phone: true });
     const normalizedPhone = normalizeMoroccanMobile(phone);
-    if (!name.trim() || !normalizedPhone || submitting) return;
+    if (name.trim().length < 2 || !normalizedPhone || submitting) return;
     setSubmitting(true);
     setError("");
+    let timeout: number | undefined;
     try {
       const orderUrl = "/api/v1/orders";
       const attribution = new URLSearchParams(window.location.search);
       const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 10_000);
+      timeout = window.setTimeout(() => controller.abort(), 10_000);
       const items = [
         { product_id: "beauty-night-ritual", quantity: 1 },
         ...selectedAddonIds.map((id) => ({ product_id: id, quantity: 1 })),
@@ -171,7 +188,7 @@ export default function RitualLandingPage() {
           body: JSON.stringify({
             name: name.trim(),
             phone: normalizedPhone,
-            idempotency_key: safeUUID(),
+            idempotency_key: idempotencyKey,
             items,
             attribution: {
               utm_source: attribution.get("utm_source"),
@@ -182,8 +199,11 @@ export default function RitualLandingPage() {
           }),
         },
       );
-      window.clearTimeout(timeout);
-      if (!response.ok) throw new Error(`order_failed_status_${response.status}`);
+      if (!response.ok) {
+        setError(await orderErrorMessage(response));
+        setSubmitting(false);
+        return;
+      }
       const result: { order_number: string } = await response.json();
       console.info("MELSSY order saved", { orderUrl, orderNumber: result.order_number });
       void emitCommerceEvent("Purchase", ["beauty-night-ritual", ...selectedAddonIds], total);
@@ -193,8 +213,14 @@ export default function RitualLandingPage() {
       location.href = destination;
     } catch (error) {
       console.error("MELSSY order submission failed", { url: "/api/v1/orders", error });
-      setError(landing.order.error);
+      setError(
+        error instanceof DOMException && error.name === "AbortError"
+          ? landing.order.timeoutError
+          : landing.order.networkError,
+      );
       setSubmitting(false);
+    } finally {
+      if (timeout !== undefined) window.clearTimeout(timeout);
     }
   };
   const form = (suffix: string) => (
@@ -251,7 +277,7 @@ export default function RitualLandingPage() {
           </span>
         )}
       </label>
-      {error && <p role="alert" className="text-sm text-red-800">{error}</p>}
+      {error && <p role="alert" aria-live="assertive" className="border border-red-800/25 bg-red-50 px-3 py-2 text-sm text-red-900">{error}</p>}
       {landing.addons.items.length > 0 && (
         <fieldset className="grid gap-3 border-t border-[var(--line)] pt-4">
           <legend className="text-sm font-medium">{landing.addons.title}</legend>

@@ -8,21 +8,22 @@ type RouteContext = {
 
 async function proxy(request: Request, context: RouteContext) {
   const { path } = await context.params;
-  const url = new URL(`/v1/${path.join("/")}`, getApiTarget());
-  url.search = new URL(request.url).search;
-
-  const headers = new Headers();
-  const contentType = request.headers.get("content-type");
-  const idempotencyKey = request.headers.get("idempotency-key");
-  if (contentType) headers.set("content-type", contentType);
-  if (idempotencyKey) headers.set("idempotency-key", idempotencyKey);
+  let backendUrl: URL | null = null;
 
   try {
-    const response = await fetch(url, {
+    backendUrl = new URL(`/v1/${path.join("/")}`, getApiTarget());
+    backendUrl.search = new URL(request.url).search;
+    const headers = new Headers();
+    const contentType = request.headers.get("content-type");
+    const idempotencyKey = request.headers.get("idempotency-key");
+    if (contentType) headers.set("content-type", contentType);
+    if (idempotencyKey) headers.set("idempotency-key", idempotencyKey);
+    const response = await fetch(backendUrl, {
       method: request.method,
       headers,
       body: request.method === "GET" || request.method === "HEAD" ? undefined : await request.arrayBuffer(),
       cache: "no-store",
+      signal: AbortSignal.timeout(10_000),
     });
     const responseHeaders = new Headers();
     const responseContentType = response.headers.get("content-type");
@@ -31,7 +32,7 @@ async function proxy(request: Request, context: RouteContext) {
     if (requestId) responseHeaders.set("x-request-id", requestId);
     return new Response(response.body, { status: response.status, headers: responseHeaders });
   } catch (error) {
-    console.error("MELSSY API proxy failed", { url: url.toString(), error });
+    console.error("MELSSY API proxy failed", { url: backendUrl?.toString() ?? "invalid API_PROXY_TARGET", error });
     return Response.json({ detail: "Le service de commande est indisponible." }, { status: 503 });
   }
 }
