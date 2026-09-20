@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import UTC
 from typing import Protocol
+from zoneinfo import ZoneInfo
 
 import httpx
 import structlog
@@ -41,7 +42,7 @@ def telegram_order_message(order: Order, items: list[OrderItem] | None = None) -
         *item_lines,
         "",
         f"Total : {order.total:.2f} {order.currency}",
-        f"Heure : {created_at.astimezone(UTC):%d/%m/%Y %H:%M} UTC",
+        f"Heure : {created_at.astimezone(ZoneInfo('Africa/Casablanca')):%d/%m/%Y %H:%M}",
     ])
 
 
