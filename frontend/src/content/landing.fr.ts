@@ -105,9 +105,9 @@ export const landing = {
   },
   faq: [
     ["Comment se passe le paiement ?", "Vous réglez votre commande à la livraison, après confirmation avec notre équipe."],
-    ["Où livrez-vous et en combien de temps ?", "Partout au Maroc, livraison offerte sur le coffret. Délai indicatif : {{deliveryTime}}. Confirmé par téléphone avant l'envoi."],
+    ["Où livrez-vous et en combien de temps ?", "Partout au Maroc, livraison offerte sur le coffret. Le délai vous est confirmé par téléphone avant l'envoi."],
+    ["Et si je ne suis pas satisfaite ?", "Vous pouvez échanger ou retourner votre coffret sous 7 jours après réception. Pour des raisons d'hygiène, les pièces doivent être non utilisées et dans leur emballage d'origine. {{contact}}, nous vous répondons rapidement."],
     ["Le rituel convient-il à tous les cheveux ?", "Oui. C'est un geste de douceur pour vos cheveux. Il ne remplace pas un soin professionnel."],
-    ["Comment entretenir les pièces ?", "Nos pièces sont en satin 100% polyester, pensé pour supporter le lavage. Conseils d'entretien détaillés : [à confirmer]."],
   ],
   ritual: {
     eyebrow: "Le rituel",

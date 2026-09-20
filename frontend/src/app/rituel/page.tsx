@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
-import { Check, X } from "lucide-react";
+import { Check, Plus, X } from "lucide-react";
 
 import { catalog, formatPrice } from "@/content/catalog";
 import { landing } from "@/content/landing.fr";
@@ -32,6 +32,18 @@ const separateValue = landing.valueStack.items.reduce(
   0,
 );
 const deliveryTime = landing.trust.deliveryTime;
+const renderFaqAnswer = (answer: string) => {
+  const withDelivery = answer.replace("{{deliveryTime}}", deliveryTime);
+  const [before, after] = withDelivery.split("{{contact}}");
+  if (after === undefined) return withDelivery;
+  return (
+    <>
+      {before}
+      <Link href="/contact" className="underline underline-offset-4">Contactez-nous</Link>
+      {after}
+    </>
+  );
+};
 const confirmationWindow = optionalStorefront.confirmationWindow();
 const normalizeMoroccanMobile = (value: string) => {
   let phone = value.replace(/[\s-]/g, "");
@@ -56,6 +68,7 @@ export default function RitualLandingPage() {
   const [stickyCtaVisible, setStickyCtaVisible] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(0);
   const [tapTarget, setTapTarget] = useState("");
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
   const toggleAddon = (id: string) =>
     setSelectedAddons((current) => ({ ...current, [id]: !current[id] }));
   const selectedAddonIds = landing.addons.items.filter((id) => selectedAddons[id]);
@@ -491,14 +504,31 @@ export default function RitualLandingPage() {
           Avant de <span className="headline-accent">commander.</span>
         </h2>
         <div className="mt-8 divide-y divide-[var(--line)] border-y border-[var(--line)]">
-          {landing.faq.map(([question, answer]) => (
-            <details key={question} className="py-5">
-              <summary className="cursor-pointer pr-5 font-medium">
-                {question}
-              </summary>
-              <p className="mt-3 max-w-xl text-sm leading-6">{answer.replace("{{deliveryTime}}", deliveryTime)}</p>
-            </details>
-          ))}
+          {landing.faq.map(([question, answer], index) => {
+            const open = openFaqIndex === index;
+            return (
+              <div key={question}>
+                <button
+                  type="button"
+                  onClick={() => setOpenFaqIndex(open ? null : index)}
+                  aria-expanded={open}
+                  className="flex w-full items-center justify-between gap-4 py-4 text-left font-medium"
+                >
+                  {question}
+                  <Plus
+                    size={18}
+                    strokeWidth={1.5}
+                    className={`shrink-0 text-[var(--green)] transition-transform duration-200 motion-reduce:transition-none ${open ? "rotate-45" : "rotate-0"}`}
+                  />
+                </button>
+                <div className={`grid transition-[grid-template-rows] duration-300 ease-out motion-reduce:transition-none ${open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
+                  <div className="overflow-hidden">
+                    <p className="max-w-xl pb-4 text-sm leading-6">{renderFaqAnswer(answer)}</p>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
       <section className="px-6 py-16 md:px-16 md:py-24">
