@@ -61,8 +61,10 @@ export default function RitualLandingPage() {
   const [error, setError] = useState("");
   const [touched, setTouched] = useState({ name: false, phone: false });
   const [heroSection, setHeroSection] = useState<HTMLElement | null>(null);
-  const [primaryForm, setPrimaryForm] = useState<HTMLFormElement | null>(null);
+  const [heroCta, setHeroCta] = useState<HTMLAnchorElement | null>(null);
+  const [orderForm, setOrderForm] = useState<HTMLFormElement | null>(null);
   const [heroInView, setHeroInView] = useState(true);
+  const [heroCtaInView, setHeroCtaInView] = useState(true);
   const [checkoutInView, setCheckoutInView] = useState(false);
   const [stickyCtaMounted, setStickyCtaMounted] = useState(false);
   const [stickyCtaVisible, setStickyCtaVisible] = useState(false);
@@ -83,7 +85,7 @@ export default function RitualLandingPage() {
     return () => window.visualViewport?.removeEventListener("resize", updateViewportHeight);
   }, []);
   useEffect(() => {
-    if (!heroSection || !primaryForm || !viewportHeight) return;
+    if (!heroSection || !heroCta || !orderForm || !viewportHeight) return;
 
     const syncHeroVisibility = () => {
       setHeroInView(heroSection.getBoundingClientRect().bottom > 0);
@@ -92,21 +94,27 @@ export default function RitualLandingPage() {
       ([entry]) => setHeroInView(entry.isIntersecting),
       { threshold: 0 },
     );
+    const heroCtaObserver = new IntersectionObserver(
+      ([entry]) => setHeroCtaInView(entry.isIntersecting),
+      { threshold: 0 },
+    );
     const checkoutObserver = new IntersectionObserver(
       ([entry]) => setCheckoutInView(entry.isIntersecting),
-      { rootMargin: `0px 0px -${Math.round(viewportHeight * 0.7)}px 0px`, threshold: 0 },
+      { threshold: 0 },
     );
     heroObserver.observe(heroSection);
-    checkoutObserver.observe(primaryForm);
+    heroCtaObserver.observe(heroCta);
+    checkoutObserver.observe(orderForm);
     window.addEventListener("scroll", syncHeroVisibility, { passive: true });
     syncHeroVisibility();
     return () => {
       heroObserver.disconnect();
+      heroCtaObserver.disconnect();
       checkoutObserver.disconnect();
       window.removeEventListener("scroll", syncHeroVisibility);
     };
-  }, [heroSection, primaryForm, viewportHeight]);
-  const showStickyCta = !heroInView && !checkoutInView;
+  }, [heroSection, heroCta, orderForm, viewportHeight]);
+  const showStickyCta = !heroCtaInView && !checkoutInView;
   const compactMasthead = !heroInView;
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;
@@ -132,7 +140,7 @@ export default function RitualLandingPage() {
     return () => window.clearTimeout(timeout);
   }, [showStickyCta]);
   const scrollToForm = () => {
-    document.getElementById("commande-fields")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    document.getElementById("commander")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   const handleHeroCta = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -191,7 +199,7 @@ export default function RitualLandingPage() {
   };
   const form = (suffix: string) => (
     <form
-      ref={suffix === "primary" ? setPrimaryForm : undefined}
+      ref={suffix === "final" ? setOrderForm : undefined}
       data-order-form
       action="/commande"
       method="post"
@@ -320,7 +328,8 @@ export default function RitualLandingPage() {
             {formatPrice(ritual.price)} · Livraison offerte · Paiement à la livraison
           </p>
           <a
-            href="#commande-fields"
+            ref={setHeroCta}
+            href="#commander"
             onClick={handleHeroCta}
             className="mt-6 inline-block w-full bg-[var(--green)] px-6 py-4 text-center text-white sm:w-auto"
           >
@@ -397,7 +406,7 @@ export default function RitualLandingPage() {
             </div>
           </div>
           <a
-            href="#commande"
+            href="#commander"
             onClick={handleHeroCta}
             className="mt-8 mx-auto block w-full bg-[var(--background)] px-6 py-[13px] text-center font-semibold text-[var(--green)] rounded-[8px] md:max-w-[400px] text-base transition-colors hover:bg-[#ede7dd] active:bg-[#e8e0d4]"
           >
@@ -473,31 +482,6 @@ export default function RitualLandingPage() {
         <h2 className="display mt-4 text-4xl leading-none">{landing.preview.reviewsTitle}</h2>
         <p className="mx-auto mt-5 max-w-xl text-sm leading-6">{landing.preview.reviewsBody}</p>
       </section>}
-      <section
-        id="commande"
-        className="px-6 py-16 md:px-16 md:py-24"
-      >
-        <div className="mx-auto max-w-xl">
-          <div id="commande-fields" className="scroll-mt-20">
-            <p className="eyebrow text-[var(--rose)]">COMMANDER</p>
-            <h2 className="display mt-4 text-5xl leading-none">
-              Votre coffret, <span className="headline-accent">livré chez vous.</span>
-            </h2>
-          </div>
-          <div className="mt-8 border border-[var(--line)] bg-white/50 p-5 md:p-6">
-            <p className="text-sm font-medium">{landing.order.productLabel}</p>
-            <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">
-              {ritual.contents}
-            </p>
-            <p className="display mt-4 text-5xl leading-none">
-              {ritual.price}<span className="ml-1 align-middle text-3xl font-normal">&thinsp;DH</span>
-            </p>
-            <div className="mt-6 border-t border-[var(--line)] pt-5">
-              {form("primary")}
-            </div>
-          </div>
-        </div>
-      </section>
       <section className="bg-[#eadbd1] px-6 py-16 md:px-16">
         <p className="eyebrow text-[var(--rose)]">{landing.faqSection.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
@@ -531,13 +515,15 @@ export default function RitualLandingPage() {
           })}
         </div>
       </section>
-      <section className="px-6 py-16 md:px-16 md:py-24">
+      <section id="commander" className="scroll-mt-20 px-6 py-16 md:px-16 md:py-24">
         <div className="mx-auto max-w-xl text-center">
           <p className="eyebrow text-[var(--rose)]">{landing.finalOrder.eyebrow}</p>
           <h2 className="display mt-4 text-5xl leading-none">
             Le dernier geste <span className="headline-accent">de votre journée.</span>
           </h2>
-          <p className="display mt-6 text-3xl">{formatPrice(ritual.price)}</p>
+          <p className="mt-6 text-sm font-medium">{landing.order.productLabel}</p>
+          <p className="mt-2 text-[10px] uppercase tracking-[.1em] text-[var(--rose)]">{ritual.contents}</p>
+          <p className="display mt-4 text-3xl">{formatPrice(total)}</p>
           {form("final")}
         </div>
       </section>
@@ -573,11 +559,12 @@ export default function RitualLandingPage() {
       </footer>
       {stickyCtaMounted && (
         <a
-          href="#commande-fields"
+          href="#commander"
+          onClick={handleHeroCta}
           aria-hidden={!stickyCtaVisible}
           className={`fixed bottom-0 left-0 right-0 z-30 box-border flex h-[calc(var(--sticky-cta-height)+env(safe-area-inset-bottom))] items-center justify-center whitespace-nowrap bg-[var(--green)] px-6 pb-[env(safe-area-inset-bottom)] text-center text-sm text-white transition-opacity duration-200 ease-out ${stickyCtaVisible ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
         >
-          {landing.ctas.completeRitual} · {formatPrice(ritual.price)}
+          Commander le coffret · {formatPrice(ritual.price)}
         </a>
       )}
       {tapTarget && process.env.NODE_ENV !== "production" && (
