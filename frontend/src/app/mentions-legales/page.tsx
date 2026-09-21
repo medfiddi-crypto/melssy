@@ -28,22 +28,9 @@ export default function LegalNoticesPage() {
         </section>
 
         <section>
-          <h2 className="font-semibold">Informations professionnelles</h2>
-          <p className="text-black/65">
-            Les informations suivantes seront complétées une fois l'immatriculation de l'entreprise finalisée :
-          </p>
-          <ul className="ml-4 list-disc space-y-1 text-black/65">
-            <li>Numéro de registre de commerce (RC)</li>
-            <li>Numéro d'identifiant fiscal (ICE)</li>
-            <li>Adresse professionnelle</li>
-            <li>Directeur de publication</li>
-          </ul>
-        </section>
-
-        <section>
           <h2 className="font-semibold">Hébergement</h2>
-          <p className="text-black/65">
-            Informations d'hébergement à ajouter.
+          <p>
+            Ce site est hébergé sur un serveur fourni par Hostinger.
           </p>
         </section>
 

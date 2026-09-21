@@ -50,7 +50,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="font-semibold">Conservation des données</h2>
           <p>
-            Vos données sont conservées aussi longtemps que nécessaire pour traiter votre commande, organiser votre livraison et gérer les éventuels retours ou échanges (7 jours minimum). Elles peuvent être conservées plus longtemps si required par la loi marocaine.
+            Vos données sont conservées aussi longtemps que nécessaire pour traiter votre commande, organiser votre livraison et gérer les éventuels retours ou échanges. Elles peuvent être conservées plus longtemps si la loi marocaine l'exige.
           </p>
         </section>
 
