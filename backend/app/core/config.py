@@ -64,6 +64,10 @@ class Settings(BaseSettings):
         return normalize_database_url(self.database_url)
 
     @property
+    def sync_database_url(self) -> str:
+        return self.async_database_url.replace("+asyncpg", "+psycopg").replace("+aiosqlite", "")
+
+    @property
     def database_backend(self) -> str:
         return urlsplit(self.async_database_url).scheme.split("+", 1)[0]
 

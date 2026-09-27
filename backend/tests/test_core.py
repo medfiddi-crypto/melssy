@@ -10,6 +10,12 @@ def test_normalizes_easypanel_postgres_url() -> None:
     assert normalize_database_url("postgres://u:p@host/melssybeauty?sslmode=disable") == "postgresql+asyncpg://u:p@host/melssybeauty"
 
 
+def test_uses_explicit_postgres_drivers() -> None:
+    settings = Settings(database_url="postgresql://u:p@host/melssybeauty?sslmode=disable")
+    assert settings.async_database_url == "postgresql+asyncpg://u:p@host/melssybeauty"
+    assert settings.sync_database_url == "postgresql+psycopg://u:p@host/melssybeauty"
+
+
 def test_production_rejects_sqlite_database() -> None:
     with pytest.raises(ValueError, match="must point to PostgreSQL"):
         Settings(
