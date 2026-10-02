@@ -28,9 +28,9 @@ export function safeUUID(): string {
   return fallbackUUID();
 }
 
-export function emitCommerceEvent(name: CommerceEventName, productIds: string[], value: number): string | null {
+export function emitCommerceEvent(name: CommerceEventName, productIds: string[], value: number, providedEventId?: string): string | null {
   try {
-    const eventId = safeUUID();
+    const eventId = providedEventId ?? safeUUID();
     const payload = {
       content_type: "product",
       content_ids: productIds,

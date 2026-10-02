@@ -6,11 +6,10 @@ import httpx
 import pytest
 from alembic.config import Config
 from pydantic import ValidationError
-from sqlalchemy import create_engine, inspect, select, text
+from sqlalchemy import create_engine, select, text
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from alembic import command
-from app.core.config import get_settings
 from app.models.orders import Order, OrderItem, SheetWebhookOutbox, TrackingOutbox
 from app.schemas.orders import OrderRequest
 from app.services.capi import ConversionEvent, meta_payload, tiktok_payload
@@ -56,31 +55,6 @@ def test_sheet_delivery_headers():
     assert payload["total"] == "449"
 
 
-@pytest.fixture
-def migrated_database(tmp_path, monkeypatch):
-    backend = Path(__file__).resolve().parents[1]
-    database = tmp_path / "orders.db"
-    monkeypatch.setenv("ENVIRONMENT", "development")
-    monkeypatch.setenv("DATABASE_URL", f"sqlite+aiosqlite:///{database.as_posix()}")
-    monkeypatch.setenv("ORDER_WEBHOOK_ENABLED", "false")
-    monkeypatch.setenv("ORDER_WEBHOOK_URL", "")
-    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "")
-    monkeypatch.setenv("TELEGRAM_CHAT_ID", "")
-    get_settings.cache_clear()
-    config = Config(str(backend / "alembic.ini"))
-    config.set_main_option("script_location", str(backend / "alembic"))
-    command.upgrade(config, "head")
-    engine = create_engine(f"sqlite:///{database.as_posix()}")
-    with engine.connect() as connection:
-        columns = {column["name"]: column for column in inspect(connection).get_columns("orders")}
-        assert columns["color"]["nullable"] is True
-        assert columns["city"]["nullable"] is True
-        assert columns["full_address"]["nullable"] is True
-    engine.dispose()
-    yield database
-    get_settings.cache_clear()
-
-
 @pytest.mark.asyncio
 async def test_local_api_persists_orders_and_blocks_invalid_delivery(migrated_database, monkeypatch):
     from app import main
@@ -105,15 +79,18 @@ async def test_local_api_persists_orders_and_blocks_invalid_delivery(migrated_da
                 response = await client.post("/v1/orders", json=body)
                 assert response.status_code == 200, response.text
                 assert response.json()["total"] == "449.00"
-                assert response.json()["offer"] is None
+                assert response.json()["offer"]["price"] == "199.00"
+                assert response.json()["upsell_token"]
                 number = response.json()["order_number"]
                 confirmation = await client.get(f"/v1/orders/{number}/confirmation")
                 assert confirmation.json()["color"] == color
                 assert confirmation.json()["phone_e164"] == "+212612345678"
+                assert "upsell_token" not in confirmation.json()
                 retry = await client.post("/v1/orders", json=body)
                 assert retry.json()["order_number"] == number
-                disabled_offer = await client.post(f"/v1/orders/{number}/upsell", json={"decision": "accept", "idempotency_key": str(uuid4())})
-                assert disabled_offer.json()["total"] == "449.00"
+                assert retry.json()["upsell_token"] == response.json()["upsell_token"]
+                no_token = await client.post(f"/v1/orders/{number}/upsell", json={"decision": "accept", "idempotency_key": str(uuid4()), "colors": ["rose", "rose"]})
+                assert no_token.status_code == 422
 
             for missing in ("city", "full_address"):
                 body = request_data(city="Rabat", full_address="Quartier test, rue 12", color="champagne")
@@ -127,6 +104,8 @@ async def test_local_api_persists_orders_and_blocks_invalid_delivery(migrated_da
                 response = await client.post("/v1/orders", json=body)
                 assert response.status_code == 200, response.text
                 assert response.json()["total"] == price
+                assert response.json()["offer"] is None
+                assert response.json()["upsell_token"] is None
 
             body = request_data(items=[{"product_id": "heatless-curler-solo", "quantity": 1}], city="Rabat", full_address="Quartier test, rue 12", color="rose")
             assert (await client.post("/v1/orders", json=body)).status_code == 422
@@ -137,7 +116,7 @@ async def test_local_api_persists_orders_and_blocks_invalid_delivery(migrated_da
             assert [order.color for order in orders[:2]] == ["champagne", "rose"]
             assert all(order.city and order.full_address for order in orders)
             outbox = list((await session.scalars(select(SheetWebhookOutbox))).all())
-            assert len(outbox) == 8
+            assert len(outbox) == 6
             assert all(row.delivered_at is None for row in outbox)
             tracking = list((await session.scalars(select(TrackingOutbox).where(TrackingOutbox.event_type == "order.created"))).all())
             assert len(tracking) == 6

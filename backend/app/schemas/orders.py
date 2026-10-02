@@ -4,6 +4,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
+from app.services.catalog import OFFER
+
 
 class CartLine(BaseModel):
     product_id: str
@@ -54,8 +56,17 @@ class OrderResponse(BaseModel):
     total: Decimal
     currency: Literal["MAD"] = "MAD"
     offer: dict[str, str | int] | None = None
+    upsell_token: str | None = None
 
 
 class UpsellRequest(BaseModel):
     decision: Literal["accept", "decline"]
     idempotency_key: UUID
+    token: str = Field(min_length=16, max_length=64)
+    colors: list[Literal["champagne", "ivory", "black", "rose"]] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_one_color_per_pillowcase(self) -> "UpsellRequest":
+        if self.decision == "accept" and len(self.colors) != OFFER["quantity"]:
+            raise ValueError("Choisissez une couleur pour chaque taie.")
+        return self

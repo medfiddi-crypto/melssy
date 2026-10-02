@@ -32,9 +32,29 @@ for product_id, name, price in (
         variant_id = f"{product_id}-{color_id}"
         CATALOG[variant_id] = Product(variant_id, f"{name} - {color_name}", price, "footer")
 
-OFFER = {"enabled": False, "product_id": "", "price": Decimal("0.00")}
+COFFRET_ID = "beauty-night-ritual"
+
+# Post-checkout upsell: `quantity` pillowcases sold together for `price`; compare-at and saving derive from the catalog.
+OFFER = {
+    "enabled": True,
+    "product_id": "pillowcase-solo",
+    "item_id": "pillowcase-upsell-pair",
+    "quantity": 2,
+    "price": Decimal("199.00"),
+}
 
 COLOR_LABELS = {"champagne": "Champagne", "ivory": "Ivoire", "black": "Noir", "rose": "Rose"}
+
+
+def offer_summary() -> dict[str, str | int]:
+    compare_at = CATALOG[OFFER["product_id"]].price * OFFER["quantity"]
+    return {
+        "product_id": OFFER["product_id"],
+        "quantity": OFFER["quantity"],
+        "price": str(OFFER["price"]),
+        "compare_at_price": str(compare_at),
+        "saving": str(compare_at - OFFER["price"]),
+    }
 
 
 def calculate_total(items: list[tuple[str, int]]) -> Decimal:

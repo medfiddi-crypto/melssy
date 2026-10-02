@@ -16,7 +16,22 @@ export type ConfirmedOrder = {
   shipping_total: string;
   upsell_decision: string;
   items: { product_id: string; product_name: string; quantity: number; unit_price: string }[];
+  upsell?: { accepted: boolean; value: string; event_id: string; product_id: string; content_ids: string[] } | null;
 };
+
+// Base Purchase keeps its pre-upsell items and value; an accepted upsell adds one separate, deduplicable Purchase.
+function emitPurchases(order: ConfirmedOrder, orderNumber: string) {
+  const upsell = order.upsell ?? null;
+  if (!sessionStorage.getItem(`purchase:${orderNumber}`)) {
+    const baseItems = order.items.filter((item) => item.product_id !== upsell?.product_id);
+    emitCommerceEvent("Purchase", baseItems.map((item) => item.product_id), Number(order.total) - Number(upsell?.value ?? 0));
+    sessionStorage.setItem(`purchase:${orderNumber}`, "sent");
+  }
+  if (upsell && !sessionStorage.getItem(`purchase-upsell:${orderNumber}`)) {
+    emitCommerceEvent("Purchase", upsell.content_ids, Number(upsell.value), upsell.event_id);
+    sessionStorage.setItem(`purchase-upsell:${orderNumber}`, "sent");
+  }
+}
 
 export function ThankYouPage({ orderNumber, initialOrder = null }: { orderNumber: string; initialOrder?: ConfirmedOrder | null }) {
   const [order, setOrder] = useState<ConfirmedOrder | null>(initialOrder);
@@ -26,9 +41,7 @@ export function ThankYouPage({ orderNumber, initialOrder = null }: { orderNumber
   useEffect(() => {
     if (!orderNumber) return;
     if (initialOrder) {
-      if (sessionStorage.getItem(`purchase:${orderNumber}`)) return;
-      emitCommerceEvent("Purchase", initialOrder.items.map((item) => item.product_id), Number(initialOrder.total));
-      sessionStorage.setItem(`purchase:${orderNumber}`, "sent");
+      emitPurchases(initialOrder, orderNumber);
       return;
     }
     fetch(`/api/v1/orders/${encodeURIComponent(orderNumber)}/confirmation`)
@@ -36,9 +49,7 @@ export function ThankYouPage({ orderNumber, initialOrder = null }: { orderNumber
       .then((confirmedOrder: ConfirmedOrder | null) => {
         setOrder(confirmedOrder);
         setLoaded(true);
-        if (!confirmedOrder || sessionStorage.getItem(`purchase:${orderNumber}`)) return;
-        emitCommerceEvent("Purchase", confirmedOrder.items.map((item) => item.product_id), Number(confirmedOrder.total));
-        sessionStorage.setItem(`purchase:${orderNumber}`, "sent");
+        if (confirmedOrder) emitPurchases(confirmedOrder, orderNumber);
       })
       .catch(() => setLoaded(true));
   }, [initialOrder, orderNumber]);

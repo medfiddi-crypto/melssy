@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager, suppress
 from uuid import uuid4
 
 import structlog
-from fastapi import BackgroundTasks, Depends, FastAPI, HTTPException, Request
+from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
@@ -14,13 +14,13 @@ from app.core.phone import MOROCCAN_MOBILE_ERROR, normalize_moroccan_phone
 from app.db.session import SessionLocal, get_session
 from app.models.orders import Order, OrderItem, SheetWebhookOutbox, TrackingOutbox
 from app.schemas.orders import OrderRequest, OrderResponse, UpsellRequest
-from app.services.catalog import CATALOG, OFFER
+from app.services.catalog import CATALOG, OFFER, offer_summary
 from app.services.notifier import (
     ManualOrderConfirmationNotifier,
     TelegramOrderNotifier,
     telegram_order_message,
 )
-from app.services.orders import apply_upsell, order_payload
+from app.services.orders import apply_upsell, load_offer_order, offer_available, order_payload
 from app.services.orders import create_order as persist_order
 from app.services.webhook import deliver_pending_sheet_webhooks
 
@@ -102,7 +102,7 @@ async def health(session: AsyncSession = Depends(get_session)) -> dict[str, str]
 async def catalog() -> dict[str, object]:
     return {
         "products": [{"id": item.id, "name": item.name, "price": str(item.price), "placement": item.placement} for item in CATALOG.values()],
-        "offer": {**OFFER, "price": str(OFFER["price"])},
+        "offer": {"enabled": OFFER["enabled"], **offer_summary()},
     }
 
 
@@ -148,8 +148,31 @@ async def create_order(
         )
     background_tasks.add_task(dispatch_sheet_webhooks)
     await ManualOrderConfirmationNotifier().notify(order.order_number)
-    offer = {"product_id": OFFER["product_id"], "price": str(OFFER["price"])} if OFFER["enabled"] else None
-    return OrderResponse(order_number=order.order_number, total=order.total, offer=offer)
+    offered = offer_available(order, order_items)
+    return OrderResponse(
+        order_number=order.order_number,
+        total=order.total,
+        offer=offer_summary() if offered else None,
+        upsell_token=order.upsell_token if offered else None,
+    )
+
+
+@app.get("/v1/orders/{order_number}/offer")
+async def order_offer(
+    order_number: str,
+    x_upsell_token: str = Header(default=""),
+    session: AsyncSession = Depends(get_session),
+) -> dict[str, object]:
+    order = await load_offer_order(session, order_number, x_upsell_token)
+    if not order:
+        raise HTTPException(404, "Commande introuvable.")
+    return {
+        "order_number": order.order_number,
+        "total": str(order.total),
+        "color": order.color,
+        "decided": order.upsell_decision is not None,
+        "offer": offer_summary() if offer_available(order, order.items) else None,
+    }
 
 
 @app.post("/v1/orders/{order_number}/upsell")
@@ -159,11 +182,15 @@ async def upsell(
     background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
 ) -> JSONResponse:
-    order = await apply_upsell(session, order_number, payload.decision)
-    if not order:
+    result = await apply_upsell(session, order_number, payload)
+    if not result:
         raise HTTPException(404, "Commande introuvable.")
-    background_tasks.add_task(dispatch_sheet_webhooks)
-    return JSONResponse({"order_number": order_number, "total": str(order.total), "status": order.upsell_decision})
+    order, applied = result
+    if applied:
+        background_tasks.add_task(dispatch_sheet_webhooks)
+        if order.upsell_decision == "accept":
+            await ManualOrderConfirmationNotifier().notify(order_number, order)
+    return JSONResponse({"order_number": order_number, "total": str(order.total), "status": order.upsell_decision, "applied": applied})
 
 
 @app.get("/v1/orders/{order_number}/confirmation")

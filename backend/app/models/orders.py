@@ -27,6 +27,8 @@ class Order(Base):
     total: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     possible_duplicate: Mapped[bool] = mapped_column(Boolean, default=False)
     upsell_decision: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    upsell_token: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    upsell_colors: Mapped[str | None] = mapped_column(String(40), nullable=True)
     utm_source: Mapped[str | None] = mapped_column(String(255), nullable=True)
     utm_campaign: Mapped[str | None] = mapped_column(String(255), nullable=True)
     fbclid: Mapped[str | None] = mapped_column(String(512), nullable=True)

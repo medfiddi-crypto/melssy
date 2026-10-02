@@ -55,7 +55,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const order = (await response.json()) as { order_number?: unknown };
+    const order = (await response.json()) as { order_number?: unknown; upsell_token?: unknown };
     if (typeof order.order_number !== "string" || !/^MLS-[A-F0-9]{10}$/.test(order.order_number)) {
       throw new Error("order_response_missing_number");
     }
@@ -71,6 +71,9 @@ export async function POST(request: Request) {
     const confirmedOrder = (await confirmation.json()) as { order_number?: unknown };
     if (confirmedOrder.order_number !== order.order_number) {
       throw new Error("order_confirmation_mismatch");
+    }
+    if (typeof order.upsell_token === "string" && /^[A-Za-z0-9_-]{16,64}$/.test(order.upsell_token)) {
+      return redirect(`/offre/${encodeURIComponent(order.order_number)}?token=${encodeURIComponent(order.upsell_token)}`);
     }
     return redirect(`/merci/${encodeURIComponent(order.order_number)}`);
   } catch (error) {

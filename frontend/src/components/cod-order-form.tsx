@@ -51,6 +51,17 @@ const readConfirmedOrderNumber = async (response: Response) => {
     : null;
 };
 
+const readOrderResponse = async (response: Response) => {
+  const payload = await response.json() as { order_number?: unknown; upsell_token?: unknown };
+  const orderNumber = typeof payload.order_number === "string" && /^MLS-[A-F0-9]{10}$/.test(payload.order_number)
+    ? payload.order_number
+    : null;
+  const upsellToken = typeof payload.upsell_token === "string" && /^[A-Za-z0-9_-]{16,64}$/.test(payload.upsell_token)
+    ? payload.upsell_token
+    : null;
+  return { orderNumber, upsellToken };
+};
+
 export function CodOrderForm({
   items,
   total,
@@ -127,7 +138,7 @@ export function CodOrderForm({
         setSubmitting(false);
         return;
       }
-      const orderNumber = await readConfirmedOrderNumber(response);
+      const { orderNumber, upsellToken } = await readOrderResponse(response);
       if (!orderNumber) {
         setError(landing.order.confirmationError);
         setSubmitting(false);
@@ -152,6 +163,11 @@ export function CodOrderForm({
       }
       console.info("MELSSY order saved", { orderUrl, orderNumber });
       void emitCommerceEvent("Purchase", items.map((item) => item.product_id), total);
+      if (upsellToken) {
+        // replace() drops the filled form from history so Back cannot resubmit it.
+        location.replace(`/offre/${encodeURIComponent(orderNumber)}?token=${encodeURIComponent(upsellToken)}`);
+        return;
+      }
       const destination = `/merci/${encodeURIComponent(orderNumber)}`;
       console.info("MELSSY navigating after order", { destination });
       // eslint-disable-next-line @next/next/no-location-assign-relative-destination
