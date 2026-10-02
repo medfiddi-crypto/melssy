@@ -18,6 +18,7 @@ from app.services.catalog import CATALOG, OFFER, offer_summary
 from app.services.notifier import (
     ManualOrderConfirmationNotifier,
     TelegramOrderNotifier,
+    notify_upsell_accepted,
     telegram_order_message,
 )
 from app.services.orders import apply_upsell, load_offer_order, offer_available, order_payload
@@ -190,6 +191,7 @@ async def upsell(
         background_tasks.add_task(dispatch_sheet_webhooks)
         if order.upsell_decision == "accept":
             await ManualOrderConfirmationNotifier().notify(order_number, order)
+            background_tasks.add_task(notify_upsell_accepted, order)
     return JSONResponse({"order_number": order_number, "total": str(order.total), "status": order.upsell_decision, "applied": applied})
 
 

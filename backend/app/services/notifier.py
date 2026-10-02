@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import UTC
+from decimal import Decimal
 from typing import Protocol
 from zoneinfo import ZoneInfo
 
@@ -8,7 +9,7 @@ import structlog
 
 from app.core.config import Settings, get_settings
 from app.models.orders import Order, OrderItem
-from app.services.catalog import COLOR_LABELS
+from app.services.catalog import COLOR_LABELS, OFFER
 
 logger = structlog.get_logger()
 
@@ -58,6 +59,30 @@ def telegram_order_message(order: Order, items: list[OrderItem] | None = None) -
     ])
 
 
+def _amount(value: Decimal) -> str:
+    return f"{value:.0f}" if value == value.to_integral_value() else f"{value:.2f}"
+
+
+def telegram_upsell_message(order: Order) -> str:
+    colors = [COLOR_LABELS.get(color, color) for color in (order.upsell_colors or "").split(",") if color]
+    delivery_lines = [
+        f"{label} : {value}"
+        for label, value in (("Ville", order.city), ("Adresse", order.full_address))
+        if value
+    ]
+    return "\n".join([
+        f"MISE À JOUR COMMANDE #{order.order_number}",
+        "",
+        f"Client : {order.customer_name}",
+        "Telephone :",
+        order.phone_e164,
+        *delivery_lines,
+        "",
+        f"Ajout : {OFFER['quantity']} taies satinées ({', '.join(colors)}) · +{_amount(OFFER['price'])} DH",
+        f"Nouveau total : {_amount(order.total)} DH",
+    ])
+
+
 def _telegram_error_description(response: httpx.Response) -> str:
     """Read Telegram's JSON error body; never read response.request, which embeds the bot token."""
     try:
@@ -102,6 +127,16 @@ class TelegramOrderNotifier:
             )
             return
         logger.info("telegram_notification_sent", order_number=order_number)
+
+
+async def notify_upsell_accepted(order: Order) -> None:
+    """Send the one-off upsell update message; any failure is logged and never reaches the caller."""
+    try:
+        message = telegram_upsell_message(order)
+    except Exception as error:
+        logger.warning("telegram_upsell_message_failed", order_number=order.order_number, error_type=type(error).__name__)
+        return
+    await TelegramOrderNotifier().notify(order.order_number, message)
 
 
 @dataclass

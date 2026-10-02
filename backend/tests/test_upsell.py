@@ -1,13 +1,20 @@
 import asyncio
 import json
+from decimal import Decimal
 from uuid import uuid4
 
+import httpx
 import pytest
 from sqlalchemy import select
 
 from app import main
+from app.core.config import get_settings
 from app.models.orders import Order, OrderItem, SheetWebhookOutbox, TrackingOutbox
+from app.services import notifier
 from app.services.catalog import CATALOG, OFFER, offer_summary
+from app.services.notifier import TelegramOrderNotifier, telegram_upsell_message
+
+REAL_TELEGRAM_NOTIFY = TelegramOrderNotifier.notify
 
 
 def order_body(**overrides):
@@ -163,3 +170,114 @@ async def test_accept_requires_one_valid_color_per_pillowcase(api, colors):
     assert response.status_code == 422
     still = await client.get(f"/v1/orders/{placed['order_number']}/offer", headers={"X-Upsell-Token": placed["upsell_token"]})
     assert still.json()["decided"] is False
+
+
+@pytest.fixture
+def sent_telegram(monkeypatch):
+    """Capture Telegram messages instead of sending them; must be requested after `api`."""
+    sent: list[str] = []
+
+    async def capture(self, order_number, message):
+        sent.append(message)
+
+    monkeypatch.setattr(TelegramOrderNotifier, "notify", capture)
+    return sent
+
+
+def updates(sent):
+    return [message for message in sent if message.startswith("MISE À JOUR")]
+
+
+async def test_new_order_message_includes_ville_adresse_couleur(api, sent_telegram):
+    client, _ = api
+    await place(client, color="ivory")
+    new_order = [message for message in sent_telegram if message.startswith("Nouvelle commande")]
+    assert len(new_order) == 1
+    assert "Ville : Rabat" in new_order[0]
+    assert "Adresse : Quartier test, rue 12" in new_order[0]
+    assert "Couleur : Ivoire" in new_order[0]
+
+
+async def test_accept_sends_one_update_message(api, sent_telegram):
+    client, _ = api
+    placed = await place(client)
+    number = placed["order_number"]
+    await client.post(f"/v1/orders/{number}/upsell", json=decision(placed["upsell_token"]))
+    assert updates(sent_telegram) == [
+        f"MISE À JOUR COMMANDE #{number}\n\nClient : Client test\nTelephone :\n+212612345678\n"
+        "Ville : Rabat\nAdresse : Quartier test, rue 12\n\n"
+        "Ajout : 2 taies satinées (Rose, Noir) · +199 DH\nNouveau total : 648 DH"
+    ]
+
+
+async def test_update_message_is_sent_once_even_with_repeats(api, sent_telegram):
+    client, _ = api
+    placed = await place(client)
+    number, token = placed["order_number"], placed["upsell_token"]
+    await asyncio.gather(*(client.post(f"/v1/orders/{number}/upsell", json=decision(token)) for _ in range(4)))
+    await client.post(f"/v1/orders/{number}/upsell", json=decision(token, colors=("black", "black")))
+    await client.get(f"/v1/orders/{number}/offer", headers={"X-Upsell-Token": token})
+    assert len(updates(sent_telegram)) == 1
+
+
+async def test_decline_sends_no_update_message(api, sent_telegram):
+    client, _ = api
+    placed = await place(client)
+    number, token = placed["order_number"], placed["upsell_token"]
+    await client.post(f"/v1/orders/{number}/upsell", json=decision(token, "decline", colors=()))
+    await client.post(f"/v1/orders/{number}/upsell", json=decision(token))
+    assert updates(sent_telegram) == []
+
+
+async def test_wrong_token_sends_no_update_message(api, sent_telegram):
+    client, _ = api
+    placed = await place(client)
+    response = await client.post(f"/v1/orders/{placed['order_number']}/upsell", json=decision("x" * 32))
+    assert response.status_code == 404
+    assert updates(sent_telegram) == []
+
+
+@pytest.mark.parametrize("failure", ["network", "http_500"])
+async def test_telegram_failure_never_breaks_the_upsell(api, monkeypatch, failure):
+    client, sessions = api
+    monkeypatch.setattr(TelegramOrderNotifier, "notify", REAL_TELEGRAM_NOTIFY)
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "test-token")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "123456")
+    get_settings.cache_clear()
+    attempts = []
+    logged = []
+
+    async def failing_send(settings, text):
+        attempts.append(text)
+        if failure == "network":
+            raise httpx.ConnectError("Telegram unavailable")
+        return httpx.Response(500, json={"ok": False, "description": "boom"}, request=httpx.Request("POST", "https://telegram.invalid"))
+
+    monkeypatch.setattr(notifier, "_post_telegram_message", failing_send)
+    monkeypatch.setattr(notifier.logger, "warning", lambda event, **fields: logged.append((event, fields)))
+    try:
+        placed = await place(client)
+        number = placed["order_number"]
+        accepted = await client.post(f"/v1/orders/{number}/upsell", json=decision(placed["upsell_token"]))
+    finally:
+        get_settings.cache_clear()
+    assert accepted.status_code == 200
+    assert accepted.json()["total"] == "648.00" and accepted.json()["applied"] is True
+    assert len(updates(attempts)) == 1
+    assert [event for event, _ in logged].count("telegram_notification_failed") == 2
+    assert "test-token" not in repr(logged)
+    confirmation = (await client.get(f"/v1/orders/{number}/confirmation")).json()
+    assert confirmation["total"] == "648.00"
+    async with sessions() as session:
+        assert str((await session.scalar(select(Order))).total) == "648.00"
+
+
+def test_update_message_amounts_come_from_config_and_order(monkeypatch):
+    monkeypatch.setitem(OFFER, "price", Decimal("249.50"))
+    monkeypatch.setitem(OFFER, "quantity", 3)
+    order = Order(order_number="MLS-CONFIG", customer_name="Client", phone_e164="+212612345678",
+                  city=None, full_address=None, upsell_colors="ivory,ivory", total=Decimal("698.50"))
+    message = telegram_upsell_message(order)
+    assert "Ajout : 3 taies satinées (Ivoire, Ivoire) · +249.50 DH" in message
+    assert "Nouveau total : 698.50 DH" in message
+    assert "Ville" not in message and "Adresse" not in message
