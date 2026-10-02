@@ -19,7 +19,7 @@ export default function EssentialsPage() {
           MELSSY
         </Link>
         <Link
-          href="/products/beauty-night-ritual"
+          href="/rituel"
           className="text-sm underline underline-offset-4"
         >
           Le rituel complet
@@ -78,7 +78,7 @@ export default function EssentialsPage() {
           Pour celles qui veulent se réveiller un peu plus elles-mêmes.
         </h2>
         <Link
-          href="/products/beauty-night-ritual"
+          href="/rituel"
           className="mt-8 inline-block border border-[#f7f3eb] px-6 py-3 text-sm"
         >
           Découvrir le rituel complet
