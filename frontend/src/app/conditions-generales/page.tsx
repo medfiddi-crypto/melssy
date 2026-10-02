@@ -21,28 +21,28 @@ export default function TermsPage() {
         <section>
           <h2 className="font-semibold">Paiement</h2>
           <p>
-            MELSSY n'accepte que le paiement à la livraison (paiement contre remboursement). Aucun paiement en ligne n'est accepté. Vous réglez votre commande en espèces au livreur lors de la réception de votre coffret.
+            MELSSY n&apos;accepte que le paiement à la livraison (paiement contre remboursement). Aucun paiement en ligne n&apos;est accepté. Vous réglez votre commande en espèces au livreur lors de la réception de votre coffret.
           </p>
         </section>
 
         <section>
           <h2 className="font-semibold">Confirmation de commande</h2>
           <p>
-            Après avoir placé votre commande en ligne, notre équipe vous appelera pour confirmer les détails de votre commande et organiser la livraison avant l'envoi de votre coffret. L'appel sera effectué dans un délai de 24 heures.
+            Après avoir placé votre commande en ligne, notre équipe vous appelera pour confirmer les détails de votre commande et organiser la livraison avant l&apos;envoi de votre coffret. L&apos;appel sera effectué dans un délai de 24 heures.
           </p>
         </section>
 
         <section>
           <h2 className="font-semibold">Livraison</h2>
           <p>
-            Nous livrons partout au Maroc. La livraison est gratuite sur tous nos coffrets. Une date de livraison exacte vous sera confirmée par téléphone avant l'envoi de votre commande.
+            Nous livrons partout au Maroc. La livraison est gratuite sur tous nos coffrets. Une date de livraison exacte vous sera confirmée par téléphone avant l&apos;envoi de votre commande.
           </p>
         </section>
 
         <section>
           <h2 className="font-semibold">Acceptation des conditions</h2>
           <p>
-            En plaçant une commande sur melssy.beauty, vous acceptez l'intégralité de ces conditions générales de vente.
+            En plaçant une commande sur melssy.beauty, vous acceptez l&apos;intégralité de ces conditions générales de vente.
           </p>
         </section>
 

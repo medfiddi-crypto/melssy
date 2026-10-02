@@ -23,7 +23,7 @@ export default function PrivacyPage() {
             <li>Articles commandés</li>
           </ul>
           <p className="mt-3">
-            Nous collectons également des données techniques via les pixels publicitaires Meta et TikTok pour mesurer l'efficacité de nos campagnes publicitaires.
+            Nous collectons également des données techniques via les pixels publicitaires Meta et TikTok pour mesurer l&apos;efficacité de nos campagnes publicitaires.
           </p>
         </section>
 
@@ -50,7 +50,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="font-semibold">Conservation des données</h2>
           <p>
-            Vos données sont conservées aussi longtemps que nécessaire pour traiter votre commande, organiser votre livraison et gérer les éventuels retours ou échanges. Elles peuvent être conservées plus longtemps si la loi marocaine l'exige.
+            Vos données sont conservées aussi longtemps que nécessaire pour traiter votre commande, organiser votre livraison et gérer les éventuels retours ou échanges. Elles peuvent être conservées plus longtemps si la loi marocaine l&apos;exige.
           </p>
         </section>
 
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
             Conformément à la loi marocaine n°09-08 relative à la protection des données à caractère personnel, vous disposez des droits suivants :
           </p>
           <ul className="ml-4 list-disc space-y-1">
-            <li>Droit d'accès à vos données</li>
+            <li>Droit d&apos;accès à vos données</li>
             <li>Droit de demander la suppression de vos données</li>
             <li>Droit de demander une rectification de vos données</li>
           </ul>

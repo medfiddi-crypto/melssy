@@ -12,23 +12,23 @@ export default function ReturnsPage() {
         <h1 className="display text-4xl">Retours et remboursements</h1>
 
         <section>
-          <h2 className="font-semibold">Droit d'échange et de retour</h2>
+          <h2 className="font-semibold">Droit d&apos;échange et de retour</h2>
           <p>
-            Vous disposez d'un délai de 7 jours à compter de la réception de votre coffret pour demander un échange ou un retour.
+            Vous disposez d&apos;un délai de 7 jours à compter de la réception de votre coffret pour demander un échange ou un retour.
           </p>
         </section>
 
         <section>
           <h2 className="font-semibold">Conditions</h2>
           <p>
-            Pour que votre demande d'échange ou de retour soit acceptée, les pièces doivent :
+            Pour que votre demande d&apos;échange ou de retour soit acceptée, les pièces doivent :
           </p>
           <ul className="ml-4 list-disc space-y-1">
             <li>Être non utilisées</li>
-            <li>Être dans leur emballage d'origine</li>
+            <li>Être dans leur emballage d&apos;origine</li>
           </ul>
           <p className="mt-3">
-            Ces conditions s'appliquent pour des raisons d'hygiène et de qualité.
+            Ces conditions s&apos;appliquent pour des raisons d&apos;hygiène et de qualité.
           </p>
         </section>
 
