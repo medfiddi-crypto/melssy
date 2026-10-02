@@ -9,6 +9,7 @@
   --section-image-ratio: 3 / 2;
   --section-image-gutter: 1.5rem;
   --section-image-spacing: 1.5rem;
+  --sticky-cta-height: 52px;
 }
 
 body {

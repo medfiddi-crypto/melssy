@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { CSSProperties } from "react";
 import { Check, Plus, X } from "lucide-react";
 
 import { CodOrderForm } from "@/components/cod-order-form";
@@ -143,10 +142,8 @@ export default function RitualLandingPage() {
   };
   return (
     <main
-      style={{
-        "--sticky-cta-height": "52px",
-      } as CSSProperties}
-      className={`pb-[calc(var(--sticky-cta-height)+env(safe-area-inset-bottom))] transition-[padding] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "pt-14" : "pt-14 md:pt-[86px]"}`}
+      data-sticky-cta
+      className={`transition-[padding] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "pt-14" : "pt-14 md:pt-[86px]"}`}
     >
       <header
         className={`fixed inset-x-0 top-0 z-20 flex justify-center border-b border-[#b9a497]/45 px-5 transition-[height,background-color,box-shadow] duration-200 ease-out motion-reduce:transition-none ${compactMasthead ? "h-14 bg-[var(--background)]/90 shadow-[0_2px_8px_rgba(31,37,32,0.06)] backdrop-blur" : "h-14 md:h-[86px] bg-[var(--background)]"}`}
