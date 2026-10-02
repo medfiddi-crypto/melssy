@@ -28,7 +28,7 @@ const previewEmpty =
 const showUgc = previewEmpty && landing.sectionOrder.includes("ugc");
 const showReviews = previewEmpty && landing.sectionOrder.includes("reviews");
 const separateValue = landing.valueStack.items.reduce(
-  (sum, item) => sum + catalog[item.productId].price,
+  (sum, item) => sum + catalog[item.productId].price * item.quantity,
   0,
 );
 const renderFaqAnswer = (answer: string) => {
@@ -236,7 +236,7 @@ export default function RitualLandingPage() {
                   {Boolean((item as { gift?: boolean }).gift) && (
                     <span className="text-[10px] uppercase tracking-[.1em] text-[#dfaaa1]">{landing.valueStack.giftBadge}</span>
                   )}
-                  <span>{formatPrice(catalog[item.productId].price)}</span>
+                  <span>{formatPrice(catalog[item.productId].price * item.quantity)}</span>
                 </span>
               </li>
             ))}
