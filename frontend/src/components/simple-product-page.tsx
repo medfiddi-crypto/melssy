@@ -64,7 +64,7 @@ export function SimpleProductPage({ slug }: { slug: SimpleProductSlug }) {
             {hasColors && (
               <fieldset className="mt-7 border-t border-[var(--line)] pt-5">
                 <legend className="text-sm font-medium">Couleur : {selectedColor.label}</legend>
-                <div className="mt-3 flex gap-3">
+                <div className="mt-3 grid grid-cols-2 gap-2">
                   {productColors.map((option) => (
                     <button
                       key={option.id}
@@ -73,16 +73,18 @@ export function SimpleProductPage({ slug }: { slug: SimpleProductSlug }) {
                       aria-label={option.label}
                       aria-pressed={color === option.id}
                       title={option.label}
-                      className={`h-9 w-9 border p-1 ${color === option.id ? "border-[var(--green)]" : "border-[var(--line)]"}`}
+                      className={`flex min-h-11 items-center gap-2 border px-3 py-2 text-sm ${color === option.id ? "border-[var(--green)]" : "border-[var(--line)]"}`}
                     >
-                      <span className="block h-full w-full border border-black/10" style={{ backgroundColor: option.swatch }} />
+                      <span aria-hidden="true" className="h-5 w-5 shrink-0 rounded-full border border-black/10" style={{ backgroundColor: option.swatch }} />
+                      <span>{option.label}</span>
                     </button>
                   ))}
                 </div>
+                {color !== "champagne" && <p className="mt-2 text-xs leading-5 text-black/60">Les photos montrent la couleur champagne.</p>}
               </fieldset>
             )}
             {!hasColors && (
-              <p className="mt-7 border-t border-[var(--line)] pt-5 text-sm font-medium">Option unique</p>
+              <p className="mt-7 border-t border-[var(--line)] pt-5 text-sm font-medium">Couleur : Champagne</p>
             )}
             <div className="mt-7">
               <CodOrderForm
@@ -90,6 +92,7 @@ export function SimpleProductPage({ slug }: { slug: SimpleProductSlug }) {
                 total={entry.price}
                 productLabel={entry.name}
                 optionLabel={optionLabel || undefined}
+                color={color}
               />
             </div>
           </div>

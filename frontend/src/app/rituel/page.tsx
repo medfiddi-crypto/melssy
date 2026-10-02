@@ -44,7 +44,6 @@ const renderFaqAnswer = (answer: string) => {
 const confirmationWindow = optionalStorefront.confirmationWindow();
 
 export default function RitualLandingPage() {
-  const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
   const [heroSection, setHeroSection] = useState<HTMLElement | null>(null);
   const [heroCta, setHeroCta] = useState<HTMLAnchorElement | null>(null);
   const [orderForm, setOrderForm] = useState<HTMLFormElement | null>(null);
@@ -56,14 +55,9 @@ export default function RitualLandingPage() {
   const [viewportHeight, setViewportHeight] = useState(0);
   const [tapTarget, setTapTarget] = useState("");
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
-  const toggleAddon = (id: string) =>
-    setSelectedAddons((current) => ({ ...current, [id]: !current[id] }));
-  const selectedAddonIds = landing.addons.items.filter((id) => selectedAddons[id]);
-  const addonsTotal = selectedAddonIds.reduce((sum, id) => sum + catalog[id].price, 0);
-  const total = ritual.price + addonsTotal;
+  const total = ritual.price;
   const orderItems = [
     { product_id: "beauty-night-ritual", quantity: 1 },
-    ...selectedAddonIds.map((id) => ({ product_id: id, quantity: 1 })),
   ];
   useEffect(() => {
     const updateViewportHeight = () => {
@@ -399,30 +393,8 @@ export default function RitualLandingPage() {
               productLabel={landing.order.productLabel}
               formRef={setOrderForm}
               showSummary={false}
+              showColorSelector
             >
-              {landing.addons.items.length > 0 && (
-                <fieldset className="grid gap-3 border-t border-[var(--line)] pt-4 text-left">
-                  <legend className="text-sm font-medium">{landing.addons.title}</legend>
-                  <p className="text-xs text-black/55">{landing.addons.hint}</p>
-                  {landing.addons.items.map((id) => (
-                    <label key={id} className="flex items-start gap-3 border border-[var(--line)] bg-[#faf8f5] px-4 py-3">
-                      <input
-                        type="checkbox"
-                        name="addons"
-                        value={id}
-                        checked={Boolean(selectedAddons[id])}
-                        onChange={() => toggleAddon(id)}
-                        className="mt-1 h-4 w-4 shrink-0 accent-[var(--green)]"
-                      />
-                      <span className="flex-1">
-                        <span className="block text-sm font-medium">{catalog[id].name}</span>
-                        <span className="block text-xs text-black/60">{catalog[id].description}</span>
-                      </span>
-                      <span className="shrink-0 text-sm">{landing.addons.pricePrefix} {formatPrice(catalog[id].price)}</span>
-                    </label>
-                  ))}
-                </fieldset>
-              )}
               <p className="text-center text-xs leading-5 text-[var(--green)]">
                 {formatPrice(total)} · Livraison offerte · Paiement à la livraison
               </p>

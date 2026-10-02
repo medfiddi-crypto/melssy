@@ -18,8 +18,15 @@ function doPost(e) {
     const existing = values.findIndex(function(row, index) { return index > 0 && row[rowIndex] === event.order.order_number; });
     const staffFields = ['call_status', 'delivery_status', 'notes'];
     const previous = existing > 0 ? values[existing] : [];
+    const deliveryFields = { Ville: 'city', Adresse: 'full_address', Couleur: 'color' };
+    const colorNames = { champagne: 'Champagne', ivory: 'Ivoire', black: 'Noir', rose: 'Rose' };
     const row = headers.map(function(header, index) {
       if (staffFields.indexOf(header) !== -1 && existing > 0) return previous[index];
+      if (deliveryFields[header]) {
+        const deliveryValue = event.order[header] !== undefined ? event.order[header] : event.order[deliveryFields[header]];
+        if (deliveryValue === undefined || deliveryValue === null || deliveryValue === '') return previous[index] || '';
+        return header === 'Couleur' ? colorNames[deliveryValue] || deliveryValue : deliveryValue;
+      }
       const value = event.order[header] !== undefined ? event.order[header] : event[header];
       return typeof value === 'object' ? JSON.stringify(value) : value || '';
     });

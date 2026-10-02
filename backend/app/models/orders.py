@@ -20,6 +20,7 @@ class Order(Base):
     phone_e164: Mapped[str] = mapped_column(String(16), index=True)
     full_address: Mapped[str | None] = mapped_column(String(500), nullable=True)
     city: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    color: Mapped[str | None] = mapped_column(String(16), nullable=True)
     currency: Mapped[str] = mapped_column(String(3), default="MAD")
     subtotal: Mapped[Decimal] = mapped_column(Numeric(10, 2))
     discount_total: Mapped[Decimal] = mapped_column(Numeric(10, 2), default=Decimal("0.00"))

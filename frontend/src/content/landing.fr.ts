@@ -29,12 +29,6 @@ export const landing = {
     coffretLabel: "En coffret",
     savingsLabel: "Vous économisez",
   },
-  addons: {
-    title: "Ajoutez à votre coffret",
-    hint: "Optionnel. Ajouté à votre commande, livré ensemble.",
-    items: ["pillowcase-pair", "extra-bonnet"],
-    pricePrefix: "+",
-  },
   order: {
     productLabel: "Coffret Beauty Night Ritual",
     nameLabel: "Nom complet",
@@ -42,10 +36,15 @@ export const landing = {
     phoneLabel: "Téléphone",
     phonePlaceholder: "06 00 00 00 00",
     phoneError: "Saisissez un numéro mobile marocain valide commençant par 06 ou 07.",
+    cityLabel: "Ville",
+    cityError: "Saisissez votre ville.",
+    addressLabel: "Adresse",
+    addressPlaceholder: "Quartier, rue, n°, point de repère",
+    addressError: "Saisissez une adresse complète d'au moins 8 caractères.",
     reassurance: "On vous appelle pour confirmer avant l'envoi. Aucun paiement en ligne.",
     submitting: "Enregistrement...",
     error: "Votre commande n'a pas pu être enregistrée. Veuillez réessayer.",
-    validationError: "Vérifiez votre nom et votre numéro de téléphone, puis réessayez.",
+    validationError: "Vérifiez votre nom, votre téléphone, votre ville et votre adresse, puis réessayez.",
     timeoutError: "Le service met trop de temps à répondre. Vérifiez votre connexion puis réessayez.",
     networkError: "Impossible de joindre le service de commande. Vérifiez votre connexion puis réessayez.",
     confirmationError: "Nous n'avons pas pu confirmer l'enregistrement de votre commande. Veuillez réessayer.",
@@ -53,12 +52,6 @@ export const landing = {
   ctas: {
     completeRitual: "Complétez votre rituel",
     viewOrderForm: "Voir le formulaire",
-  },
-  upsell: {
-    title: "Une seconde paire ?",
-    body: "Une paire de taies satinées en plus, pour la chambre d'amis ou pour offrir. Ajoutée à votre commande, livrée ensemble.",
-    accept: "Oui, ajouter à ma commande",
-    decline: "Non merci, continuer",
   },
   problem: {
     eyebrow: "Le problème",

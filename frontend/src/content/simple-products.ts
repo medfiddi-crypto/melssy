@@ -1,13 +1,20 @@
 import type { ProductId } from "@/content/catalog";
 
 export const productColors = [
-  { id: "champagne", label: "Champagne", swatch: "#d8c0a8" },
+  { id: "champagne", label: "Champagne", swatch: "#cab5a2" },
   { id: "ivory", label: "Ivoire", swatch: "#eee9dc" },
   { id: "black", label: "Noir", swatch: "#191919" },
   { id: "rose", label: "Rose", swatch: "#d8a6a3" },
 ] as const;
 
 export type ProductColorId = typeof productColors[number]["id"];
+
+export const moroccanCities = [
+  "Casablanca", "Rabat", "Salé", "Témara", "Marrakech", "Fès", "Meknès",
+  "Tanger", "Tétouan", "Agadir", "Oujda", "Kénitra", "Mohammédia", "El Jadida",
+  "Safi", "Béni Mellal", "Khouribga", "Nador", "Taza", "Settat", "Berrechid",
+  "Essaouira", "Ouarzazate", "Laâyoune", "Dakhla",
+] as const;
 
 export type SimpleProductSlug = "bonnet-solo" | "scrunchies-solo" | "pillowcase-solo" | "heatless-curler-solo";
 

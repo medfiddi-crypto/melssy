@@ -8,6 +8,7 @@ import structlog
 
 from app.core.config import Settings, get_settings
 from app.models.orders import Order, OrderItem
+from app.services.catalog import COLOR_LABELS
 
 logger = structlog.get_logger()
 
@@ -30,6 +31,15 @@ def telegram_order_message(order: Order, items: list[OrderItem] | None = None) -
         f"- {item.product_name} x{item.quantity} - {item.unit_price:.2f} {order.currency}"
         for item in order_items
     ]
+    delivery_lines = [
+        f"{label} : {value}"
+        for label, value in (
+            ("Ville", order.city),
+            ("Adresse", order.full_address),
+            ("Couleur", COLOR_LABELS.get(order.color or "", "")),
+        )
+        if value
+    ]
     return "\n".join([
         "Nouvelle commande MELSSY",
         "",
@@ -37,6 +47,7 @@ def telegram_order_message(order: Order, items: list[OrderItem] | None = None) -
         f"Client : {order.customer_name}",
         "Telephone :",
         order.phone_e164,
+        *delivery_lines,
         "",
         "Articles :",
         *item_lines,

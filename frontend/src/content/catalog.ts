@@ -4,8 +4,6 @@ export const catalog = {
   "pillowcase-solo": { name: "Taie d'oreiller satinée", price: 150, description: "Une surface plus douce pour vos nuits." },
   "heatless-curler-solo": { name: "Boucleur sans chaleur", price: 160, description: "Des boucles souples sans chaleur excessive." },
   "scrunchies-solo": { name: "Chouchous satinés", price: 60, description: "Attacher vos cheveux sans les brusquer." },
-  "pillowcase-pair": { name: "Paire de taies d'oreiller satinées", price: 180, description: "Une paire supplémentaire pour votre rituel." },
-  "extra-bonnet": { name: "Bonnet satiné", price: 100, description: "Un second bonnet pour alterner." },
 } as const;
 
 export type ProductId = keyof typeof catalog;

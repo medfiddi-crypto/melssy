@@ -1,10 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { getApiTarget } from "@/lib/api-target";
-import { landing } from "@/content/landing.fr";
-import { standaloneOrderIds } from "@/content/simple-products";
-
-const addonWhitelist = new Set<string>(landing.addons.items);
+import { productColors, standaloneOrderIds } from "@/content/simple-products";
 
 function normalizeMoroccanMobile(value: string) {
   let phone = value.replace(/[\s-]/g, "");
@@ -22,19 +19,19 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const name = String(formData.get("full_name") ?? "").trim();
   const phone = normalizeMoroccanMobile(String(formData.get("phone") ?? ""));
+  const city = String(formData.get("city") ?? "").trim();
+  const address = String(formData.get("full_address") ?? "").trim();
+  const color = String(formData.get("color") ?? "champagne");
   const requestedProductId = String(formData.get("product_id") ?? "beauty-night-ritual");
   const productId = requestedProductId === "beauty-night-ritual" || standaloneOrderIds.has(requestedProductId)
     ? requestedProductId
     : null;
 
-  if (name.length < 2 || !phone || !productId) {
+  if (name.length < 2 || name.length > 120 || !phone || !productId || !city || city.length > 120 || address.length < 8 || address.length > 500 || !productColors.some((option) => option.id === color)) {
     return redirect("/rituel?commande=invalide#commander");
   }
 
-  const addonItems = [...new Set(formData.getAll("addons").map(String))]
-    .filter((id) => addonWhitelist.has(id))
-    .map((id) => ({ product_id: id, quantity: 1 }));
-  const items = [{ product_id: productId, quantity: 1 }, ...addonItems];
+  const items = [{ product_id: productId, quantity: 1 }];
 
   try {
     const response = await fetch(new URL("/v1/orders", getApiTarget()), {
@@ -43,6 +40,9 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         name,
         phone,
+        city,
+        full_address: address,
+        color,
         idempotency_key: crypto.randomUUID(),
         items,
       }),

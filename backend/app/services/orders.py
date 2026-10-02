@@ -9,7 +9,7 @@ from sqlalchemy.orm import selectinload
 from app.core.config import get_settings
 from app.models.orders import Order, OrderItem, SheetWebhookOutbox, TrackingOutbox
 from app.schemas.orders import OrderRequest
-from app.services.catalog import CATALOG, OFFER, calculate_total
+from app.services.catalog import CATALOG, COLOR_LABELS, OFFER, calculate_total
 
 
 def order_payload(order: Order, items: list[OrderItem] | None = None) -> dict[str, object]:
@@ -20,6 +20,7 @@ def order_payload(order: Order, items: list[OrderItem] | None = None) -> dict[st
         "phone_e164": order.phone_e164,
         "full_address": order.full_address or "",
         "city": order.city or "",
+        "color": order.color or "",
         "total": str(order.total),
         "shipping_total": str(order.total - sum((item.unit_price * item.quantity for item in order_items), start=order.total - order.total)),
         "upsell_decision": order.upsell_decision or "",
@@ -37,6 +38,9 @@ def sheet_event(order: Order, event_type: str, items: list[OrderItem]) -> dict[s
         "fraud_flag": "possible_duplicate" if order.possible_duplicate else "",
         "call_status": "pending",
         "delivery_status": "pending",
+        "Ville": order.city or "",
+        "Adresse": order.full_address or "",
+        "Couleur": COLOR_LABELS.get(order.color or "", ""),
     })
     return {
         "event": event_type,
@@ -78,6 +82,7 @@ async def create_order(
         customer_name=payload.name.strip(), phone_e164=phone,
         full_address=payload.full_address.strip() if payload.full_address else None,
         city=payload.city.strip() if payload.city else None, subtotal=subtotal, total=total,
+        color=payload.color,
         possible_duplicate=duplicate is not None, utm_source=payload.attribution.utm_source,
         utm_campaign=payload.attribution.utm_campaign, fbclid=payload.attribution.fbclid,
         ttclid=payload.attribution.ttclid,

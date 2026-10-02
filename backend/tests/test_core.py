@@ -41,7 +41,9 @@ def test_rejects_landline_and_invalid_phone() -> None:
 
 
 def test_server_calculates_catalog_total() -> None:
-    assert calculate_total([("beauty-night-ritual", 1), ("extra-bonnet", 2)]) == 649
+    assert calculate_total([("beauty-night-ritual", 1)]) == 449
+    assert "extra-bonnet" not in CATALOG
+    assert "pillowcase-pair" not in CATALOG
 
 
 def test_standalone_product_variants_use_authoritative_prices() -> None:

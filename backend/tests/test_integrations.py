@@ -68,7 +68,46 @@ def test_telegram_order_message_is_phone_friendly() -> None:
     assert "- Ritual x1 - 449.00 MAD" in message
     assert "- Bonnet x1 - 100.00 MAD" in message
     assert "Total : 549.00 MAD" in message
-    assert "Heure : 20/09/2026 14:30 UTC" in message
+    assert "Heure : 20/09/2026 " in message
+    assert "Ville :" not in message
+    assert "Couleur :" not in message
+
+
+def test_telegram_message_includes_ville_adresse_couleur() -> None:
+    order = telegram_test_order()
+    order.city = "Casablanca"
+    order.full_address = "Quartier Maarif, rue 12, près du parc"
+    order.color = "rose"
+
+    message = telegram_order_message(order)
+
+    assert "Telephone :\n+212612345678\nVille : Casablanca\nAdresse : Quartier Maarif, rue 12, près du parc\nCouleur : Rose\n" in message
+    assert message.index("Couleur : Rose") < message.index("Articles :")
+
+
+@pytest.mark.asyncio
+async def test_telegram_notify_sends_delivery_details_through_mock_only(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("TELEGRAM_BOT_TOKEN", "test-token")
+    monkeypatch.setenv("TELEGRAM_CHAT_ID", "123456")
+    get_settings.cache_clear()
+    sent: list[dict[str, object]] = []
+
+    async def capture_post(self: httpx.AsyncClient, url: str, **kwargs: object) -> httpx.Response:
+        sent.append({"url": url, **kwargs})
+        return httpx.Response(200, json={"ok": True}, request=httpx.Request("POST", url))
+
+    monkeypatch.setattr(httpx.AsyncClient, "post", capture_post)
+    order = telegram_test_order()
+    order.city, order.full_address, order.color = "Rabat", "Hay Riad, rue 5, n° 8", "black"
+    try:
+        await TelegramOrderNotifier().notify(order.order_number, telegram_order_message(order))
+    finally:
+        get_settings.cache_clear()
+
+    assert len(sent) == 1
+    text = str(sent[0]["json"]["text"])
+    assert "Ville : Rabat" in text and "Adresse : Hay Riad, rue 5, n° 8" in text and "Couleur : Noir" in text
+    assert "Total : 549.00 MAD" in text
 
 
 @pytest.mark.asyncio
