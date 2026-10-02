@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { Check, Plus, X } from "lucide-react";
 
+import { CodOrderForm } from "@/components/cod-order-form";
 import { catalog, formatPrice } from "@/content/catalog";
 import { landing } from "@/content/landing.fr";
 import { media } from "@/content/media";
 import { optionalStorefront } from "@/content/storefront";
-import { emitCommerceEvent, safeUUID } from "@/lib/analytics";
 import { Carousel } from "@/components/carousel";
 import { SectionImage } from "@/components/section-image";
 import { UgcCarousel } from "@/components/ugc-carousel";
@@ -43,39 +43,9 @@ const renderFaqAnswer = (answer: string) => {
   );
 };
 const confirmationWindow = optionalStorefront.confirmationWindow();
-const normalizeMoroccanMobile = (value: string) => {
-  let phone = value.replace(/[\s-]/g, "");
-  if (phone.startsWith("00212")) phone = `+212${phone.slice(5)}`;
-  else if (phone.startsWith("212")) phone = `+${phone}`;
-  else if (phone.startsWith("0")) phone = `+212${phone.slice(1)}`;
-  return /^\+212[67]\d{8}$/.test(phone) ? phone : null;
-};
-
-const orderErrorMessage = async (response: Response) => {
-  try {
-    const payload = await response.json() as { detail?: unknown };
-    if (typeof payload.detail === "string") return payload.detail;
-  } catch {
-    // Use the status-based message when the server did not return JSON.
-  }
-  return response.status === 422 ? landing.order.validationError : landing.order.error;
-};
-
-const readConfirmedOrderNumber = async (response: Response) => {
-  const payload = await response.json() as { order_number?: unknown };
-  return typeof payload.order_number === "string" && /^MLS-[A-F0-9]{10}$/.test(payload.order_number)
-    ? payload.order_number
-    : null;
-};
 
 export default function RitualLandingPage() {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
   const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
-  const [idempotencyKey] = useState(safeUUID);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [touched, setTouched] = useState({ name: false, phone: false });
   const [heroSection, setHeroSection] = useState<HTMLElement | null>(null);
   const [heroCta, setHeroCta] = useState<HTMLAnchorElement | null>(null);
   const [orderForm, setOrderForm] = useState<HTMLFormElement | null>(null);
@@ -92,11 +62,10 @@ export default function RitualLandingPage() {
   const selectedAddonIds = landing.addons.items.filter((id) => selectedAddons[id]);
   const addonsTotal = selectedAddonIds.reduce((sum, id) => sum + catalog[id].price, 0);
   const total = ritual.price + addonsTotal;
-  useEffect(() => {
-    const checkoutStatus = new URLSearchParams(window.location.search).get("commande");
-    if (checkoutStatus === "invalide") setError(landing.order.validationError);
-    if (checkoutStatus === "indisponible") setError(landing.order.error);
-  }, []);
+  const orderItems = [
+    { product_id: "beauty-night-ritual", quantity: 1 },
+    ...selectedAddonIds.map((id) => ({ product_id: id, quantity: 1 })),
+  ];
   useEffect(() => {
     const updateViewportHeight = () => {
       setViewportHeight(window.visualViewport?.height ?? window.innerHeight);
@@ -151,14 +120,19 @@ export default function RitualLandingPage() {
   }, []);
   useEffect(() => {
     if (showStickyCta) {
-      setStickyCtaMounted(true);
-      const frame = window.requestAnimationFrame(() => setStickyCtaVisible(true));
+      const frame = window.requestAnimationFrame(() => {
+        setStickyCtaMounted(true);
+        setStickyCtaVisible(true);
+      });
       return () => window.cancelAnimationFrame(frame);
     }
 
-    setStickyCtaVisible(false);
+    const frame = window.requestAnimationFrame(() => setStickyCtaVisible(false));
     const timeout = window.setTimeout(() => setStickyCtaMounted(false), 200);
-    return () => window.clearTimeout(timeout);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
   }, [showStickyCta]);
   const scrollToForm = () => {
     document.getElementById("commander")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -167,187 +141,6 @@ export default function RitualLandingPage() {
     event.preventDefault();
     scrollToForm();
   };
-  const order = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setTouched({ name: true, phone: true });
-    const normalizedPhone = normalizeMoroccanMobile(phone);
-    if (name.trim().length < 2 || !normalizedPhone || submitting) return;
-    setSubmitting(true);
-    setError("");
-    let timeout: number | undefined;
-    try {
-      const orderUrl = "/api/v1/orders";
-      const attribution = new URLSearchParams(window.location.search);
-      const controller = new AbortController();
-      timeout = window.setTimeout(() => controller.abort(), 10_000);
-      const items = [
-        { product_id: "beauty-night-ritual", quantity: 1 },
-        ...selectedAddonIds.map((id) => ({ product_id: id, quantity: 1 })),
-      ];
-      const response = await fetch(
-        orderUrl,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: JSON.stringify({
-            name: name.trim(),
-            phone: normalizedPhone,
-            idempotency_key: idempotencyKey,
-            items,
-            attribution: {
-              utm_source: attribution.get("utm_source"),
-              utm_campaign: attribution.get("utm_campaign"),
-              fbclid: attribution.get("fbclid"),
-              ttclid: attribution.get("ttclid"),
-            },
-          }),
-        },
-      );
-      if (!response.ok) {
-        console.error("MELSSY order rejected", {
-          status: response.status,
-          requestId: response.headers.get("x-request-id"),
-        });
-        setError(await orderErrorMessage(response));
-        setSubmitting(false);
-        return;
-      }
-      const orderNumber = await readConfirmedOrderNumber(response);
-      if (!orderNumber) {
-        setError(landing.order.confirmationError);
-        setSubmitting(false);
-        return;
-      }
-      const confirmationResponse = await fetch(
-        `/api/v1/orders/${encodeURIComponent(orderNumber)}/confirmation`,
-        { cache: "no-store", signal: controller.signal },
-      );
-      const confirmedOrderNumber = confirmationResponse.ok
-        ? await readConfirmedOrderNumber(confirmationResponse)
-        : null;
-      if (confirmedOrderNumber !== orderNumber) {
-        console.error("MELSSY order confirmation failed", {
-          orderNumber,
-          status: confirmationResponse.status,
-          requestId: confirmationResponse.headers.get("x-request-id"),
-        });
-        setError(landing.order.confirmationError);
-        setSubmitting(false);
-        return;
-      }
-      console.info("MELSSY order saved", { orderUrl, orderNumber });
-      void emitCommerceEvent("Purchase", ["beauty-night-ritual", ...selectedAddonIds], total);
-      const destination = `/merci/${encodeURIComponent(orderNumber)}`;
-      console.info("MELSSY navigating after order", { destination });
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      location.href = destination;
-    } catch (error) {
-      console.error("MELSSY order submission failed", { url: "/api/v1/orders", error });
-      setError(
-        error instanceof DOMException && error.name === "AbortError"
-          ? landing.order.timeoutError
-          : landing.order.networkError,
-      );
-      setSubmitting(false);
-    } finally {
-      if (timeout !== undefined) window.clearTimeout(timeout);
-    }
-  };
-  const form = (suffix: string) => (
-    <form
-      ref={suffix === "final" ? setOrderForm : undefined}
-      data-order-form
-      action="/commande"
-      method="post"
-      noValidate
-      onSubmit={order}
-      className="grid gap-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0"
-    >
-      <div
-        className="grid gap-4"
-      >
-      <label htmlFor={`name-${suffix}`} className="text-sm font-medium">
-        {landing.order.nameLabel}
-        <input
-          id={`name-${suffix}`}
-          name="full_name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          onFocus={() => setTouched((fields) => ({ ...fields, name: true }))}
-          onBlur={() => setTouched((fields) => ({ ...fields, name: true }))}
-          autoComplete="name"
-          aria-invalid={touched.name && name.trim().length < 2}
-          aria-describedby={`name-error-${suffix}`}
-          className="mt-2 w-full border border-[#b9a497] bg-[#faf8f5] px-4 py-3 outline-none focus:border-[var(--rose)] focus:ring-1 focus:ring-[var(--rose)]"
-          required
-        />
-        {touched.name && name.trim().length < 2 && <span id={`name-error-${suffix}`} className="mt-2 block text-sm text-red-800">{landing.order.nameError}</span>}
-      </label>
-      <label htmlFor={`phone-${suffix}`} className="text-sm font-medium">
-        {landing.order.phoneLabel}
-        <input
-          id={`phone-${suffix}`}
-          name="phone"
-          value={phone}
-          onChange={(event) => setPhone(event.target.value)}
-          onFocus={() => setTouched((fields) => ({ ...fields, phone: true }))}
-          onBlur={() => setTouched((fields) => ({ ...fields, phone: true }))}
-          type="tel"
-          autoComplete="tel"
-          inputMode="numeric"
-          placeholder={landing.order.phonePlaceholder}
-          aria-invalid={touched.phone && !normalizeMoroccanMobile(phone)}
-          aria-describedby={`phone-error-${suffix}`}
-          className="mt-2 w-full border border-[#b9a497] bg-[#faf8f5] px-4 py-3 outline-none focus:border-[var(--rose)] focus:ring-1 focus:ring-[var(--rose)]"
-          required
-        />
-        {touched.phone && !normalizeMoroccanMobile(phone) && (
-          <span id={`phone-error-${suffix}`} className="mt-2 block text-sm text-red-800">
-            {landing.order.phoneError}
-          </span>
-        )}
-      </label>
-      {error && <p role="alert" aria-live="assertive" className="border border-red-800/25 bg-red-50 px-3 py-2 text-sm text-red-900">{error}</p>}
-      {landing.addons.items.length > 0 && (
-        <fieldset className="grid gap-3 border-t border-[var(--line)] pt-4">
-          <legend className="text-sm font-medium">{landing.addons.title}</legend>
-          <p className="text-xs text-black/55">{landing.addons.hint}</p>
-          {landing.addons.items.map((id) => (
-            <label key={`${id}-${suffix}`} className="flex items-start gap-3 border border-[var(--line)] bg-[#faf8f5] px-4 py-3">
-              <input
-                type="checkbox"
-                name="addons"
-                value={id}
-                checked={Boolean(selectedAddons[id])}
-                onChange={() => toggleAddon(id)}
-                className="mt-1 h-4 w-4 shrink-0 accent-[var(--green)]"
-              />
-              <span className="flex-1">
-                <span className="block text-sm font-medium">{catalog[id].name}</span>
-                <span className="block text-xs text-black/60">{catalog[id].description}</span>
-              </span>
-              <span className="shrink-0 text-sm">{landing.addons.pricePrefix} {formatPrice(catalog[id].price)}</span>
-            </label>
-          ))}
-        </fieldset>
-      )}
-      <p className="text-center text-xs leading-5 text-[var(--green)]">
-        {formatPrice(total)} · Livraison offerte · Paiement à la livraison
-      </p>
-      <p className="text-center text-sm leading-6 text-black/65">
-        {landing.order.reassurance}
-      </p>
-      <button
-        type="submit"
-        disabled={submitting}
-        className="relative z-40 w-full bg-[var(--green)] px-6 py-4 text-white disabled:bg-[#9aa79f] disabled:text-white disabled:opacity-100"
-      >
-        {submitting ? landing.order.submitting : `Confirmer ma commande · ${formatPrice(total)}`}
-      </button>
-      </div>
-    </form>
-  );
   return (
     <main
       style={{
@@ -602,7 +395,42 @@ export default function RitualLandingPage() {
             </div>
           </div>
           <p className="display mt-4 text-3xl">{formatPrice(total)}</p>
-          {form("final")}
+          <div className="mt-4 pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
+            <CodOrderForm
+              items={orderItems}
+              total={total}
+              productLabel={landing.order.productLabel}
+              formRef={setOrderForm}
+              showSummary={false}
+            >
+              {landing.addons.items.length > 0 && (
+                <fieldset className="grid gap-3 border-t border-[var(--line)] pt-4 text-left">
+                  <legend className="text-sm font-medium">{landing.addons.title}</legend>
+                  <p className="text-xs text-black/55">{landing.addons.hint}</p>
+                  {landing.addons.items.map((id) => (
+                    <label key={id} className="flex items-start gap-3 border border-[var(--line)] bg-[#faf8f5] px-4 py-3">
+                      <input
+                        type="checkbox"
+                        name="addons"
+                        value={id}
+                        checked={Boolean(selectedAddons[id])}
+                        onChange={() => toggleAddon(id)}
+                        className="mt-1 h-4 w-4 shrink-0 accent-[var(--green)]"
+                      />
+                      <span className="flex-1">
+                        <span className="block text-sm font-medium">{catalog[id].name}</span>
+                        <span className="block text-xs text-black/60">{catalog[id].description}</span>
+                      </span>
+                      <span className="shrink-0 text-sm">{landing.addons.pricePrefix} {formatPrice(catalog[id].price)}</span>
+                    </label>
+                  ))}
+                </fieldset>
+              )}
+              <p className="text-center text-xs leading-5 text-[var(--green)]">
+                {formatPrice(total)} · Livraison offerte · Paiement à la livraison
+              </p>
+            </CodOrderForm>
+          </div>
         </div>
       </section>
       <section className="border-t border-[var(--line)] px-6 py-16 md:px-16">

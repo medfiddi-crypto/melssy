@@ -3,7 +3,7 @@ import pytest
 from app.core.config import Settings, normalize_database_url
 from app.core.phone import normalize_moroccan_phone
 from app.core.security import sha256_pii
-from app.services.catalog import calculate_total
+from app.services.catalog import CATALOG, calculate_total
 
 
 def test_normalizes_easypanel_postgres_url() -> None:
@@ -42,6 +42,17 @@ def test_rejects_landline_and_invalid_phone() -> None:
 
 def test_server_calculates_catalog_total() -> None:
     assert calculate_total([("beauty-night-ritual", 1), ("extra-bonnet", 2)]) == 649
+
+
+def test_standalone_product_variants_use_authoritative_prices() -> None:
+    assert CATALOG["bonnet-solo-rose"].name == "Bonnet satiné - Rose"
+    assert CATALOG["pillowcase-solo-ivory"].name == "Taie d'oreiller satinée 70 x 50 cm - Ivoire"
+    assert calculate_total([
+        ("bonnet-solo-black", 1),
+        ("scrunchies-solo-champagne", 1),
+        ("pillowcase-solo-rose", 1),
+        ("heatless-curler-solo", 1),
+    ]) == 490
 
 
 def test_hash_normalizes_text_before_sha256() -> None:

@@ -2,6 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { getApiTarget } from "@/lib/api-target";
 import { landing } from "@/content/landing.fr";
+import { standaloneOrderIds } from "@/content/simple-products";
 
 const addonWhitelist = new Set<string>(landing.addons.items);
 
@@ -21,15 +22,19 @@ export async function POST(request: Request) {
   const formData = await request.formData();
   const name = String(formData.get("full_name") ?? "").trim();
   const phone = normalizeMoroccanMobile(String(formData.get("phone") ?? ""));
+  const requestedProductId = String(formData.get("product_id") ?? "beauty-night-ritual");
+  const productId = requestedProductId === "beauty-night-ritual" || standaloneOrderIds.has(requestedProductId)
+    ? requestedProductId
+    : null;
 
-  if (name.length < 2 || !phone) {
+  if (name.length < 2 || !phone || !productId) {
     return redirect("/rituel?commande=invalide#commander");
   }
 
   const addonItems = [...new Set(formData.getAll("addons").map(String))]
     .filter((id) => addonWhitelist.has(id))
     .map((id) => ({ product_id: id, quantity: 1 }));
-  const items = [{ product_id: "beauty-night-ritual", quantity: 1 }, ...addonItems];
+  const items = [{ product_id: productId, quantity: 1 }, ...addonItems];
 
   try {
     const response = await fetch(new URL("/v1/orders", getApiTarget()), {
