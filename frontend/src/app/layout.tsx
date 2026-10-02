@@ -19,7 +19,24 @@ export const metadata: Metadata = {
   title: "MELSSY | Beauty Sleep Ritual",
   description: "Votre beauté mérite aussi la nuit.",
   metadataBase: new URL("https://melssy.beauty"),
-  openGraph: { title: "MELSSY", description: "Votre beauté mérite aussi la nuit.", locale: "fr_MA", type: "website" },
+  openGraph: {
+    title: "MELSSY",
+    description: "Votre beauté mérite aussi la nuit.",
+    locale: "fr_MA",
+    type: "website",
+    siteName: "MELSSY",
+    images: [
+      {
+        url: "https://melssy.beauty/images/og-image-rituel.webp",
+        width: 1200,
+        height: 630,
+        alt: "Coffret MELSSY",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
