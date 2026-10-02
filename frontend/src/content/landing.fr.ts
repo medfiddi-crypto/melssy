@@ -109,15 +109,15 @@ export const landing = {
     ["Comment se passe le paiement ?", "Vous réglez votre commande à la livraison, après confirmation avec notre équipe."],
     ["Où livrez-vous et en combien de temps ?", "Partout au Maroc, livraison offerte sur le coffret. Le délai vous est confirmé par téléphone avant l'envoi."],
     ["Et si je ne suis pas satisfaite ?", "Vous pouvez échanger ou retourner votre coffret sous 7 jours après réception. Pour des raisons d'hygiène, les pièces doivent être non utilisées et dans leur emballage d'origine. {{contact}}, nous vous répondons rapidement."],
-    ["Le rituel convient-il à tous les cheveux ?", "Oui. C'est un geste de douceur pour vos cheveux. Il ne remplace pas un soin professionnel."],
+    ["Le rituel convient-il à tous les cheveux ?", "Il est pensé pour tous les types de cheveux. C'est un geste de douceur pour vos cheveux. Il ne remplace pas un soin professionnel."],
   ],
   ritual: {
     eyebrow: "Le rituel",
-    title: "Trois gestes, puis dormez.",
+    title: "Quatre étapes, puis dormez.",
     steps: [
       { label: "LE BOUCLEUR", text: "Enroulez vos longueurs, fixez avec les chouchous." },
       { label: "LE BONNET", text: "Enfilez-le pour garder tout en place." },
-      { label: "LA TAIE", text: "Posez la tête sur le satin. Aucun frottement." },
+      { label: "LA TAIE", text: "Posez la tête sur le satin. Moins de frottement." },
       { label: "AU RÉVEIL", text: "Déroulez : des boucles souples, sans chaleur." },
     ],
   },

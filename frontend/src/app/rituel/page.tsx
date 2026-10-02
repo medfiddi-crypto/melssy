@@ -518,7 +518,7 @@ export default function RitualLandingPage() {
       <section className="px-6 py-16 md:px-16 md:py-24">
         <p className="eyebrow text-[var(--rose)]">{landing.ritual.eyebrow}</p>
         <h2 className="display mt-4 text-5xl leading-none">
-          Trois gestes, <span className="headline-accent">puis dormez.</span>
+          Quatre étapes, <span className="headline-accent">puis dormez.</span>
         </h2>
         <div className="mt-6 md:mx-auto md:max-w-2xl">
           <Image
