@@ -481,28 +481,28 @@ export default function RitualLandingPage() {
         <div className="px-6 py-16 md:order-2 md:px-16 md:py-24">
           <p className="eyebrow text-[var(--green)]">{landing.satinComparison.eyebrow}</p>
           <h2 className="display mt-4 text-[30px] leading-[1.15] md:text-5xl md:leading-none">
-            Le coton accroche. <span className="headline-accent">Le satin glisse.</span>
+            Fluide, lisse et <span className="headline-accent">doux sur la peau.</span>
           </h2>
-          <p className="mt-6 max-w-lg leading-7">Toute la nuit, vos cheveux frottent contre votre taie. Tout dépend de ce qu&apos;ils touchent.</p>
+          <p className="mt-6 max-w-lg leading-7">{landing.satinComparison.subheadline}</p>
           <div className="mt-8 overflow-x-auto">
             <table className="w-full border-collapse text-sm md:text-base mx-auto md:max-w-[640px]">
               <thead>
                 <tr>
                   <th className="text-left p-3 md:p-4"></th>
                   <th className="text-left p-3 md:p-4 text-black/50 font-normal">Coton</th>
-                  <th className="text-left p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb] font-normal">Satin MELSSY</th>
+                  <th className="text-left p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb] font-normal">Demi-soie MELSSY</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-t border-[var(--line)]">
                   <td className="p-3 md:p-4 text-[var(--rose)] text-xs font-semibold uppercase tracking-wide">Vos cheveux</td>
                   <td className="p-3 md:p-4 text-black/50"><div className="flex items-start gap-2"><X size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span>S&apos;accrochent à chaque mouvement</span></div></td>
-                  <td className="p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb]"><div className="flex items-start gap-2"><Check size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span className="font-medium">Glissent sans frottement</span></div></td>
+                  <td className="p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb]"><div className="flex items-start gap-2"><Check size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span className="font-medium">Glissent avec moins de friction</span></div></td>
                 </tr>
                 <tr className="border-t border-[var(--line)]">
-                  <td className="p-3 md:p-4 text-[var(--rose)] text-xs font-semibold uppercase tracking-wide">Votre soin du soir</td>
-                  <td className="p-3 md:p-4 text-black/50"><div className="flex items-start gap-2"><X size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span>Absorbé par le tissu</span></div></td>
-                  <td className="p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb]"><div className="flex items-start gap-2"><Check size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span className="font-medium">Reste dans vos cheveux</span></div></td>
+                  <td className="p-3 md:p-4 text-[var(--rose)] text-xs font-semibold uppercase tracking-wide">Peau &amp; soins</td>
+                  <td className="p-3 md:p-4 text-black/50"><div className="flex items-start gap-2"><X size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span>Le coton absorbe davantage</span></div></td>
+                  <td className="p-3 md:p-4 bg-[var(--green)] text-[#f7f3eb]"><div className="flex items-start gap-2"><Check size={16} strokeWidth={1.5} className="shrink-0 mt-0.5" /><span className="font-medium">Surface douce, moins absorbante</span></div></td>
                 </tr>
                 <tr className="border-t border-[var(--line)]">
                   <td className="p-3 md:p-4 text-[var(--rose)] text-xs font-semibold uppercase tracking-wide">Au réveil</td>
@@ -512,7 +512,7 @@ export default function RitualLandingPage() {
               </tbody>
             </table>
           </div>
-          <p className="mt-6 text-xs text-black/50">Satin 100 % polyester, pas de la soie. Nous préférons vous le dire.</p>
+          <p className="mt-6 text-xs text-black/50">{landing.satinComparison.closing}</p>
         </div>
       </section>
       <section className="px-6 py-16 md:px-16 md:py-24">

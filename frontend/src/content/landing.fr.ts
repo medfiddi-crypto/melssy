@@ -1,9 +1,9 @@
 export const landing = {
   sectionOrder: ["ugc", "reviews"] as const,
   hero: {
-    eyebrow: "Le coffret Beauty Night Ritual",
+    eyebrow: "Le coffret en satin demi-soie",
     headline: "Vos cheveux, protégés toute la nuit.",
-    body: "2 taies, 1 bonnet, 2 chouchous et le boucleur offert. Prêt pour ce soir.",
+    body: "Toucher soyeux, doux sur la peau. 6 pièces, boucleur offert.",
     cta: "Commander le coffret",
     priceCaption: "paiement à la livraison",
   },
@@ -71,9 +71,9 @@ export const landing = {
     body: "Deux taies satinées, un bonnet satiné, deux chouchous satinés et un boucleur sans chaleur offert.",
   },
   satinComparison: {
-    eyebrow: "Pourquoi le satin",
-    headline: "Ce que le satin change, nuit après nuit.",
-    subheadline: "Et le matin, vous accusez vos cheveux.",
+    eyebrow: "Le toucher demi-soie",
+    headline: "Fluide, lisse et doux sur la peau.",
+    subheadline: "Sa surface satinée accompagne vos cheveux avec moins de friction et absorbe moins les soins et l'humidité que le coton.",
     blocks: [
       {
         lead: "Le coton absorbe. C'est son métier.",
@@ -88,7 +88,7 @@ export const landing = {
         text: "Votre cheveu est couvert d'écailles superposées, comme des tuiles. La friction les soulève. Des écailles soulevées, c'est précisément ça, un frisottis. Voilà pourquoi vos cheveux sont souvent moins beaux au réveil qu'au moment où vous vous êtes couchée.",
       },
     ],
-    closing: "Ce n'est pas de la soie, et nous préférons vous le dire. C'est du satin 100% polyester : il n'absorbe pas et supporte le lavage.",
+    closing: "Composition : 97 % polyester, 3 % élasthanne. Un satin demi-soie au tombé fluide et à l'éclat discret.",
     imageAlt: "Comparaison macro entre une trame de coton et une trame de satin, côte à côte",
   },
   preview: {
